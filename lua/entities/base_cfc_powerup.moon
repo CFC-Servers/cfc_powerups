@@ -29,9 +29,7 @@ if CLIENT then return
 ENT.Initialize = =>
     @SetModel @Model
     @SetMoveType MOVETYPE_NONE
-    @SetSolid SOLID_NONE
-
-    if SERVER then @PhysicsInit SOLID_NONE
+    @PhysicsInit SOLID_NONE
 
 -- This will be replaced in each powerup
 ENT.PowerupEffect = (ply) =>

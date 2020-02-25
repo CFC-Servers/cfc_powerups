@@ -9,6 +9,7 @@ ENT.PrintName   = "Regen Powerup"
 ENT.Purpose     = "Base Powerup for CFC Powerups"
 
 ENT.PowerupEffect = (ply) =>
+    maxHp = 150
     powerupDuration = 300
     regenInterval = 0.1
     regenAmount = 3
@@ -21,12 +22,12 @@ ENT.PowerupEffect = (ply) =>
     powerupTick = ->
         hp = ply\Health!
 
-        if hp < 100
+        if hp < maxHp
             if not ply.PlayingRegenSound
                 ply.RegenSound\Play!
                 ply.PlayingRegenSound = true
 
-            newHp = math.Clamp hp + regenAmount, 0, 100
+            newHp = math.Clamp hp + regenAmount, 0, maxHp
 
             ply\SetHealth newHp
 

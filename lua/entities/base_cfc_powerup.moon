@@ -18,13 +18,13 @@ ENT.RemoveOnDeath = true
 
 -- Client --
 
-if CLIENT then
+if CLIENT
    ENT.Draw = =>
        @DrawModel!
 
 -- Shared --
 
-if CLIENT then return
+if CLIENT return
 
 ENT.Initialize = =>
     @SetModel @Model

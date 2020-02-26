@@ -46,3 +46,6 @@ ENT.PowerupEffect = (ply) =>
         @RegenSound = nil
         @PlayingRegenSound = nil
         @RemovePowerup = nil
+
+    removalTimer = timerName .. "-Removal"
+    timer.Create removalTimer, powerupDuration, 1, ply.RemovePowerup

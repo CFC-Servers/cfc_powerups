@@ -8,6 +8,9 @@ ENT.Type        = "anim"
 ENT.PrintName   = "Regen Powerup"
 ENT.Purpose     = "Base Powerup for CFC Powerups"
 
+ENT.Spawnable     = true
+ENT.AdminOnly     = true
+
 ENT.PowerupEffect = (ply) =>
     maxHp = 150
     powerupDuration = 300

@@ -2,15 +2,6 @@ AddCSLuaFile "cl_init.lua"
 AddCSLuaFile "shared.lua"
 include "shared.lua"
 
-DEFINE_BASECLASS "base_cfc_powerup"
-
-ENT.Type        = "anim"
-ENT.PrintName   = "Regen Powerup"
-ENT.Purpose     = "Base Powerup for CFC Powerups"
-
-ENT.Spawnable     = true
-ENT.AdminOnly     = true
-
 ENT.PowerupEffect = (ply) =>
     maxHp = 150
     powerupDuration = 300

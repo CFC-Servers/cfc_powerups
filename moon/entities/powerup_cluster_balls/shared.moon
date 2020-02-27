@@ -1,8 +1,8 @@
 ENT.Base        = "base_cfc_powerup"
 
 ENT.Type        = "anim"
-ENT.PrintName   = "Cluster Combine Ball POwerup"
-ENT.Purpose     = "Allows for 3 shots of the Cluster Combine Balls"
+ENT.PrintName   = "Cluster Combine Ball Powerup"
+ENT.Purpose     = "Converts the next few Combine Balls into Clustered Combine Balls that explode into many balls after a short delay"
 
 ENT.Spawnable   = true
 ENT.AdminOnly   = true

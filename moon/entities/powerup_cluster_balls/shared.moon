@@ -6,3 +6,5 @@ ENT.Purpose     = "Converts the next few Combine Balls into Clustered Combine Ba
 
 ENT.Spawnable   = true
 ENT.AdminOnly   = true
+
+ENT.PowerupName = "cluster-combine-balls"

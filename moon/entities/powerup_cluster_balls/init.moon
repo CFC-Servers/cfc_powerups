@@ -2,59 +2,52 @@ AddCSLuaFile "cl_init.lua"
 AddCSLuaFile "shared.lua"
 include "shared.lua"
 
-BALLS_PER_CLUSTER = 15
+CLUSTER_DELAY = 0.3 -- How long after firing will it cluster?
+BALLS_PER_CLUSTER = 15 -- How many balls per cluster?
 MIN_BALL_SPEED = 1500
 MAX_BALL_SPEED = 1500
-MAX_BALL_BOUNCES = "30" -- Must be a string
+MAX_BALL_BOUNCES = 30 -- How many bounces until the clustered balls explode?
 CLUSTER_BALL_COLOR = Color 255, 0, 0
 
 CLUSTER_LAUNCH_SOUND = "beams/beamstart5.wav"
 CLUSTER_LAUNCH_VOLUME = 500 -- 0-511
 
--- The only way to find these new balls is to check in a small radius around the spawner
--- :(
--- TODO: Check if the balls keep the spawner as an owner if we don't remove the spawner until after the balls init
-findClusteredBalls = (parent) ->
-    findRadius = 50
-    things = ents.FindInSphere parent\GetPos!, findRadius
-
-    [thing for thing in *things when thing\GetClass! == "prop_combine_ball"]
-
 configureClusterBall = (ball) ->
+    ball\SetSaveValue "m_bHeld", true -- Visual effects won't apply unless the ball is "held"
     ball\SetColor CLUSTER_BALL_COLOR
-    ball\Activate!
+
+    util.SpriteTrail ball, 0, CLUSTER_BALL_COLOR, true, 10, 1, 1, 1, "trails/laser"
 
     ball.IsClusteredBall = true
 
 makeClusterFor = (parent, owner) ->
     spawner = ents.Create "point_combine_ball_launcher"
 
-    spawner\SetAngles parent\GetAngles!
     spawner\SetPos parent\GetPos!
     spawner\SetKeyValue "minspeed", MIN_BALL_SPEED
     spawner\SetKeyValue "maxspeed", MAX_BALL_SPEED
     spawner\SetKeyValue "ballradius", "15"
-    spawner\SetKeyValue "ballcount", "1"
-    spawner\SetKeyValue "maxballbounces", MAX_BALL_BOUNCES
+    spawner\SetKeyValue "ballcount", "0" -- Disable auto-spawning of balls
+    spawner\SetKeyValue "maxballbounces", tostring MAX_BALL_BOUNCES
     spawner\SetKeyValue "launchconenoise", 360
 
     spawner\Spawn!
-    spawner\Activate!
     spawner\SetOwner owner
 
-    for i in *count
+    for _ in *count
         spawner\Fire "LaunchBall"
         parent\EmitSound CLUSTER_LAUNCH_SOUND, CLUSTER_LAUNCH_VOLUME
 
-    -- Small delay to wait for the balls to actually init
-    timer.Simple 0.01, ->
-        balls = findClusteredBalls parent
-
-        for ball in *balls
-            ball\SetOwner owner
-            configureClusterBall ball
-
+    timer.Simple 0.2, ->
         spawner\Fire "kill", "", 0
+
+-- Is the given ball a cluster created by owner?
+isClusteredBy = (ball, owner) ->
+    -- The ball keeps a reference to the spawner that made it
+    spawner = ball\GetSaveTable!["m_hSpawner"]
+    if not IsValid spawner return false
+
+    if spawner\GetOwner! == owner return true
 
 -- Result passed into OnEntityCreated hook
 createWatcherFor = (ply) ->
@@ -63,29 +56,37 @@ createWatcherFor = (ply) ->
         if thing.IsClusteredBall return
 
         -- Small delay to wait for owner to be set
-        -- TODO: do we have to wait longer?
         timer.Simple 0, ->
-            if thing\GetOwner! ~= ply return
+            if isClusteredBy thing, owner
+                return configureClusterBall thing
+
+            -- FiredBy implemented by CFC PvP
+            ballOwner = thing.FiredBy or thing\GetOwner!
+
+            if ballOwner ~= ply return
 
             makeClusterFor thing, ply
-            ply.RemainingClusterBalls -= 1
 
-            if ply.RemainingClusterBalls <= 0
-                ply.RemovePowerup!
+            existingPowerup = ply\GetPowerup ENT.PowerupName
+            existingPowerup.RemainingClusterBalls -= 1
+
+            if existingPowerup.RemainingClusterBalls <= 0
+                existingPowerup.RemovePowerup!
 
 ENT.PowerupEffect = (ply) =>
     plySteamID = ply\GetSteamID64!
     powerupHookName = "CFC_Powerups_ClusterBalls-#{plySteamID}"
     plyClusterWatcher = createWatcherFor ply
 
-    -- If the player picks up another of these powerups, it should just refresh it?
     hook.Remove "OnEntityCreated", powerupHookName
     hook.Add "OnEntityCreated", powerupHookName, plyClusterWatcher
 
-    ply.RemainingClusterBalls = MAX_BALLS_TO_CLUSTER
-
-    ply.RemovePowerup = =>
+    @PowerupInfo.RemainingClusterBalls = MAX_BALLS_TO_CLUSTER
+    @PowerupInfo.RemovePowerup = ->
         hook.Remove "OnEntityCreated", powerupHookName
-        @RemainingClusterBalls = nil
+        ply\ChatPrint "You've lost the Cluster Powerup"
 
-        @ChatPrint "You've lost the Cluster Powerup"
+ENT.PowerupRefresh = (ply) =>
+    existingPowerup = ply\GetPowerup @PowerupName
+
+    existingPowerup.RemainingClusterBalls += MAX_BALLS_TO_CLUSTER

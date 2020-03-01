@@ -6,7 +6,7 @@ playerMeta.AddPowerup = (powerup) =>
 playerMeta.RemovePowerup = (name) =>
     for key, powerup in pairs @Powerups
         if powerup\Name == name
-            info.RemovePowerup!
+            powerup.RemovePowerup!
             table.remove @Powerups, key
 
 playerMeta.GetPowerup = (name) =>

@@ -4,9 +4,10 @@ include "shared.lua"
 
 CLUSTER_DELAY = 0.3 -- How long after firing will it cluster?
 BALLS_PER_CLUSTER = 15 -- How many balls per cluster?
+MAX_BALLS_TO_CLUSTER = 3 -- How many uses of the powerup?
 MIN_BALL_SPEED = 1500
 MAX_BALL_SPEED = 1500
-MAX_BALL_BOUNCES = 30 -- How many bounces until the clustered balls explode?
+MAX_BALL_BOUNCES = 8 -- How many bounces until the clustered balls explode?
 CLUSTER_BALL_COLOR = Color 255, 0, 0
 
 CLUSTER_LAUNCH_SOUND = "beams/beamstart5.wav"
@@ -34,10 +35,12 @@ makeClusterFor = (parent, owner) ->
     spawner\Spawn!
     spawner\SetOwner owner
 
-    for _ in *count
+    -- TODO Start at 1 or 0?
+    for _ = 0, BALLS_PER_CLUSTER
         spawner\Fire "LaunchBall"
         parent\EmitSound CLUSTER_LAUNCH_SOUND, CLUSTER_LAUNCH_VOLUME
 
+    -- Small delay so we can reference the spawner later
     timer.Simple 0.2, ->
         spawner\Fire "kill", "", 0
 
@@ -57,7 +60,7 @@ createWatcherFor = (ply) ->
 
         -- Small delay to wait for owner to be set
         timer.Simple 0, ->
-            if isClusteredBy thing, owner
+            if isClusteredBy thing, ply
                 return configureClusterBall thing
 
             -- FiredBy implemented by CFC PvP
@@ -65,7 +68,8 @@ createWatcherFor = (ply) ->
 
             if ballOwner ~= ply return
 
-            makeClusterFor thing, ply
+            timer.Simple CLUSTER_DELAY, ->
+                makeClusterFor thing, ply
 
             existingPowerup = ply\GetPowerup ENT.PowerupName
             existingPowerup.RemainingClusterBalls -= 1

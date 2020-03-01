@@ -1,4 +1,3 @@
-
 AddCSLuaFile "cl_init.lua"
 AddCSLuaFile "shared.lua"
 include "shared.lua"
@@ -46,6 +45,6 @@ ENT.PowerupEffect = (ply) =>
     timer.Create removalTimer, powerupDuration, 1, @PowerupInfo.RemovePowerup
 
 ENT.RefreshPowerup = (ply) =>
-    timername = "#{ply\SteamID64!}-Regen-Powerup"
+    timerName = "#{ply\SteamID64!}-Regen-Powerup"
 
     timer.Start( timerName )

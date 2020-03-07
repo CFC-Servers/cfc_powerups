@@ -60,4 +60,4 @@ ENT.GivePowerup = (ply) =>
     @Remove!
 
 ENT.Use = (activator) =>
-    GivePowerup activator
+    @GivePowerup activator

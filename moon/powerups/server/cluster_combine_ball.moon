@@ -32,7 +32,7 @@ getRandomizedVelocity = (original) ->
 setClusterVelocity = (ball, parentVel) ->
     newVel = getRandomizedVelocity parentVel
 
-    ball\GetPhysicsObject!\SetVelocityInstantaneous newVel
+    ball\GetPhysicsObject!\SetVelocity newVel*MAX_BALL_SPEED
 
 configureClusterBall = (ball) ->
     ball\SetSaveValue "m_bHeld", true -- Visual effects won't apply unless the ball is "held"

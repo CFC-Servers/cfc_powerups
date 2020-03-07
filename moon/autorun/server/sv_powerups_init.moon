@@ -3,7 +3,7 @@ include "utils/server/sv_powerups_manager.lua"
 export CFCPowerups
 CFCPowerups or= {}
 
-foundPowerups = file.Find "powerups/*.lua", "LUA"
+foundPowerups = file.Find "powerups/server/*.lua", "LUA"
 
 for powerup in *foundPowerups
     print "Including #{powerup}"

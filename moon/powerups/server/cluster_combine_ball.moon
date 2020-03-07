@@ -69,13 +69,13 @@ class ClusterBallPowerup extends BasePowerup
     -- Passed into OnEntityCreated
     ClusterBallWatcher: =>
         return (thing) ->
-            print(self)
-            print(self)
-            print(self)
-            print(self)
-            print(self)
-            print(self)
-            print(self)
+            PrintTable(self)
+            PrintTable(self)
+            PrintTable(self)
+            PrintTable(self)
+            PrintTable(self)
+            PrintTable(self)
+            PrintTable(self)
             if thing\GetClass! ~= "prop_combine_ball" return
             if thing.IsClusteredBall return
 

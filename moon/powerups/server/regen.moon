@@ -14,24 +14,27 @@ class RegenPowerup extends BasePowerup
         @timerName = "CFC_Powerups-Regen-#{ply\SteamID64!}"
 
         timerDuration = POWERUP_DURATION / REGEN_INTERVAL
-        timer.Create @timerName, REGEN_INTERVAL, timerDuration, @PowerupTick
+        timer.Create @timerName, REGEN_INTERVAL, timerDuration, @PowerupTick!
 
     PowerupTick: =>
-        plyHealth = @owner\Health!
+        powerup = self
 
-        if plyHealth < MAX_HP
-            if not @PlayingRegenSound
-                @RegenSound\Play!
-                @PlayingRegenSound = true
+        return ->
+            plyHealth = powerup.owner\Health!
 
-            newHealth = math.Clamp plyHealth + REGEN_AMOUNT, 0, MAX_HP
+            if plyHealth < MAX_HP
+                if not powerup.PlayingRegenSound
+                    powerup.RegenSound\Play!
+                    powerup.PlayingRegenSound = true
 
-            @owner\SetHealth newHealth
+                newHealth = math.Clamp plyHealth + REGEN_AMOUNT, 0, MAX_HP
 
-        else
-            if @PlayingRegenSound
-                @RegenSound\Stop!
-                @PlayingRegenSound = false
+                powerup.owner\SetHealth newHealth
+
+            else
+                if powerup.PlayingRegenSound
+                    powerup.RegenSound\Stop!
+                    powerup.PlayingRegenSound = false
 
     Refresh: =>
         timer.Start @timerName

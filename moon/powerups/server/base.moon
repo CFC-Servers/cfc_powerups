@@ -1,13 +1,13 @@
+POWERUP_ID = "base-cfc-powerup"
+
 export BasePowerup
 class BasePowerup
-    ID: "base-cfc-powerup"
-    RemoveOnDeath: true
-    RequiresPvp: true
-    IsRefreshable: true
-
-    new: (ply) =>
+    new: (ply, removeOnDeath=true, requiresPvp=true, isRefreshable=true) =>
         @owner = ply
-        @ApplyEffect!
+
+        @RemoveOnDeath = removeOnDeath
+        @RequiresPvp = requiresPvp
+        @IsRefreshable = isRefreshable
 
     ApplyEffect: =>
         @owner\ChatPrint "Powerup Get!"
@@ -21,4 +21,4 @@ class BasePowerup
         @owner\ChatPrint "Powerup Removed!"
         @owner\Kill!
 
-CFCPowerups[BasePowerup.ID] = BasePowerup
+CFCPowerups[POWERUP_ID] = BasePowerup

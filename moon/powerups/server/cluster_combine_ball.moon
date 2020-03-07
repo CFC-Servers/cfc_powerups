@@ -71,6 +71,8 @@ class ClusterBallPowerup extends BasePowerup
         powerup = self
 
         return (thing) ->
+            powerup = powerup
+
             if thing\GetClass! ~= "prop_combine_ball" return
             if thing.IsClusteredBall return
 

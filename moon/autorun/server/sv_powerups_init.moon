@@ -1,5 +1,10 @@
-include "utils/server/sv_player_ext.lua"
 include "utils/server/sv_powerups_manager.lua"
+
+foundPowerups = file.Find "powerups/*.lua", "LUA"
+
+for powerup in *foundPowerups
+    print "Including #{powerup}"
+    include powerup
 
 CFCPowerups or= {}
 

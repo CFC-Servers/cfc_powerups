@@ -19,7 +19,7 @@ ENT.Sounds        = {
     PickupFailed: "common/warning.wav"
 }
 
-ENT.Model         = "models/props/cs_assault/money.mdl"
+ENT.Model         = "models/props_junk/garbage_plasticbottle003a.mdl"
 
 -- Client --
 
@@ -34,7 +34,7 @@ if CLIENT return
 ENT.Initialize = =>
     @SetModel @Model
     @SetMoveType MOVETYPE_NONE
-    @PhysicsInit SOLID_NONE
+    @PhysicsInit SOLID_VPHYSICS
 
 ENT.GivePowerup = (ply) =>
     if not PowerupManager.plyCanGetPowerup ply, @Powerup

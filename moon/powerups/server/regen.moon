@@ -17,6 +17,8 @@ class RegenPowerup extends BasePowerup
         timerDuration = POWERUP_DURATION / REGEN_INTERVAL
         timer.Create @timerName, REGEN_INTERVAL, timerDuration, @PowerupTick!
 
+        @RegenSound = CreateSound(@owner, "items/medcharge4.wav")
+
     PowerupTick: =>
         powerup = self
 

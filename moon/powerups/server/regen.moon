@@ -46,3 +46,5 @@ class RegenPowerup extends BasePowerup
         plyHealth = @owner\Health!
         if plyHealth > 100
             @owner\SetHealthj 100
+
+CFCPowerups[ClusterBallPowerup.ID] = RegenPowerup

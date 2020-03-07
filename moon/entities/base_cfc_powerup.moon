@@ -12,7 +12,7 @@ ENT.RenderGroup	  = RENDERGROUP_OPAQUE
 ENT.Spawnable     = false
 ENT.AdminOnly     = false
 
-ENT.Powerup   = PowerupManager.getMetaPowerup "base-cfc-powerup"
+ENT.Powerup       = "base-cfc-powerup"
 
 ENT.Sounds        = {
     Pickup: "vo/npc/female01/hacks01.wav",
@@ -42,9 +42,11 @@ ENT.GivePowerup = (ply) =>
         ply\ChatPrint "This Powerup requires PvP mode!"
         return
 
-    if ply\HasPowerup @Powerup
-        if @Powerup.IsRefreshable
-            @EmitSound @PickupSound
+    if PowerupManager.hasPowerup @Powerup
+        existingPowerup = ply.Powerups[@Powerup]
+
+        if existingPowerup.IsRefreshable
+            @EmitSound @Sounds.Pickup
             return PowerupManager.refreshPowerup ply, @Powerup
         else
             @EmitSound @Sounds.PickupFailed

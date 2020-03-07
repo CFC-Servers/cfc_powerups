@@ -80,7 +80,7 @@ class ClusterBallPowerup extends BasePowerup
                 -- FiredBy implemented by CFC PvP
                 ballOwner = thing.FiredBy or thing\GetOwner!
 
-                if ballOwner ~= powerup.owner return
+                if ballOwner ~= @owner return
 
                 timer.Simple CLUSTER_DELAY, ->
                     @MakeClusterFor thing

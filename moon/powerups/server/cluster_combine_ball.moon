@@ -2,16 +2,35 @@ include "base.lua"
 
 POWERUP_ID = "cluster-combine-balls"
 
-CLUSTER_DELAY = 0.3 -- How long after firing will it cluster?
-BALLS_PER_CLUSTER = 15 -- How many balls per cluster?
-MAX_BALLS_TO_CLUSTER = 3 -- How many uses of the powerup?
-MIN_BALL_SPEED = 1500
-MAX_BALL_SPEED = 1500
-MAX_BALL_BOUNCES = 8 -- How many bounces until the clustered balls explode?
+CLUSTER_DELAY        = 0.3 -- How long after firing will it cluster?
+BALLS_PER_CLUSTER    = 15  -- How many balls per cluster?
+MAX_BALLS_TO_CLUSTER = 3   -- How many uses of the powerup?
+MIN_BALL_SPEED       = 1500
+MAX_BALL_SPEED       = 1500
+MAX_BALL_BOUNCES     = 8   -- How many bounces until the clustered balls explode?
 CLUSTER_BALL_COLOR = Color 255, 0, 0
 
 CLUSTER_LAUNCH_SOUND = "cfc/seismic-charge-bass.wav"
 CLUSTER_LAUNCH_VOLUME = 500 -- 0-511
+
+TIGHTNESS         = 100
+HORIZONTAL_SPREAD = 20
+VERTICAL_SPREAD   = 10
+
+getRandomizedVelocity = (original) ->
+    x = TIGHTNESS
+    y = math.random -HORIZONTAL_SPREAD, HORIZONTAL_SPREAD
+    z = math.random -VERTICAL_SPREAD, VERTICAL_SPREAD
+    v = Vector x, y, z
+
+    v\Rotate original\Angle!
+    v\Normalize!
+    return v
+
+setClusterVelocity = (ball, parentVel) ->
+    newVel = getRandomizedVelocity parentVel
+
+    ball\GetPhysicsObject!\SetVelocityInstantaneous newVel
 
 configureClusterBall = (ball) ->
     ball\SetSaveValue "m_bHeld", true -- Visual effects won't apply unless the ball is "held"
@@ -36,7 +55,7 @@ class ClusterBallPowerup extends BasePowerup
         @ApplyEffect!
 
     -- Is the given ball a cluster created by owner?
-    IsClusteredBy: (ball) =>
+    IsClusteredByOwner: (ball) =>
         -- The ball keeps a reference to the spawner that made it
         spawner = ball\GetSaveTable!["m_hSpawner"]
         if not IsValid spawner return false
@@ -57,10 +76,8 @@ class ClusterBallPowerup extends BasePowerup
         spawner\Spawn!
         spawner\SetOwner @owner
 
-        -- TODO Start at 1 or 0?
         for _ = 0, BALLS_PER_CLUSTER
             spawner\Fire "LaunchBall"
-            parent\EmitSound CLUSTER_LAUNCH_SOUND, CLUSTER_LAUNCH_VOLUME
 
         -- Small delay so we can reference the spawner later
         timer.Simple 0.2, ->
@@ -74,7 +91,8 @@ class ClusterBallPowerup extends BasePowerup
 
             -- Small delay to wait for owner to be set
             timer.Simple 0, ->
-                if @IsClusteredBy thing
+                if @IsClusteredByOwner thing
+                    setClusterVelocity thing, @ParentBallVelocity
                     return configureClusterBall thing
 
                 -- FiredBy implemented by CFC PvP
@@ -83,6 +101,9 @@ class ClusterBallPowerup extends BasePowerup
                 if ballOwner ~= @owner return
 
                 timer.Simple CLUSTER_DELAY, ->
+                    -- Always hold on to the last parent ball's velocity
+                    @ParentBallVelocity = thing\GetPhysicsObject!\GetVelocity!
+
                     @MakeClusterFor thing
 
                 @RemainingClusterBalls -= 1
@@ -109,6 +130,6 @@ class ClusterBallPowerup extends BasePowerup
         if not IsValid(@owner) return
 
         -- TODO: Should the PowerupManager do this?
-        @owner.Powerups[@ID] = nil
+        @owner.Powerups[POWERUP_ID] = nil
 
 CFCPowerups[POWERUP_ID] = ClusterBallPowerup

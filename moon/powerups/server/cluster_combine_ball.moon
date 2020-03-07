@@ -21,11 +21,13 @@ getRandomizedVelocity = (original) ->
     x = TIGHTNESS
     y = math.random -HORIZONTAL_SPREAD, HORIZONTAL_SPREAD
     z = math.random -VERTICAL_SPREAD, VERTICAL_SPREAD
-    v = Vector x, y, z
 
-    v\Rotate original\Angle!
-    v\Normalize!
-    return v
+    newVel = Vector x, y, z
+
+    newVel\Rotate original\Angle!
+    newVel\Normalize!
+
+    newVel
 
 setClusterVelocity = (ball, parentVel) ->
     newVel = getRandomizedVelocity parentVel
@@ -80,7 +82,7 @@ class ClusterBallPowerup extends BasePowerup
             spawner\Fire "LaunchBall"
 
         -- Small delay so we can reference the spawner later
-        timer.Simple 0.2, ->
+        timer.Simple 0.15, ->
             spawner\Fire "kill", "", 0
 
     -- Passed into OnEntityCreated
@@ -121,6 +123,7 @@ class ClusterBallPowerup extends BasePowerup
 
     Refresh: =>
         @RemainingClusterBalls += MAX_BALLS_TO_CLUSTER
+        @owner\ChatPrint "You've gained #{MAX_BALLS_TO_CLUSTER} more uses of the Cluster Combine balls. (Total: #{@RemainingClusterBalls})"
 
     Remove: =>
         @owner\ChatPrint "You've lost the Cluster Powerup"

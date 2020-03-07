@@ -53,7 +53,7 @@ ENT.GivePowerup = (ply) =>
             ply\ChatPrint "This Powerup cannot be refreshed!"
             return
 
-    @EmitSound @Pickup
+    @EmitSound @Sounds.Pickup
 
     PowerupManager.givePowerup ply, @Powerup
 

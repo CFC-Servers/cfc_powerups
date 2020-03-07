@@ -8,7 +8,7 @@ MAX_BALL_SPEED = 1500
 MAX_BALL_BOUNCES = 8 -- How many bounces until the clustered balls explode?
 CLUSTER_BALL_COLOR = Color 255, 0, 0
 
-CLUSTER_LAUNCH_SOUND = "beams/beamstart5.wav"
+CLUSTER_LAUNCH_SOUND = "cfc/seismic-charge-bass.wav"
 CLUSTER_LAUNCH_VOLUME = 500 -- 0-511
 
 configureClusterBall = (ball) ->
@@ -19,13 +19,15 @@ configureClusterBall = (ball) ->
 
     ball.IsClusteredBall = true
 
+    ball\EmitSound CLUSTER_LAUNCH_SOUND, CLUSTER_LAUNCH_VOLUME
+
 export ClusterBallPowerup
 class ClusterBallPowerup extends BasePowerup
     ID: "cluster-combine-balls"
 
     new: (ply) =>
         @owner = ply
-        ownerSteamID = @owner\GetSteamID64!
+        ownerSteamID = @owner\SteamID64!
 
         @PowerupHookName = "CFC_Powerups_ClusterBalls-#{ownerSteamID}"
         @RemainingClusterBalls = MAX_BALLS_TO_CLUSTER

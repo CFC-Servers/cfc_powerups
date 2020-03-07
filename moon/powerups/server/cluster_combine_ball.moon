@@ -1,5 +1,7 @@
 include "base.lua"
 
+POWERUP_ID = "cluster-combine-balls"
+
 CLUSTER_DELAY = 0.3 -- How long after firing will it cluster?
 BALLS_PER_CLUSTER = 15 -- How many balls per cluster?
 MAX_BALLS_TO_CLUSTER = 3 -- How many uses of the powerup?
@@ -23,16 +25,15 @@ configureClusterBall = (ball) ->
 
 export ClusterBallPowerup
 class ClusterBallPowerup extends BasePowerup
-    ID: "cluster-combine-balls"
-
     new: (ply) =>
-        @owner = ply
+        super ply
+
         ownerSteamID = @owner\SteamID64!
 
         @PowerupHookName = "CFC_Powerups_ClusterBalls-#{ownerSteamID}"
         @RemainingClusterBalls = MAX_BALLS_TO_CLUSTER
 
-        @ApplyEffects!
+        @ApplyEffect!
 
     -- Is the given ball a cluster created by owner?
     isClusteredBy = (ball) =>
@@ -114,4 +115,4 @@ class ClusterBallPowerup extends BasePowerup
         -- TODO: Should the PowerupManager do this?
         @owner.Powerups[@ID] = nil
 
-CFCPowerups[ClusterBallPowerup.ID] = ClusterBallPowerup
+CFCPowerups[POWERUP_ID] = ClusterBallPowerup

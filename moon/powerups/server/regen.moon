@@ -1,5 +1,7 @@
 include "base.lua"
 
+POWERUP_ID = "regen-powerup"
+
 MAX_HP = 150
 POWERUP_DURATION = 300 -- In seconds
 REGEN_INTERVAL = 0.1 -- How often to apply the regen, in seconds
@@ -7,10 +9,9 @@ REGEN_AMOUNT = 3 -- How much health to apply every REGEN_INTERVAL
 
 export RegenPowerup
 class RegenPowerup extends BasePowerup
-    ID: "regen-powerup"
-
     new: (ply) =>
-        @owner = ply
+        super ply
+
         @timerName = "CFC_Powerups-Regen-#{ply\SteamID64!}"
 
         timerDuration = POWERUP_DURATION / REGEN_INTERVAL
@@ -50,4 +51,4 @@ class RegenPowerup extends BasePowerup
         if plyHealth > 100
             @owner\SetHealthj 100
 
-CFCPowerups[ClusterBallPowerup.ID] = RegenPowerup
+CFCPowerups[POWERUP_ID] = RegenPowerup

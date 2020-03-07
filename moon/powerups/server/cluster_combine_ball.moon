@@ -100,14 +100,12 @@ class ClusterBallPowerup extends BasePowerup
         -- TODO: can I pass in an instance method like this?
         hook.Add "OnEntityCreated", @PowerupHookName, @ClusterBallWatcher
 
-        @PowerupInfo.RemovePowerup = ->
-            hook.Remove "OnEntityCreated", @PowerupHookName
-            @owner\ChatPrint "You've lost the Cluster Powerup"
-
     Refresh: =>
         @RemainingClusterBalls += MAX_BALLS_TO_CLUSTER
 
     Remove: =>
+        @owner\ChatPrint "You've lost the Cluster Powerup"
+
         hook.Remove "OnEntityCreated", @PowerupHookName
 
         if not IsValid(@owner) return

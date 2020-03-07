@@ -1,27 +1,26 @@
-require "cfclogger"
-
 export PowerupManager
 PowerupManager =
-    logger: CFCLogger "PowerupManager",
-    givePowerup: (ply, powerup) =>
-        if ply\HasPowerup powerup
-            existingPowerup = ply\GetPowerup powerup
+    hasPowerup: (ply, powerupId) ->
+        ply.Powerups[powerupId] ~= nil
 
+    givePowerup: (ply, powerupId) ->
+        existingPowerup = ply.Powerups[powerupId]
+
+        if existingPowerup
             return existingPowerup\Refresh!
 
-        ply.Powerups[powerup.ID] = powerup ply
+        ply.Powerups[powerupId] = CFCPowerups[powerupId](ply)
 
-    plyCanGetPowerup: (ply, powerup) =>
-        if powerup.RequiresPvP and ply\GetNWBool("CFC_PvP_Mode", false) == false
+    plyCanGetPowerup: (ply, powerupId) ->
+        existingPowerup = ply.Powerups[powerupId]
+
+        if existingPowerup.RequiresPvP and ply\GetNWBool("CFC_PvP_Mode", false) == false
             return false
 
         if ply\IsDead! return false
 
         true
 
-    refreshPowerup: (ply, powerup) =>
-        existingPowerup = ply.Powerups[powerup.ID]
+    refreshPowerup: (ply, powerupId) ->
+        existingPowerup = ply.Powerups[powerupId]
         existingPowerup\Refresh!
-
-    getMetaPowerup: (powerupId) =>
-        return CFCPowerups[powerupId]

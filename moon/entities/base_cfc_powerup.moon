@@ -42,7 +42,7 @@ ENT.GivePowerup = (ply) =>
         ply\ChatPrint "This Powerup requires PvP mode!"
         return
 
-    if PowerupManager.hasPowerup @Powerup
+    if PowerupManager.hasPowerup ply, @Powerup
         existingPowerup = ply.Powerups[@Powerup]
 
         if existingPowerup.IsRefreshable

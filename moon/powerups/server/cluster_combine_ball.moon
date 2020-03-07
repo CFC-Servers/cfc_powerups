@@ -97,8 +97,8 @@ class ClusterBallPowerup extends BasePowerup
     ApplyEffect: =>
         hook.Remove "OnEntityCreated", @PowerupHookName
 
-        -- TODO: can I pass in an instance method like this?
-        hook.Add "OnEntityCreated", @PowerupHookName, @ClusterBallWatcher
+        this = self
+        hook.Add "OnEntityCreated", @PowerupHookName, -> this.ClusterBallWatcher
 
     Refresh: =>
         @RemainingClusterBalls += MAX_BALLS_TO_CLUSTER

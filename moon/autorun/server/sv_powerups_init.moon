@@ -6,6 +6,8 @@ CFCPowerups or= {}
 foundPowerups = file.Find "powerups/server/*.lua", "LUA"
 
 for powerup in *foundPowerups
+    powerup = "powerups/server/#{powerup}"
+
     print "Including #{powerup}"
     include powerup
 

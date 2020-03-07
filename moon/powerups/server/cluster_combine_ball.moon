@@ -97,8 +97,7 @@ class ClusterBallPowerup extends BasePowerup
     ApplyEffect: =>
         hook.Remove "OnEntityCreated", @PowerupHookName
 
-        this = self
-        hook.Add "OnEntityCreated", @PowerupHookName, -> this.ClusterBallWatcher
+        hook.Add "OnEntityCreated", @PowerupHookName, @ClusterBallWatcher!
 
     Refresh: =>
         @RemainingClusterBalls += MAX_BALLS_TO_CLUSTER

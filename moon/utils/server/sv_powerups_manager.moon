@@ -19,7 +19,7 @@ PowerupManager =
         if existingPowerup.RequiresPvP and ply\GetNWBool("CFC_PvP_Mode", false) == false
             return false
 
-        if ply\IsDead! return false
+        if not ply\Alive! return false
 
         true
 

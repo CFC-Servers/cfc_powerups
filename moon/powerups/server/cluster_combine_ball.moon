@@ -36,7 +36,7 @@ class ClusterBallPowerup extends BasePowerup
         @ApplyEffect!
 
     -- Is the given ball a cluster created by owner?
-    isClusteredBy = (ball) =>
+    IsClusteredBy = (ball) =>
         -- The ball keeps a reference to the spawner that made it
         spawner = ball\GetSaveTable!["m_hSpawner"]
         if not IsValid spawner return false

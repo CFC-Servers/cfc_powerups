@@ -6,6 +6,7 @@ for powerup in *foundPowerups
     print "Including #{powerup}"
     include powerup
 
+export CFCPowerups
 CFCPowerups or= {}
 
 playerInit = (ply) ->

@@ -52,6 +52,9 @@ class RegenPowerup extends BasePowerup
         -- Make sure they don't have more 100 HP
         plyHealth = @owner\Health!
         if plyHealth > 100
-            @owner\SetHealthj 100
+            @owner\SetHealth 100
+
+        -- TODO: Should the PowerupManager do this?
+        @owner.Powerups[POWERUP_ID] = nil
 
 CFCPowerups[POWERUP_ID] = RegenPowerup

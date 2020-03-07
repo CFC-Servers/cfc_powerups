@@ -1,13 +1,13 @@
 include "utils/server/sv_powerups_manager.lua"
 
+export CFCPowerups
+CFCPowerups or= {}
+
 foundPowerups = file.Find "powerups/*.lua", "LUA"
 
 for powerup in *foundPowerups
     print "Including #{powerup}"
     include powerup
-
-export CFCPowerups
-CFCPowerups or= {}
 
 playerInit = (ply) ->
     ply.Powerups or= {}

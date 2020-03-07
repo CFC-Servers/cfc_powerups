@@ -6,6 +6,7 @@ MAX_HP = 150
 POWERUP_DURATION = 300 -- In seconds
 REGEN_INTERVAL = 0.1 -- How often to apply the regen, in seconds
 REGEN_AMOUNT = 3 -- How much health to apply every REGEN_INTERVAL
+REGEN_SOUND = "items/medcharge4.wav"
 
 export RegenPowerup
 class RegenPowerup extends BasePowerup
@@ -17,7 +18,7 @@ class RegenPowerup extends BasePowerup
         timerDuration = POWERUP_DURATION / REGEN_INTERVAL
         timer.Create @timerName, REGEN_INTERVAL, timerDuration, @PowerupTick!
 
-        @RegenSound = CreateSound(@owner, "items/medcharge4.wav")
+        @RegenSound = CreateSound(@owner, REGEN_SOUND)
 
     PowerupTick: =>
         powerup = self

@@ -39,7 +39,6 @@ ENT.Initialize = =>
 ENT.GivePowerup = (ply) =>
     if not PowerupManager.plyCanGetPowerup ply, @Powerup
         @EmitSound @Sounds.PickupFailed
-        ply\ChatPrint "This Powerup requires PvP mode!"
         return
 
     if PowerupManager.hasPowerup ply, @Powerup
@@ -47,10 +46,14 @@ ENT.GivePowerup = (ply) =>
 
         if existingPowerup.IsRefreshable
             @EmitSound @Sounds.Pickup
-            return PowerupManager.refreshPowerup ply, @Powerup
+            PowerupManager.refreshPowerup ply, @Powerup
+            @Remove!
+
+            return
         else
             @EmitSound @Sounds.PickupFailed
             ply\ChatPrint "This Powerup cannot be refreshed!"
+
             return
 
     @EmitSound @Sounds.Pickup

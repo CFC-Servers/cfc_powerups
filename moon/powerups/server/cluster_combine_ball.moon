@@ -69,19 +69,20 @@ class ClusterBallPowerup extends BasePowerup
     -- Passed into OnEntityCreated
     ClusterBallWatcher: =>
         return (thing) ->
-            PrintTable(self)
-            PrintTable(self)
-            PrintTable(self)
-            PrintTable(self)
-            PrintTable(self)
-            PrintTable(self)
-            PrintTable(self)
             if thing\GetClass! ~= "prop_combine_ball" return
             if thing.IsClusteredBall return
 
             -- Small delay to wait for owner to be set
             timer.Simple 0, ->
-                if powerup\IsClusteredBy thing
+                PrintTable(self)
+                PrintTable(self)
+                PrintTable(self)
+                PrintTable(self)
+                PrintTable(self)
+                PrintTable(self)
+                PrintTable(self)
+
+                if @IsClusteredBy thing
                     return configureClusterBall thing
 
                 -- FiredBy implemented by CFC PvP
@@ -92,12 +93,12 @@ class ClusterBallPowerup extends BasePowerup
                 timer.Simple CLUSTER_DELAY, ->
                     @MakeClusterFor thing
 
-                powerup.RemainingClusterBalls -= 1
+                @RemainingClusterBalls -= 1
 
-                if powerup.RemainingClusterBalls <= 0
+                if @RemainingClusterBalls <= 0
                     -- TODO: How to tell PowerupManager to also remove?
                     -- whose responsibility is it?
-                    powerup\Remove!
+                    @Remove!
 
     ApplyEffect: =>
         hook.Remove "OnEntityCreated", @PowerupHookName

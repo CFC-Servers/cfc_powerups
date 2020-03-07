@@ -67,12 +67,15 @@ class ClusterBallPowerup extends BasePowerup
             spawner\Fire "kill", "", 0
 
     -- Passed into OnEntityCreated
-    ClusterBallWatcher: () =>
-        powerup = self
-
+    ClusterBallWatcher: =>
         return (thing) ->
-            powerup = powerup
-
+            print(self)
+            print(self)
+            print(self)
+            print(self)
+            print(self)
+            print(self)
+            print(self)
             if thing\GetClass! ~= "prop_combine_ball" return
             if thing.IsClusteredBall return
 
@@ -99,7 +102,8 @@ class ClusterBallPowerup extends BasePowerup
     ApplyEffect: =>
         hook.Remove "OnEntityCreated", @PowerupHookName
 
-        hook.Add "OnEntityCreated", @PowerupHookName, @ClusterBallWatcher!
+        watcher = @ClusterBallWatcher!
+        hook.Add "OnEntityCreated", @PowerupHookName, watcher
 
     Refresh: =>
         @RemainingClusterBalls += MAX_BALLS_TO_CLUSTER

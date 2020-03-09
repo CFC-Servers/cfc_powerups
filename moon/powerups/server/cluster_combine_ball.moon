@@ -102,6 +102,12 @@ class ClusterBallPowerup extends BasePowerup
 
                 if ballOwner ~= @owner return
 
+                if @RemainingClusterBalls <= 0
+                    -- TODO: How to tell PowerupManager to also remove?
+                    -- whose responsibility is it?
+                    timer.Simple 0.25, -> @Remove!
+                    return
+
                 timer.Simple CLUSTER_DELAY, ->
                     -- Always hold on to the last parent ball's velocity
                     @ParentBallVelocity = thing\GetPhysicsObject!\GetVelocity!
@@ -109,11 +115,6 @@ class ClusterBallPowerup extends BasePowerup
                     @MakeClusterFor thing
 
                 @RemainingClusterBalls -= 1
-
-                if @RemainingClusterBalls <= 0
-                    -- TODO: How to tell PowerupManager to also remove?
-                    -- whose responsibility is it?
-                    @Remove!
 
     ApplyEffect: =>
         hook.Remove "OnEntityCreated", @PowerupHookName

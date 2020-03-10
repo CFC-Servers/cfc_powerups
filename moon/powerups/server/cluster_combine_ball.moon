@@ -88,7 +88,7 @@ class ClusterBallPowerup extends BasePowerup
         if @RemainingClusterBalls <= 0
             -- TODO: How to tell PowerupManager to also remove?
             -- whose responsibility is it?
-            @Remove!
+            timer.Simple 0.15, -> @Remove!
 
     -- Passed into OnEntityCreated
     ClusterBallWatcher: =>

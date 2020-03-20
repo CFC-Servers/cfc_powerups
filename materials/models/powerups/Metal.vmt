@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/powerups/Metal"
+	"$bumpmap" "models/powerups/Metal_N"
+}

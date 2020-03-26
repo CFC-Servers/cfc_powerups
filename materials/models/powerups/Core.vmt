@@ -1,6 +1,0 @@
-"VertexlitGeneric"
-{
-	"$basetexture" "models/powerups/Core"
-
-	$selfillum 1
-}

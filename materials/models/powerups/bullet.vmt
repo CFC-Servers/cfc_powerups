@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/powerups/bullet"
+	$selfillum 1
+}

@@ -19,7 +19,7 @@ ENT.Sounds        = {
     PickupFailed: "common/warning.wav"
 }
 
-ENT.Model         = "models/props_junk/garbage_plasticbottle003a.mdl"
+ENT.Model         = "models/powerups/minigun.mdl"
 
 -- Client --
 

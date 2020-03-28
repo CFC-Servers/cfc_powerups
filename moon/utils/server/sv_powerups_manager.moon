@@ -28,3 +28,14 @@ PowerupManager =
 
         if existingPowerup
             existingPowerup\Refresh!
+
+    getRandomPowerup: ->
+        sumOfWeights = CFCPowerups["cfc-base-powerup"].powerupTotalWeight - 1
+
+        randomIndex = math.random 0, sumOfWeights
+
+        for name, powerup in pairs CFCPowerups["cfc-base-powerup"].powerupList
+            if randomIndex < powerup.powerupWeight
+                return powerup
+
+            randomIndex -= powerup.powerupWeight

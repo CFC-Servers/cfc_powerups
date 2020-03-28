@@ -46,6 +46,8 @@ configureClusterBall = (ball) ->
 
 export ClusterBallPowerup
 class ClusterBallPowerup extends BasePowerup
+    @powerupWeight: 1
+
     new: (ply) =>
         super ply
 

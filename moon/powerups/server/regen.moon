@@ -10,6 +10,8 @@ REGEN_SOUND = "items/medcharge4.wav"
 
 export RegenPowerup
 class RegenPowerup extends BasePowerup
+    @powerupWeight: 1
+
     new: (ply) =>
         super ply
 

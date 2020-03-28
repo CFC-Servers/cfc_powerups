@@ -24,6 +24,8 @@ MELEE_WEAPONS       = {
 
 export ViperPowerup
 class ViperPowerup extends BasePowerup
+    @powerupWeight: 1
+
     new: (ply) =>
         super ply
 

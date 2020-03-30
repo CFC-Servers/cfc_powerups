@@ -20,7 +20,8 @@ include "powerups/server/viper.lua"
 --    print "Including #{powerup}"
 --    include powerup
 
-CFCPowerups.spawnLocations = include "powerups/config/maps/" .. game.GetMap! .. ".lua"
+mapConfigPath = "powerups/config/maps/#{game.GetMap!}.lua"
+CFCPowerups.spawnLocations = include mapConfigPath
 
 playerInit = (ply) ->
     ply.Powerups or= {}

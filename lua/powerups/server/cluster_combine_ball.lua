@@ -1,5 +1,4 @@
 include("base.lua")
-local POWERUP_ID = "cluster-combine-balls"
 local CLUSTER_DELAY = 0.3
 local BALLS_PER_CLUSTER = 15
 local MAX_BALLS_TO_CLUSTER = 3
@@ -146,9 +145,17 @@ do
     end
   })
   _base_0.__class = _class_0
+  local self = _class_0
+  self.powerupID = "powerup_cluster_balls"
+  self.powerupWeights = {
+    1,
+    1,
+    1,
+    1
+  }
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
   ClusterBallPowerup = _class_0
+  return _class_0
 end
-CFCPowerups[POWERUP_ID] = ClusterBallPowerup

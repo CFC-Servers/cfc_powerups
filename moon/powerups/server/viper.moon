@@ -1,7 +1,5 @@
 include "base.lua"
 
-POWERUP_ID = "viper-powerup"
-
 DEFAULT_PLAYER_COLOR = Color 255, 255, 255, 255
 PLAYER_COLOR         = Color 255, 255, 255, 1
 PLAYER_MATERIAL      = ""
@@ -24,7 +22,9 @@ MELEE_WEAPONS       = {
 
 export ViperPowerup
 class ViperPowerup extends BasePowerup
-    @powerupWeight: 1
+    @powerupID: "powerup_viper"
+
+    @powerupWeights: {1, 1, 1, 1}
 
     new: (ply) =>
         super ply
@@ -68,5 +68,3 @@ class ViperPowerup extends BasePowerup
 
         if not IsValid(@owner) return
         @owner\SetColor DEFAULT_PLAYER_COLOR
-
-CFCPowerups[POWERUP_ID] = ViperPowerup

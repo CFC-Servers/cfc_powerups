@@ -1,4 +1,3 @@
-local POWERUP_ID = "base-cfc-powerup"
 do
   local _class_0
   local _base_0 = {
@@ -13,6 +12,13 @@ do
     Remove = function(self)
       self.owner:ChatPrint("Powerup Removed!")
       return self.owner:Kill()
+    end,
+    __inherited = function(self, child)
+      table.insert(self.powerupList, child)
+      CFCPowerups[child.powerupID] = child
+      for tier = 1, 4 do
+        self.powerupTotalWeights[tier] = self.powerupTotalWeights[tier] + child.powerupWeights[tier]
+      end
     end
   }
   _base_0.__index = _base_0
@@ -43,6 +49,21 @@ do
     end
   })
   _base_0.__class = _class_0
+  local self = _class_0
+  self.powerupList = { }
+  self.powerupID = "base_cfc_powerup"
+  self.powerupTotalWeights = {
+    0,
+    0,
+    0,
+    0
+  }
+  self.powerupWeights = {
+    0,
+    0,
+    0,
+    0
+  }
   BasePowerup = _class_0
 end
-CFCPowerups[POWERUP_ID] = BasePowerup
+CFCPowerups[BasePowerup.powerupID] = BasePowerup

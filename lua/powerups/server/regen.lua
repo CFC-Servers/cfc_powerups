@@ -1,5 +1,4 @@
 include("base.lua")
-local POWERUP_ID = "regen-powerup"
 local MAX_HP = 150
 local POWERUP_DURATION = 300
 local REGEN_INTERVAL = 0.1
@@ -76,9 +75,17 @@ do
     end
   })
   _base_0.__class = _class_0
+  local self = _class_0
+  self.powerupID = "powerup_regen"
+  self.powerupWeights = {
+    1,
+    1,
+    1,
+    1
+  }
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
   RegenPowerup = _class_0
+  return _class_0
 end
-CFCPowerups[POWERUP_ID] = RegenPowerup

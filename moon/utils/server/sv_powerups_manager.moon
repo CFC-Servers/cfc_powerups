@@ -29,13 +29,45 @@ PowerupManager =
         if existingPowerup
             existingPowerup\Refresh!
 
-    getRandomPowerup: ->
-        sumOfWeights = CFCPowerups["cfc-base-powerup"].powerupTotalWeight - 1
+    getRandomPowerup: (tier) ->
+        CFCBasePowerup = CFCPowerups["base_cfc_powerup"]
 
+        sumOfWeights = CFCBasePowerup.powerupTotalWeights[tier] - 1
         randomIndex = math.random 0, sumOfWeights
 
-        for name, powerup in pairs CFCPowerups["cfc-base-powerup"].powerupList
-            if randomIndex < powerup.powerupWeight
+        for name, powerup in pairs CFCBasePowerup.powerupList
+            if randomIndex < powerup.powerupWeights[tier]
                 return powerup
 
-            randomIndex -= powerup.powerupWeight
+            randomIndex -= powerup.powerupWeights[tier]
+
+    getShuffledSpawnLocations: (tier) ->
+        spawnLocations = table.Copy CFCPowerups.spawnLocations[tier]
+
+        for i = #spawnLocations, 2, -1
+            j = math.random i
+            spawnLocations[i], spawnLocations[j] = spawnLocations[j], spawnLocations[i]
+
+        spawnLocations
+
+    getRandomSpawnLocations: (tier) ->
+        allSpawnLocations = PowerupManager.getShuffledSpawnLocations tier
+        spawnCount = math.floor #allSpawnLocations / (tier + 1)
+
+        spawnLocations = {}
+
+        for i = 1, spawnCount
+            table.insert spawnLocations, allSpawnLocations[i]
+
+        spawnLocations
+
+    spawnRandomPowerups: ->
+        for tier = 1, 4 do
+            spawnLocations = PowerupManager.getRandomSpawnLocations tier
+
+            for _, location in ipairs spawnLocations
+                powerupClass = PowerupManager.getRandomPowerup!.powerupID
+
+                powerup = ents.Create powerupClass
+                powerup\SetPos location
+                powerup\Spawn!

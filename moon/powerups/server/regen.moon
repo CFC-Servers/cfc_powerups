@@ -1,7 +1,5 @@
 include "base.lua"
 
-POWERUP_ID = "regen-powerup"
-
 MAX_HP = 150
 POWERUP_DURATION = 300 -- In seconds
 REGEN_INTERVAL = 0.1 -- How often to apply the regen, in seconds
@@ -10,7 +8,9 @@ REGEN_SOUND = "items/medcharge4.wav"
 
 export RegenPowerup
 class RegenPowerup extends BasePowerup
-    @powerupWeight: 1
+    @powerupID: "powerup_regen"
+
+    @powerupWeights: {1, 1, 1, 1}
 
     new: (ply) =>
         super ply
@@ -58,5 +58,3 @@ class RegenPowerup extends BasePowerup
 
         -- TODO: Should the PowerupManager do this?
         @owner.Powerups[POWERUP_ID] = nil
-
-CFCPowerups[POWERUP_ID] = RegenPowerup

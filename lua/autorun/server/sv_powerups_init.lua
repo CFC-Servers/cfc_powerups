@@ -7,6 +7,7 @@ for _index_0 = 1, #foundPowerups do
   print("Including " .. tostring(powerup))
   include(powerup)
 end
+CFCPowerups.spawnLocations = include("powerups/config/maps/" .. game.GetMap() .. ".lua")
 local playerInit
 playerInit = function(ply)
   ply.Powerups = ply.Powerups or { }

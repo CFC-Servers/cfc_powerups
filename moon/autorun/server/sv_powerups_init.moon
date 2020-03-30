@@ -11,6 +11,8 @@ for powerup in *foundPowerups
     print "Including #{powerup}"
     include powerup
 
+CFCPowerups.spawnLocations = include "powerups/config/maps/" .. game.GetMap! .. ".lua"
+
 playerInit = (ply) ->
     ply.Powerups or= {}
 

@@ -1,5 +1,4 @@
 include("base.lua")
-local POWERUP_ID = "viper-powerup"
 local DEFAULT_PLAYER_COLOR = Color(255, 255, 255, 255)
 local PLAYER_COLOR = Color(255, 255, 255, 1)
 local PLAYER_MATERIAL = ""
@@ -94,9 +93,17 @@ do
     end
   })
   _base_0.__class = _class_0
+  local self = _class_0
+  self.powerupID = "powerup_viper"
+  self.powerupWeights = {
+    1,
+    1,
+    1,
+    1
+  }
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
   ViperPowerup = _class_0
+  return _class_0
 end
-CFCPowerups[POWERUP_ID] = ViperPowerup

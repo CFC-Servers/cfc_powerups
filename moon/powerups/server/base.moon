@@ -1,11 +1,11 @@
-POWERUP_ID = "base-cfc-powerup"
-
 export BasePowerup
 class BasePowerup
     @powerupList: {}
-    @powerupTotalWeight: 0
 
-    @powerupWeight: 0
+    @powerupID: "base_cfc_powerup"
+    
+    @powerupTotalWeights: {0, 0, 0, 0}
+    @powerupWeights: {0, 0, 0, 0}
 
     new: (ply, removeOnDeath=true, requiresPvp=true, isRefreshable=true) =>
         @owner = ply
@@ -28,6 +28,10 @@ class BasePowerup
 
     __inherited: ( child ) =>
         table.insert @powerupList, child
-        @powerupTotalWeight += child.powerupWeight
+        
+        CFCPowerups[child.powerupID] = child
 
-CFCPowerups[POWERUP_ID] = BasePowerup
+        for tier = 1, 4
+            @powerupTotalWeights[tier] += child.powerupWeights[tier]
+
+CFCPowerups[BasePowerup.powerupID] = BasePowerup

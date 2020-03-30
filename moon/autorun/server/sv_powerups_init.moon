@@ -1,15 +1,24 @@
-include "utils/server/sv_powerups_manager.lua"
-
 export CFCPowerups
-CFCPowerups or= {}
+CFCPowerups = {}
 
-foundPowerups = file.Find "powerups/server/*.lua", "LUA"
+include "powerups/config/sv_config.lua"
 
-for powerup in *foundPowerups
-    powerup = "powerups/server/#{powerup}"
+include "utils/server/sv_powerups_manager.lua"
+include "utils/server/sv_powerups_spawner.lua"
 
-    print "Including #{powerup}"
-    include powerup
+include "powerups/server/base.lua"
+include "powerups/server/cluster_combine_ball.lua"
+include "powerups/server/regen.lua"
+include "powerups/server/viper.lua"
+
+-- TODO: Automatically include all powerups after including the base powerup
+--foundPowerups = file.Find "powerups/server/*.lua", "LUA"
+
+--for powerup in *foundPowerups
+--    powerup = "powerups/server/#{powerup}"
+--
+--    print "Including #{powerup}"
+--    include powerup
 
 CFCPowerups.spawnLocations = include "powerups/config/maps/" .. game.GetMap! .. ".lua"
 

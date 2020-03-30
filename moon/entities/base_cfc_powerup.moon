@@ -12,7 +12,7 @@ ENT.RenderGroup	  = RENDERGROUP_OPAQUE
 ENT.Spawnable     = false
 ENT.AdminOnly     = false
 
-ENT.Powerup       = "base-cfc-powerup"
+ENT.Powerup       = "base_cfc_powerup"
 
 ENT.Sounds        = {
     Pickup: "vo/npc/female01/hacks01.wav",

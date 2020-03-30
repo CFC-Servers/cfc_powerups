@@ -1,5 +1,3 @@
-include "base.lua"
-
 CLUSTER_DELAY        = 0.3 -- How long after firing will it cluster?
 BALLS_PER_CLUSTER    = 15  -- How many balls per cluster?
 MAX_BALLS_TO_CLUSTER = 3   -- How many uses of the powerup?
@@ -46,7 +44,12 @@ export ClusterBallPowerup
 class ClusterBallPowerup extends BasePowerup
     @powerupID: "powerup_cluster_balls"
 
-    @powerupWeights: {1, 1, 1, 1}
+    @powerupWeights: {
+        tier1: 1
+        tier2: 1
+        tier3: 1
+        tier4: 1
+    }
 
     new: (ply) =>
         super ply
@@ -135,4 +138,4 @@ class ClusterBallPowerup extends BasePowerup
         if not IsValid(@owner) return
 
         -- TODO: Should the PowerupManager do this?
-        @owner.Powerups[POWERUP_ID] = nil
+        @owner.Powerups[@@powerupID] = nil

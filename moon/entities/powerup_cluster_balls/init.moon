@@ -3,4 +3,4 @@ AddCSLuaFile "shared.lua"
 include "shared.lua"
 
 ENT.Base = "base_cfc_powerup"
-ENT.Powerup = "cluster-combine-balls"
+ENT.Powerup = "powerup_cluster_balls"

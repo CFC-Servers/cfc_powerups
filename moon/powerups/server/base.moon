@@ -4,8 +4,18 @@ class BasePowerup
 
     @powerupID: "base_cfc_powerup"
     
-    @powerupTotalWeights: {0, 0, 0, 0}
-    @powerupWeights: {0, 0, 0, 0}
+    @powerupTotalWeights: {
+        tier1: 0
+        tier2: 0
+        tier3: 0
+        tier4: 0
+    }
+    @powerupWeights: {
+        tier1: 0
+        tier2: 0
+        tier3: 0
+        tier4: 0
+    }
 
     new: (ply, removeOnDeath=true, requiresPvp=true, isRefreshable=true) =>
         @owner = ply
@@ -26,12 +36,14 @@ class BasePowerup
         @owner\ChatPrint "Powerup Removed!"
         @owner\Kill!
 
-    __inherited: ( child ) =>
+    @__inherited: ( child ) =>
         table.insert @powerupList, child
         
         CFCPowerups[child.powerupID] = child
 
         for tier = 1, 4
-            @powerupTotalWeights[tier] += child.powerupWeights[tier]
+            tierName = "tier" .. tostring tier
+
+            @powerupTotalWeights[tierName] += child.powerupWeights[tierName]
 
 CFCPowerups[BasePowerup.powerupID] = BasePowerup

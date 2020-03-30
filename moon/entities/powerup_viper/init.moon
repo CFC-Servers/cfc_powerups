@@ -3,4 +3,4 @@ AddCSLuaFile "shared.lua"
 include "shared.lua"
 
 ENT.Base = "base_cfc_powerup"
-ENT.Powerup = "viper-powerup"
+ENT.Powerup = "powerup_viper"

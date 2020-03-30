@@ -1,5 +1,3 @@
-include "base.lua"
-
 DEFAULT_PLAYER_COLOR = Color 255, 255, 255, 255
 PLAYER_COLOR         = Color 255, 255, 255, 1
 PLAYER_MATERIAL      = ""
@@ -24,7 +22,12 @@ export ViperPowerup
 class ViperPowerup extends BasePowerup
     @powerupID: "powerup_viper"
 
-    @powerupWeights: {1, 1, 1, 1}
+    @powerupWeights: {
+        tier1: 1
+        tier2: 1
+        tier3: 1
+        tier4: 1
+    }
 
     new: (ply) =>
         super ply
@@ -57,7 +60,7 @@ class ViperPowerup extends BasePowerup
         timer.Create @timerName, POWERUP_DURATION, 1, -> @Remove!
 
         watcher = @CreateDamageWatcher!
-        hook.Create "EntityTakeDamage", @hookName, watcher
+        hook.Add "EntityTakeDamage", @hookName, watcher
 
     Refresh: =>
         timer.Start @timerName

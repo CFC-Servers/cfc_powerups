@@ -1,5 +1,3 @@
-include "base.lua"
-
 MAX_HP = 150
 POWERUP_DURATION = 300 -- In seconds
 REGEN_INTERVAL = 0.1 -- How often to apply the regen, in seconds
@@ -10,7 +8,12 @@ export RegenPowerup
 class RegenPowerup extends BasePowerup
     @powerupID: "powerup_regen"
 
-    @powerupWeights: {1, 1, 1, 1}
+    @powerupWeights: {
+        tier1: 1
+        tier2: 1
+        tier3: 1
+        tier4: 1
+    }
 
     new: (ply) =>
         super ply
@@ -57,4 +60,4 @@ class RegenPowerup extends BasePowerup
             @owner\SetHealth 100
 
         -- TODO: Should the PowerupManager do this?
-        @owner.Powerups[POWERUP_ID] = nil
+        @owner.Powerups[@@powerupID] = nil

@@ -33,8 +33,9 @@ if CLIENT return
 
 ENT.Initialize = =>
     @SetModel @Model
-    @SetMoveType MOVETYPE_NONE
+    @SetMoveType MOVETYPE_VPHYSICS
     @PhysicsInit SOLID_VPHYSICS
+    @SetModelScale 15
 
 ENT.GivePowerup = (ply) =>
     if not PowerupManager.plyCanGetPowerup ply, @Powerup
@@ -62,5 +63,10 @@ ENT.GivePowerup = (ply) =>
 
     @Remove!
 
-ENT.Use = (activator) =>
-    @GivePowerup activator
+ENT.PhysicsCollide = (colData, collider) =>
+    collideEnt = colData.HitEntity
+
+    isValidPlayer = IsValid(collideEnt) and collideEnt\IsPlayer!
+
+    if isValidPlayer
+        @GivePowerup collideEnt

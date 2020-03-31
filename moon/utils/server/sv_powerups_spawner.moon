@@ -43,6 +43,17 @@ PowerupSpawner =
 
         spawnLocations
 
+    spawnPowerup: (powerupClass, position) =>
+        powerup = ents.Create powerupClass
+        powerup\SetPos location
+        powerup\Spawn!
+
+        powerup\SetModelScale 15
+        powerup\Activate!
+        powerup\GetPhysicsObject!\EnableMotion false
+
+        powerup\EmitSound "ambient/machines/teleport4.wav", 90
+
     spawnRandomPowerups: ->
         PowerupSpawner.removeAllPowerups!
 
@@ -54,9 +65,7 @@ PowerupSpawner =
             for _, location in ipairs spawnLocations
                 powerupClass = PowerupSpawner.getRandomPowerup( tierName ).powerupID
 
-                powerup = ents.Create powerupClass
-                powerup\SetPos location
-                powerup\Spawn!
+                PowerupSpawner.spawnPowerup powerupClass, location
 
     startSpawnTimer: (delay) ->
         timer.Create "cfc_powerup_spawn", delay, 0, PowerupSpawner.spawnRandomPowerups

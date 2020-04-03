@@ -36,6 +36,17 @@ ENT.Initialize = =>
     @SetMoveType MOVETYPE_VPHYSICS
     @PhysicsInit SOLID_VPHYSICS
     @SetModelScale 15
+    @Activate!
+    @GetPhysicsObject!\EnableMotion false
+
+    @originalPos = @GetPos!
+
+ENT.Think = =>
+    newPos = @originalPos + Vector 0, 0, math.sin(CurTime! * 2) * 10
+    @SetPos newPos
+
+    @NextThink CurTime!
+    true
 
 ENT.GivePowerup = (ply) =>
     if not PowerupManager.plyCanGetPowerup ply, @Powerup

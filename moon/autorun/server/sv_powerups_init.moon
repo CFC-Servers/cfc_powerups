@@ -1,8 +1,7 @@
 export CFCPowerups
 CFCPowerups = {}
 
-include "powerups/config/sv_config.lua"
-
+include "utils/server/sv_config_manager.lua"
 include "utils/server/sv_powerups_manager.lua"
 include "utils/server/sv_powerups_spawner.lua"
 
@@ -23,31 +22,14 @@ include "powerups/server/viper.lua"
 mapConfigPath = "powerups/config/maps/#{game.GetMap!}.lua"
 CFCPowerups.spawnLocations = include mapConfigPath
 
-playerInit = (ply) ->
+hook.Add "PlayerInitialSpawn", "CFC_Powerups_PlayerInit", (ply) ->
     ply.Powerups or= {}
 
-hook.Remove "PlayerInitialSpawn", "CFC_Powerups_PlayerInit"
-hook.Add "PlayerInitialSpawn", "CFC_Powerups_PlayerInit", playerInit
+hook.Add "PlayerDisconnected", "CFC_Powerups_Cleanup", (ply) ->
+    powerup\Remove! for powerup in *ply.Powerups
 
-playerLeave = (ply) ->
-    for _, powerup in pairs ply.Powerups
-        powerup\Remove!
+hook.Add "CFC_PlayerExitedPvp", "CFC_Powerups_PlayerExitPvp",(ply) ->
+    powerup\Remove! for powerup in *ply.Powerups when powerup.RequiresPvp
 
-hook.Remove "PlayerDisconnected", "CFC_Powerups_Cleanup"
-hook.Add "PlayerDisconnected", "CFC_Powerups_Cleanup", playerLeave
-
-playerExitPvp = (ply) ->
-    for _, powerup in pairs ply.Powerups
-        if powerup.RequiresPvp
-            powerup\Remove!
-
-hook.Remove "CFC_PlayerExitedPvp", "CFC_Powerups_PlayerExitPvp"
-hook.Add "CFC_PlayerExitedPvp", "CFC_Powerups_PlayerExitPvp", playerExitPvp
-
-playerDied = (ply) ->
-    for _, powerup in pairs ply.Powerups
-        if powerup.RemoveOnDeath
-            powerup\Remove!
-
-hook.Remove "PostPlayerDeath", "CFC_Powerups_PlayerDeath"
-hook.Add "PostPlayerDeath", "CFC_Powerups_PlayerDeath", playerDied
+hook.Add "PostPlayerDeath", "CFC_Powerups_PlayerDeath", (ply) ->
+    powerup\Remove! for powerup in *ply.Powerups when powerup.RemoveOnDeath

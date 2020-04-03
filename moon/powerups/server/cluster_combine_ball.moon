@@ -1,9 +1,5 @@
-CLUSTER_DELAY        = 0.3 -- How long after firing will it cluster?
-BALLS_PER_CLUSTER    = 15  -- How many balls per cluster?
-MAX_BALLS_TO_CLUSTER = 3   -- How many uses of the powerup?
-MIN_BALL_SPEED       = 1500
-MAX_BALL_SPEED       = 1500
-MAX_BALL_BOUNCES     = 8   -- How many bounces until the clustered balls explode?
+{get: getConf} = CFCPowerups.Config
+
 CLUSTER_BALL_COLOR = Color 255, 0, 0
 
 CLUSTER_LAUNCH_SOUND = "cfc/seismic-charge-bass.wav"
@@ -27,8 +23,9 @@ getRandomizedVelocity = (original) ->
 
 setClusterVelocity = (ball, parentVel) ->
     newVel = getRandomizedVelocity parentVel
+    maxSpeed = getConf "cball_speed"
 
-    ball\GetPhysicsObject!\SetVelocity newVel*MAX_BALL_SPEED
+    ball\GetPhysicsObject!\SetVelocity newVel * maxSpeed
 
 configureClusterBall = (ball) ->
     ball\SetSaveValue "m_bHeld", true -- Visual effects won't apply unless the ball is "held"
@@ -44,12 +41,11 @@ export ClusterBallPowerup
 class ClusterBallPowerup extends BasePowerup
     @powerupID: "powerup_cluster_balls"
 
-    @powerupWeights: {
+    @powerupWeights:
         tier1: 1
         tier2: 1
         tier3: 1
         tier4: 1
-    }
 
     new: (ply) =>
         super ply
@@ -57,7 +53,7 @@ class ClusterBallPowerup extends BasePowerup
         ownerSteamID = @owner\SteamID64!
 
         @PowerupHookName = "CFC_Powerups_ClusterBalls-#{ownerSteamID}"
-        @RemainingClusterBalls = MAX_BALLS_TO_CLUSTER
+        @RemainingClusterBalls = getConf "cball_uses"
 
         @ApplyEffect!
 
@@ -72,18 +68,21 @@ class ClusterBallPowerup extends BasePowerup
     MakeClusterFor: (parent) =>
         spawner = ents.Create "point_combine_ball_launcher"
 
+        speed = getConf "cball_speed"
+        maxBounces = getConf "cball_bounces"
+
         spawner\SetPos parent\GetPos!
-        spawner\SetKeyValue "minspeed", MIN_BALL_SPEED
-        spawner\SetKeyValue "maxspeed", MAX_BALL_SPEED
+        spawner\SetKeyValue "minspeed", speed
+        spawner\SetKeyValue "maxspeed", speed
         spawner\SetKeyValue "ballradius", "15"
         spawner\SetKeyValue "ballcount", "0" -- Disable auto-spawning of balls
-        spawner\SetKeyValue "maxballbounces", tostring MAX_BALL_BOUNCES
+        spawner\SetKeyValue "maxballbounces", tostring maxBounces
         spawner\SetKeyValue "launchconenoise", 360
 
         spawner\Spawn!
         spawner\SetOwner @owner
 
-        for _ = 0, BALLS_PER_CLUSTER
+        for _ = 0, getConf "cball_balls_per_cluster"
             spawner\Fire "LaunchBall"
 
         -- Small delay so we can reference the spawner later
@@ -112,7 +111,7 @@ class ClusterBallPowerup extends BasePowerup
 
                 if ballOwner ~= @owner return
 
-                timer.Simple CLUSTER_DELAY, ->
+                timer.Simple getConf "cball_cluster_delay", ->
                     -- Always hold on to the last parent ball's velocity
                     @ParentBallVelocity = thing\GetPhysicsObject!\GetVelocity!
 
@@ -127,8 +126,10 @@ class ClusterBallPowerup extends BasePowerup
         hook.Add "OnEntityCreated", @PowerupHookName, watcher
 
     Refresh: =>
-        @RemainingClusterBalls += MAX_BALLS_TO_CLUSTER
-        @owner\ChatPrint "You've gained #{MAX_BALLS_TO_CLUSTER} more uses of the Cluster Combine balls. (Total: #{@RemainingClusterBalls})"
+        ballsToCluster = getConf "cball_uses"
+        
+        @RemainingClusterBalls += ballsToCluster
+        @owner\ChatPrint "You've gained #{ballsToCluster} more uses of the Cluster Combine balls. (Total: #{@RemainingClusterBalls})"
 
     Remove: =>
         @owner\ChatPrint "You've lost the Cluster Powerup"

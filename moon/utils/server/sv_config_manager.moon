@@ -2,6 +2,8 @@ configs = include "powerups/config/sv_config.lua"
 
 CFCPowerups.Config =
     get: (key) ->
+        key = "cfc_powerups_#{key}"
+
         convar = GetConVar key
         default = convar\GetDefault!
         convarType = type default

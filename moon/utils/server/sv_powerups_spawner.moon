@@ -1,4 +1,4 @@
-{Config: config} = CFCPowerups
+{get: getConf} = CFCPowerups.Config
 
 export PowerupSpawner
 PowerupSpawner =
@@ -48,7 +48,7 @@ PowerupSpawner =
         powerup\SetPos position
         powerup\Spawn!
 
-        powerup\EmitSound config.get("spawn_sound"), 90
+        powerup\EmitSound getConf("spawn_sound"), 90
 
     spawnRandomPowerups: ->
         PowerupSpawner.removeAllPowerups!
@@ -66,4 +66,4 @@ PowerupSpawner =
     startSpawnTimer: (delay) ->
         timer.Create "cfc_powerup_spawn", delay, 0, PowerupSpawner.spawnRandomPowerups
 
-PowerupSpawner.startSpawnTimer config.get "spawn_delay"
+PowerupSpawner.startSpawnTimer getConf "spawn_delay"

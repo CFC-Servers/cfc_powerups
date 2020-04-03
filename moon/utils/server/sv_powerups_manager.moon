@@ -14,17 +14,18 @@ PowerupManager =
     plyCanGetPowerup: (ply, powerupId) ->
         existingPowerup = ply.Powerups[powerupId]
 
-        if not existingPowerup return true
+        return true unless existingPowerup
 
         if existingPowerup.RequiresPvP and ply\GetNWBool("CFC_PvP_Mode", false) == false
             return false
 
-        if not ply\Alive! return false
+        return false unless ply\Alive!
 
         true
 
     refreshPowerup: (ply, powerupId) ->
         existingPowerup = ply.Powerups[powerupId]
 
-        if existingPowerup
-            existingPowerup\Refresh!
+        return unless existingPowerup
+
+        existingPowerup\Refresh!

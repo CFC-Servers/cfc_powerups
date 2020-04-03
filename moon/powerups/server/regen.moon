@@ -1,49 +1,52 @@
-MAX_HP = 150
-POWERUP_DURATION = 300 -- In seconds
-REGEN_INTERVAL = 0.1 -- How often to apply the regen, in seconds
-REGEN_AMOUNT = 3 -- How much health to apply every REGEN_INTERVAL
-REGEN_SOUND = "items/medcharge4.wav"
+{get: getConf} = CFCPowerups.Config
 
 export RegenPowerup
 class RegenPowerup extends BasePowerup
     @powerupID: "powerup_regen"
 
-    @powerupWeights: {
+    @powerupWeights:
         tier1: 1
         tier2: 1
         tier3: 1
         tier4: 1
-    }
 
     new: (ply) =>
         super ply
 
         @timerName = "CFC_Powerups-Regen-#{ply\SteamID64!}"
 
-        timerDuration = POWERUP_DURATION / REGEN_INTERVAL
-        timer.Create @timerName, REGEN_INTERVAL, timerDuration, @PowerupTick!
+        duration = getConf "regen_duration"
+        interval = getConf "regen_interval"
 
-        @RegenSound = CreateSound(@owner, REGEN_SOUND)
+        timerDuration = duration / interval
+        timer.Create @timerName, interval, timerDuration, @PowerupTick!
+
+        @RegenSound = CreateSound @owner, getConf "regen_sound"
 
     PowerupTick: =>
         powerup = self
 
         return ->
             plyHealth = powerup.owner\Health!
+            maxHP = getConf "regen_max_hp"
 
-            if plyHealth < MAX_HP
+            if plyHealth < maxHP
                 if not powerup.PlayingRegenSound
                     powerup.RegenSound\Play!
                     powerup.PlayingRegenSound = true
 
-                newHealth = math.Clamp plyHealth + REGEN_AMOUNT, 0, MAX_HP
+                amount = getConf "regen_amount"
+                newHP = plyHealth + amount
+
+                newHealth = math.Clamp newHP, 0, maxHP
 
                 powerup.owner\SetHealth newHealth
 
             else
-                if powerup.PlayingRegenSound
-                    powerup.RegenSound\Stop!
-                    powerup.PlayingRegenSound = false
+                return unless powerup.PlayingRegenSound
+
+                powerup.RegenSound\Stop!
+                powerup.PlayingRegenSound = false
 
     Refresh: =>
         timer.Start @timerName
@@ -52,12 +55,11 @@ class RegenPowerup extends BasePowerup
         @RegenSound\Stop!
         timer.Remove @timerName
 
-        if not IsValid(@owner) return
+        return unless IsValid @owner
 
         -- Make sure they don't have more 100 HP
         plyHealth = @owner\Health!
-        if plyHealth > 100
-            @owner\SetHealth 100
+        @owner\SetHealth 100 if plyHealth > 100
 
         -- TODO: Should the PowerupManager do this?
         @owner.Powerups[@@powerupID] = nil

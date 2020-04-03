@@ -4,18 +4,18 @@ class BasePowerup
 
     @powerupID: "base_cfc_powerup"
     
-    @powerupTotalWeights: {
+    @powerupTotalWeights:
         tier1: 0
         tier2: 0
         tier3: 0
         tier4: 0
-    }
-    @powerupWeights: {
+
+    @powerupWeights:
         tier1: 0
         tier2: 0
         tier3: 0
         tier4: 0
-    }
+
 
     new: (ply, removeOnDeath=true, requiresPvp=true, isRefreshable=true) =>
         @owner = ply
@@ -42,7 +42,7 @@ class BasePowerup
         CFCPowerups[child.powerupID] = child
 
         for tier = 1, 4
-            tierName = "tier" .. tostring tier
+            tierName = "tier#{tier}"
 
             @powerupTotalWeights[tierName] += child.powerupWeights[tierName]
 

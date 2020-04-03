@@ -1,9 +1,8 @@
+{get: getConf} = CFCPowerups.Config
+
 DEFAULT_PLAYER_COLOR = Color 255, 255, 255, 255
 PLAYER_COLOR         = Color 255, 255, 255, 1
 PLAYER_MATERIAL      = ""
-POWERUP_DURATION     = 300 -- In Seconds
-
-MELEE_DAMAGE_MULT   = 3 -- Valid melee damage is multiplied by this value
 
 MELEE_WEAPONS       = {
     "m9k_knife": true,
@@ -22,12 +21,11 @@ export ViperPowerup
 class ViperPowerup extends BasePowerup
     @powerupID: "powerup_viper"
 
-    @powerupWeights: {
+    @powerupWeights:
         tier1: 1
         tier2: 1
         tier3: 1
         tier4: 1
-    }
 
     new: (ply) =>
         super ply
@@ -44,20 +42,22 @@ class ViperPowerup extends BasePowerup
             attacker = dmg\GetAttacker!
 
             if not IsValid(attacker) and attacker\IsPlayer! return
-            if attacker ~= @owner return
+            return unless attacker == @owner
 
             attackerWeapon = attacker\GetActiveWeapon!
 
-            if not IsValid(attackerWeapon) return
+            return unless IsValid attackerWeapon
 
-            if not MELEE_WEAPONS[attackerWeapon] return
+            return unless MELEE_WEAPONS[attackerWeapon]
 
-            dmg\ScaleDamage MELEE_DAMAGE_MULT
+            multiplier = getConf "viper_multiplier"
+            dmg\ScaleDamage multiplier
 
     ApplyEffect: =>
         @owner\SetColor PLAYER_COLOR
 
-        timer.Create @timerName, POWERUP_DURATION, 1, -> @Remove!
+        duration = getConf "viper_duration"
+        timer.Create @timerName, duration, 1, @Remove
 
         watcher = @CreateDamageWatcher!
         hook.Add "EntityTakeDamage", @hookName, watcher

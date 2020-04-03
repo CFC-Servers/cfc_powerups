@@ -1,8 +1,8 @@
+{Config: config} = CFCPowerups
+
 export PowerupSpawner
 PowerupSpawner =
-    removeAllPowerups: ->
-        for _, ent in pairs ents.FindByClass( "powerup_*" )
-            ent\Remove!
+    removeAllPowerups: -> ent\Remove! for ent in *ents.FindByClass("powerup_*")
 
     getRandomPowerup: (tier) ->
         CFCBasePowerup = CFCPowerups["base_cfc_powerup"]
@@ -10,7 +10,7 @@ PowerupSpawner =
         sumOfWeights = CFCBasePowerup.powerupTotalWeights[tier] - 1
         randomIndex = math.random 0, sumOfWeights
 
-        for name, powerup in pairs CFCBasePowerup.powerupList
+        for powerup in *CFCBasePowerup.powerupList
             if randomIndex < powerup.powerupWeights[tier]
                 return powerup
 
@@ -26,12 +26,11 @@ PowerupSpawner =
         spawnLocations
 
     getRandomSpawnLocations: (tier) ->
-        tierSpawnDivider = {
+        tierSpawnDivider =
             tier1: 2
             tier2: 3
             tier3: 4
             tier4: 5
-        }
 
         allSpawnLocations = PowerupSpawner.getShuffledSpawnLocations tier
         spawnCount = math.floor #allSpawnLocations / tierSpawnDivider[tier]
@@ -49,17 +48,17 @@ PowerupSpawner =
         powerup\SetPos position
         powerup\Spawn!
 
-        powerup\EmitSound "ambient/machines/teleport4.wav", 90
+        powerup\EmitSound config.get("spawn_sound"), 90
 
     spawnRandomPowerups: ->
         PowerupSpawner.removeAllPowerups!
 
         for tier = 1, 4
-            tierName = "tier" .. tostring tier
+            tierName = "tier#{tier}"
 
             spawnLocations = PowerupSpawner.getRandomSpawnLocations tierName
 
-            for _, location in ipairs spawnLocations
+            for location in *spawnLocations
                 powerupClass = PowerupSpawner.getRandomPowerup( tierName ).powerupID
 
                 PowerupSpawner.spawnPowerup powerupClass, location
@@ -67,4 +66,4 @@ PowerupSpawner =
     startSpawnTimer: (delay) ->
         timer.Create "cfc_powerup_spawn", delay, 0, PowerupSpawner.spawnRandomPowerups
 
-PowerupSpawner.startSpawnTimer CFCPowerups.Config.spawnDelay
+PowerupSpawner.startSpawnTimer config.get "spawn_delay"

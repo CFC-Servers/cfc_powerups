@@ -57,7 +57,7 @@ class ViperPowerup extends BasePowerup
         @owner\SetColor PLAYER_COLOR
 
         duration = getConf "viper_duration"
-        timer.Create @timerName, duration, 1, @Remove
+        timer.Create @timerName, duration, 1, -> @Remove!
 
         watcher = @CreateDamageWatcher!
         hook.Add "EntityTakeDamage", @hookName, watcher

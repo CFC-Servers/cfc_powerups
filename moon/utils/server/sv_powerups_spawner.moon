@@ -43,14 +43,11 @@ PowerupSpawner =
 
         spawnLocations
 
-    spawnPowerup: (powerupClass, position) =>
+    spawnPowerup: (powerupClass, position) ->
         powerup = ents.Create powerupClass
-        powerup\SetPos location
+        powerup.originalPos = position
+        powerup\SetPos position
         powerup\Spawn!
-
-        powerup\SetModelScale 15
-        powerup\Activate!
-        powerup\GetPhysicsObject!\EnableMotion false
 
         powerup\EmitSound "ambient/machines/teleport4.wav", 90
 

@@ -65,4 +65,14 @@
     default: 3
     helpText: "What value to multiply melee damage by for the Viper powerup"
 -- =======================================================================
+
+-- Speed =================================================================
+"cfc_powerups_speed_duration":
+    default: 600
+    helpText: "How long does the Speed powerup last, in seconds"
+
+"cfc_powerups_speed_multiplier":
+    default: 1.25
+    helpText: "What value to multiply speed by for the Speed powerup"
+-- =======================================================================
 }

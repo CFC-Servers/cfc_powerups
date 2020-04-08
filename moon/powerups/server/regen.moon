@@ -19,7 +19,7 @@ class RegenPowerup extends BasePowerup
         interval = getConf "regen_interval"
 
         timerDuration = duration / interval
-        timer.Create @timerName, interval, timerDuration, -> @PowerupTick!
+        timer.Create @timerName, interval, timerDuration, @PowerupTick!
 
         @RegenSound = CreateSound @owner, getConf "regen_sound"
 

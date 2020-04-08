@@ -2,7 +2,7 @@ get: getConf = CFCPowerups.Config
 
 export SpeedPowerup
 class SpeedPowerup extends BasePowerup
-    @powerupID: "base_cfc_powerup"
+    @powerupID: "powerup_speed"
 
     @powerupWeights:
         tier1: 1
@@ -18,6 +18,8 @@ class SpeedPowerup extends BasePowerup
         duration = getConf "speed_duration"
 
         timer.Create @timerName, duration, 1, -> @Remove
+
+        @ApplyEffect!
 
     ApplyEffect: =>
         with @owner
@@ -54,3 +56,6 @@ class SpeedPowerup extends BasePowerup
             \SetRunSpeed .baseRunSpeed
             \SetLadderClimbSpeed .baseLadderClimbSpeed
             \SetMaxSpeed .baseMaxSpeed
+
+        -- TODO: Should the PowerupManager do this?
+        @owner.Powerups[@@powerupID] = nil

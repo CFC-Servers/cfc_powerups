@@ -111,7 +111,9 @@ class ClusterBallPowerup extends BasePowerup
 
                 if ballOwner ~= @owner return
 
-                timer.Simple getConf "cball_cluster_delay", ->
+                clusterDelay = getConf "cball_cluster_delay"
+
+                timer.Simple clusterDelay, ->
                     -- Always hold on to the last parent ball's velocity
                     @ParentBallVelocity = thing\GetPhysicsObject!\GetVelocity!
 

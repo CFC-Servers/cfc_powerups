@@ -21,7 +21,7 @@ CFCPowerups.Config =
 
     loadConfig: =>
         for key, options in pairs configs
-            {:default, :helpText, :min} = options
+            :default, :helpText, :min = options
 
             flags = FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_PROTECTED
             CreateConVar key, default, flags, helpText, min

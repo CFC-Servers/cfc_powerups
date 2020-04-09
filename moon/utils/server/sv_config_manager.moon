@@ -5,13 +5,11 @@ CFCPowerups.Config =
         key = "cfc_powerups_#{key}"
 
         convar = GetConVar key
-        default = convar\GetDefault!
+        default = configs[key].default
         convarType = type default
 
         switch convarType
             when "number"
-                convar\GetInt!
-            when "float"
                 convar\GetFloat!
             when "string"
                 convar\GetString!
@@ -24,8 +22,8 @@ CFCPowerups.Config =
     loadConfig: =>
         for key, options in pairs configs
             {:default, :helpText, :min} = options
-            value = GetConVar(key) or default
 
-            CreateConVar key, value, nil, helpText
+            flags = FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_PROTECTED
+            CreateConVar key, default, flags, helpText, min
 
 CFCPowerups.Config.loadConfig!

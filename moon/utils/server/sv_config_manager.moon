@@ -20,7 +20,7 @@ CFCPowerups.Config =
                 convar\GetString!
 
     loadConfig: =>
-        for key, options in pairs configs
+        for key, options in pairs configs do
             :default, :helpText, :min = options
 
             flags = FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_PROTECTED

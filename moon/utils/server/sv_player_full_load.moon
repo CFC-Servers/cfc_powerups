@@ -1,5 +1,5 @@
 hook.Add "PlayerInitialSpawn","FullLoadSetup", (ply) ->
-    hook.Add "SetupMove", ply, (self, ply, _,cmd)
+    hook.Add "SetupMove", ply, (self, ply, _, cmd) ->
         return if self ~= ply
         return unless cmd\IsForced!
 

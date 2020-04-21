@@ -25,7 +25,7 @@ import Logger from CFCPvp
 mapConfigPath = "powerups/config/maps/#{game.GetMap!}.lua"
 CFCPowerups.spawnLocations = include mapConfigPath
 
-hook.Add "PlayerFullLoad", "CFC_Powerups_PlayerInit", (ply) ->
+hook.Add "PlayerInitialSpawn", "CFC_Powerups_PlayerInit", (ply) ->
     logger\info "Setting Powerups on #{ply\Nick!}"
     ply.Powerups or= {}
     logger\info "Ply powerups: #{ply.Powerups}"

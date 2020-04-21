@@ -20,11 +20,15 @@ include "powerups/server/speed.lua"
 --    print "Including #{powerup}"
 --    include powerup
 
+import Logger from CFCPvp
+
 mapConfigPath = "powerups/config/maps/#{game.GetMap!}.lua"
 CFCPowerups.spawnLocations = include mapConfigPath
 
 hook.Add "PlayerFullLoad", "CFC_Powerups_PlayerInit", (ply) ->
+    logger\info "Setting Powerups on #{ply\Nick!}"
     ply.Powerups or= {}
+    logger\info "Ply powerups: #{ply.Powerups}"
 
 hook.Add "PlayerDisconnected", "CFC_Powerups_Cleanup", (ply) ->
     powerup\Remove! for powerup in *ply.Powerups

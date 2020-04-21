@@ -1,4 +1,4 @@
-get: getConf = CFCPowerups.Config
+{get: getConf} = CFCPowerups.Config
 
 export SpeedPowerup
 class SpeedPowerup extends BasePowerup
@@ -43,7 +43,7 @@ class SpeedPowerup extends BasePowerup
             \SetLadderClimbSpeed .baseLadderClimbSpeed * speedMultiplier
             \SetMaxSpeed .baseMaxSpeed * speedMultiplier
 
-            \ChatPrint "You've gained #{getconf "speed_duration"} seconds of the Speed Powerup"
+            \ChatPrint "You've gained #{getConf "speed_duration"} seconds of the Speed Powerup"
 
     Refresh: =>
         timer.Start @timerName

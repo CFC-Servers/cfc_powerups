@@ -35,7 +35,7 @@ class SpeedPowerup extends BasePowerup
             speedMultiplier = getConf "speed_multiplier"
 
             \SetDuckSpeed .baseDuckSpeed * speedMultiplier
-            \SetUnuckSpeed .baseUnDuckSpeed * speedMultiplier
+            \SetUnDuckSpeed .baseUnDuckSpeed * speedMultiplier
             \SetCrouchedWalkSpeed .baseCrouchedWalkSpeed * speedMultiplier
             \SetSlowWalkSpeed .baseSlowWalkSpeed * speedMultiplier
             \SetWalkSpeed .baseWalkSpeed * speedMultiplier
@@ -54,7 +54,7 @@ class SpeedPowerup extends BasePowerup
 
         with @owner
             \SetDuckSpeed .baseDuckSpeed
-            \SetUnuckSpeed .baseUnDuckSpeed
+            \SetUnDuckSpeed .baseUnDuckSpeed
             \SetCrouchedWalkSpeed .baseCrouchedWalkSpeed
             \SetSlowWalkSpeed .baseSlowWalkSpeed
             \SetWalkSpeed .baseWalkSpeed

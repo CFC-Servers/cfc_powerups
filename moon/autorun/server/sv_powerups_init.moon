@@ -1,7 +1,3 @@
-print("Loading CFC Pvp")
-print("Loading CFC Pvp")
-print("Loading CFC Pvp")
-print("Loading CFC Pvp")
 export CFCPowerups
 CFCPowerups = {}
 
@@ -24,16 +20,11 @@ include "powerups/server/speed.lua"
 --    print "Including #{powerup}"
 --    include powerup
 
-import Logger from CFCPvp
-
 mapConfigPath = "powerups/config/maps/#{game.GetMap!}.lua"
 CFCPowerups.spawnLocations = include mapConfigPath
 
 hook.Add "PlayerSpawn", "CFC_Powerups_PlayerInit", (ply) ->
-    print("Running Player Initial Spawn for CFC PvP")
-    logger\info "Setting Powerups on #{ply\Nick!}"
     ply.Powerups or= {}
-    logger\info "Ply powerups: #{ply.Powerups}"
 
 hook.Add "PlayerDisconnected", "CFC_Powerups_Cleanup", (ply) ->
     powerup\Remove! for powerup in *ply.Powerups

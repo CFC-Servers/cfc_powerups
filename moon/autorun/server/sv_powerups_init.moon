@@ -24,7 +24,7 @@ mapConfigPath = "powerups/config/maps/#{game.GetMap!}.lua"
 CFCPowerups.spawnLocations = include mapConfigPath
 
 hook.Add "PlayerInitialSpawn", "CFC_Powerups_PlayerInit", (ply) ->
-    timer.Simple, 5, -> ply.Powerups or= {}
+    timer.Simple, 10, -> ply.Powerups or= {}
 
 hook.Add "PlayerDisconnected", "CFC_Powerups_Cleanup", (ply) ->
     powerup\Remove! for powerup in *ply.Powerups

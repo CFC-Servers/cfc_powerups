@@ -29,7 +29,7 @@ class SpeedPowerup extends BasePowerup
             .baseSlowWalkSpeed = @owner\GetSlowWalkSpeed!
             .baseWalkSpeed = @owner\GetWalkSpeed!
             .baseRunSpeed = @owner\GetRunSpeed!
-            .baseLadderClimbSpeed = @owner\GetladderClimbSpeed!
+            .baseLadderClimbSpeed = @owner\GetLadderClimbSpeed!
             .baseMaxSpeed = @owner\GetMaxSpeed!
 
             speedMultiplier = getConf "speed_multiplier"
@@ -43,10 +43,15 @@ class SpeedPowerup extends BasePowerup
             \SetLadderClimbSpeed .baseLadderClimbSpeed * speedMultiplier
             \SetMaxSpeed .baseMaxSpeed * speedMultiplier
 
+            \ChatPrint "You've gained #{getconf "speed_duration"} seconds of the Speed Powerup"
+
     Refresh: =>
         timer.Start @timerName
+        @owner\ChatPrint "You've refreshed your duration of the Speed Powerup"
 
     Remove: =>
+        return unless IsValid @owner
+
         with @owner
             \SetDuckSpeed .baseDuckSpeed
             \SetUnuckSpeed .baseUnDuckSpeed
@@ -56,6 +61,8 @@ class SpeedPowerup extends BasePowerup
             \SetRunSpeed .baseRunSpeed
             \SetLadderClimbSpeed .baseLadderClimbSpeed
             \SetMaxSpeed .baseMaxSpeed
+
+        @owner\ChatPrint "You've lost the Speed Powerup"
 
         -- TODO: Should the PowerupManager do this?
         @owner.Powerups[@@powerupID] = nil

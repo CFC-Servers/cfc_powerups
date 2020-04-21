@@ -62,12 +62,18 @@ class ViperPowerup extends BasePowerup
         watcher = @CreateDamageWatcher!
         hook.Add "EntityTakeDamage", @hookName, watcher
 
+        @owner\ChatPrint "You've gained the Viper Powerup"
+
     Refresh: =>
         timer.Start @timerName
+        @owner\ChatPrint "You've refreshed the duration of the Viper Powerup"
 
     Remove: =>
         timer.Remove @timerName
         hook.Remove "EntityTakeDamage", @hookName
 
         if not IsValid(@owner) return
+
+        @owner\ChatPrint "You've lost the Viper Powerup"
         @owner\SetColor DEFAULT_PLAYER_COLOR
+        @owner.Powerups[@@powerupID] = nil

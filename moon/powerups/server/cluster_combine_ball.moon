@@ -57,6 +57,11 @@ class ClusterBallPowerup extends BasePowerup
 
         @ApplyEffect!
 
+    GiveAmmo: (count) =>
+        for i = 1, count+1
+            @owner\Give "item_ammo_ar2_altfire"
+
+
     -- Is the given ball a cluster created by owner?
     IsClusteredByOwner: (ball) =>
         -- The ball keeps a reference to the spawner that made it
@@ -122,23 +127,28 @@ class ClusterBallPowerup extends BasePowerup
                 @RemainingClusterBalls -= 1
 
     ApplyEffect: =>
+        ballsToCluster = getConf "cball_uses"
+
         hook.Remove "OnEntityCreated", @PowerupHookName
 
         watcher = @ClusterBallWatcher!
         hook.Add "OnEntityCreated", @PowerupHookName, watcher
 
+        @GiveAmmo ballsToCluster
+        @owner\ChatPrint "You've gained #{ballsToCluster} uses of the Cluster Combine balls."
+
     Refresh: =>
         ballsToCluster = getConf "cball_uses"
         
         @RemainingClusterBalls += ballsToCluster
+
+        @GiveAmmo ballsToCluster
         @owner\ChatPrint "You've gained #{ballsToCluster} more uses of the Cluster Combine balls. (Total: #{@RemainingClusterBalls})"
 
     Remove: =>
-        @owner\ChatPrint "You've lost the Cluster Powerup"
-
         hook.Remove "OnEntityCreated", @PowerupHookName
 
-        if not IsValid(@owner) return
+        return unless IsValid @owner
 
-        -- TODO: Should the PowerupManager do this?
+        @owner\ChatPrint "You've lost the Cluster Combine balls Powerup"
         @owner.Powerups[@@powerupID] = nil

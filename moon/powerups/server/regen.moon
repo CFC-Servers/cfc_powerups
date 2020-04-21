@@ -22,6 +22,7 @@ class RegenPowerup extends BasePowerup
         timer.Create @timerName, interval, timerDuration, @PowerupTick!
 
         @RegenSound = CreateSound @owner, getConf "regen_sound"
+        @owner\ChatPrint "You've gained #{timerDuration} seconds of the Regen Powerup"
 
     PowerupTick: =>
         powerup = self
@@ -50,12 +51,15 @@ class RegenPowerup extends BasePowerup
 
     Refresh: =>
         timer.Start @timerName
+        @owner\ChatPrint "You've refreshed the duration of the Regen Powerup"
 
     Remove: =>
         @RegenSound\Stop!
         timer.Remove @timerName
 
         return unless IsValid @owner
+
+        @owner\ChatPrint "You've lost the Regen Powerup"
 
         -- Make sure they don't have more 100 HP
         plyHealth = @owner\Health!

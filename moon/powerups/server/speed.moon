@@ -24,7 +24,7 @@ class SpeedPowerup extends BasePowerup
     ApplyEffect: =>
         with @owner
             .baseDuckSpeed = @owner\GetDuckSpeed!
-            .baseUnduckSpeed = @owner\GetUnduckSpeed!
+            .baseUnDuckSpeed = @owner\GetUnDuckSpeed!
             .baseCrouchedWalkSpeed = @owner\GetCrouchedWalkSpeed!
             .baseSlowWalkSpeed = @owner\GetSlowWalkSpeed!
             .baseWalkSpeed = @owner\GetWalkSpeed!
@@ -35,7 +35,7 @@ class SpeedPowerup extends BasePowerup
             speedMultiplier = getConf "speed_multiplier"
 
             \SetDuckSpeed .baseDuckSpeed * speedMultiplier
-            \SetUnuckSpeed .baseUnduckSpeed * speedMultiplier
+            \SetUnuckSpeed .baseUnDuckSpeed * speedMultiplier
             \SetCrouchedWalkSpeed .baseCrouchedWalkSpeed * speedMultiplier
             \SetSlowWalkSpeed .baseSlowWalkSpeed * speedMultiplier
             \SetWalkSpeed .baseWalkSpeed * speedMultiplier
@@ -49,7 +49,7 @@ class SpeedPowerup extends BasePowerup
     Remove: =>
         with @owner
             \SetDuckSpeed .baseDuckSpeed
-            \SetUnuckSpeed .baseUnduckSpeed
+            \SetUnuckSpeed .baseUnDuckSpeed
             \SetCrouchedWalkSpeed .baseCrouchedWalkSpeed
             \SetSlowWalkSpeed .baseSlowWalkSpeed
             \SetWalkSpeed .baseWalkSpeed

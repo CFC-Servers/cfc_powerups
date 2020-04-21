@@ -51,6 +51,7 @@ ENT.Think = =>
 ENT.GivePowerup = (ply) =>
     if not PowerupManager.plyCanGetPowerup ply, @Powerup
         @EmitSound @Sounds.PickupFailed
+        ply\ChatPrint "You can't use this powerup right now! (Maybe it requires PvP mode or maybe you already have it)"
         return
 
     if PowerupManager.hasPowerup ply, @Powerup

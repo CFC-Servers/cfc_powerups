@@ -22,6 +22,9 @@ class BasePowerup
 
     new: (ply) =>
         @owner = ply
+        @RemoveOnDeath = @@RemoveOnDeath
+        @RequiresPvp = @@RequiresPvp
+        @IsRefreshable = @@IsRefreshable
 
     ApplyEffect: =>
         @owner\ChatPrint "Powerup Get!"

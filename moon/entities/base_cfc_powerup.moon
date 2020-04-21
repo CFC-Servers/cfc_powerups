@@ -19,7 +19,7 @@ ENT.Sounds        = {
     PickupFailed: "common/warning.wav"
 }
 
-ENT.Model         = "models/powerups/minigun.mdl"
+ENT.Model         = "models/powerups/powerup_minigun.mdl"
 
 -- Client --
 

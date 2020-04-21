@@ -16,13 +16,12 @@ class BasePowerup
         tier3: 0
         tier4: 0
 
+    @RemoveOnDeath = true
+    @RequiresPvp = true
+    @IsRefreshable = true
 
-    new: (ply, removeOnDeath=true, requiresPvp=true, isRefreshable=true) =>
+    new: (ply) =>
         @owner = ply
-
-        @RemoveOnDeath = removeOnDeath
-        @RequiresPvp = requiresPvp
-        @IsRefreshable = isRefreshable
 
     ApplyEffect: =>
         @owner\ChatPrint "Powerup Get!"

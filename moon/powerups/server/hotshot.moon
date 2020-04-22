@@ -51,7 +51,7 @@ class HotshotPowerup extends BasePowerup
 
         duration = getConf "hotshot_duration"
 
-        timer.Create @timerName, interval, timerDuration, @PowerupTick!
+        timer.Create @timerName, interval, timerDuration, -> @Remove!
 
         @owner\ChatPrint "You've gained #{timerDuration} seconds of the Hotshot Powerup"
 

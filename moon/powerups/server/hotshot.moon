@@ -48,8 +48,7 @@ class HotshotPowerup extends BasePowerup
         super ply
 
         @timerName = "CFC_Powerups-Hotshot-#{ply\SteamID64!}"
-
-        duration = getConf "hotshot_duration"
+        timerDuration = getConf "hotshot_duration"
 
         timer.Create @timerName, timerDuration, 1, -> @Remove!
 

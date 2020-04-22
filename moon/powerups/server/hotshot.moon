@@ -51,7 +51,7 @@ class HotshotPowerup extends BasePowerup
 
         duration = getConf "hotshot_duration"
 
-        timer.Create @timerName, interval, timerDuration, -> @Remove!
+        timer.Create @timerName, timerDuration, 1, -> @Remove!
 
         @owner\ChatPrint "You've gained #{timerDuration} seconds of the Hotshot Powerup"
 
@@ -78,7 +78,7 @@ class HotshotPowerup extends BasePowerup
             timerIndex = ent\IsPlayer! and ent\SteamID64! or ent\EntIndex!
             timerName = "CFC_Powerups-Hotshot-OnExtinguish-#{timerIndex}"
 
-            timer.Create timerName, igniteDuration, 0, ->
+            timer.Create timerName, igniteDuration, 1, ->
                 ent.hotshotStacks = nil
                 timer.Remove timerName
 

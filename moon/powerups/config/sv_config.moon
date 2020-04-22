@@ -75,4 +75,14 @@
     default: 2.25
     helpText: "What value to multiply speed by for the Speed powerup"
 -- =======================================================================
+
+-- Feather ===============================================================
+"cfc_powerups_feather_duration":
+    default: 600
+    helpText: "How long does the Feather powerup last, in seconds"
+
+"cfc_powerups_feather_gravity_multiplier":
+    default: 2.25
+    helpText: "What value to multiply gravity by for the Feather powerup"
+-- =======================================================================
 }

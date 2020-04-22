@@ -10,6 +10,8 @@ include "powerups/server/cluster_combine_ball.lua"
 include "powerups/server/regen.lua"
 include "powerups/server/viper.lua"
 include "powerups/server/speed.lua"
+include "powerups/server/hotshot.lua"
+include "powerups/server/feather.lua"
 
 -- TODO: Automatically include all powerups after including the base powerup
 --foundPowerups = file.Find "powerups/server/*.lua", "LUA"

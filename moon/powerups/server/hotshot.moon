@@ -22,7 +22,7 @@ class HotshotPowerup extends BasePowerup
         @owner\ChatPrint "You've gained #{timerDuration} seconds of the Hotshot Powerup"
 
     CalculateIgniteDuration = (damageInfo) =>
-        damageInfo\GetDamage! * 0.25
+        damageInfo\GetDamage! * getConf "hotshot_ignite_multiplier"
     
     DamageWatcher: =>
         owner = @owner

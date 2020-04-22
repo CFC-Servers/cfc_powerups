@@ -85,4 +85,13 @@
     default: 2.25
     helpText: "What value to multiply gravity by for the Feather powerup"
 -- =======================================================================
+-- Hotshot ===============================================================
+"cfc_powerups_hotshot_duration":
+    default: 600
+    helpText: "How long does the Hotshot powerup last, in seconds"
+
+"cfc_powerups_hotshot_ignite_multiplier":
+    default: 0.05
+    helpText: "Ignite duration is calculated by multiplying the damage amount by this value"
+-- =======================================================================
 }

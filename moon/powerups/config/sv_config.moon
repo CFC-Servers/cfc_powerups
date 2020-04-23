@@ -91,15 +91,15 @@
     helpText: "How long does the Hotshot powerup last, in seconds"
 
 "cfc_powerups_hotshot_ignite_multiplier":
-    default: 0.05
-    helpText: "Ignite duration is calculated by multiplying the damage amount by this value"
+    default: 0.1
+    helpText: "Cumulative ignite damage is calculated by multiplying the damage amount by this number"
 
 "cfc_powerups_hotshot_explosion_ignite_duration":
     default: 10
     helpText: "The ignite duration for the on-death explosion of players affected by Hotshot"
 
 "cfc_powerups_hotshot_explosion_radius":
-    default: 10
+    default: 120
     helpText: "What distance (in units) from the on-death explosion will entites be ignited"
 
 "cfc_powerups_hotshot_explosion_sound":
@@ -109,9 +109,5 @@
 "cfc_powerups_hotshot_explosion_sound_level":
     default: 180
     helpText: "How loud and how far the on-death explosion can be heard. (Range: 20 - 180)"
-
-"cfc_powerups_hotshot_max_stacks":
-    default: 25
-    helpText: "What is the maximum amount of Hotshot extra damage stacks a player can accrue?"
 -- =======================================================================
 }

@@ -2,7 +2,7 @@ get: getConf = CFCPowerups.Config
 
 export FeatherPowerup
 class FeatherPowerup extends BasePowerup
-    @powerupID: "feather_powerup"
+    @powerupID: "powerup_feather"
 
     @powerupWeights:
         tier1: 1

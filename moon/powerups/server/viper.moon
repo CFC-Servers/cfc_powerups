@@ -1,21 +1,16 @@
-{get: getConf} = CFCPowerups.Config
+get: getConf = CFCPowerups.Config
 
-DEFAULT_PLAYER_COLOR = Color 255, 255, 255, 255
-PLAYER_COLOR         = Color 255, 255, 255, 1
-PLAYER_MATERIAL      = ""
-
-MELEE_WEAPONS       = {
-    "m9k_knife": true,
-    "m9k_damascus": true,
-    "m9k_machete": true,
-    "m9k_thrown_knife": true,
-    "m9k_harpoon": true,
-    "m9k_fists": true,
-    "cw_ws_pamachete": true,
-    "weapon_fists": true,
-    "weapon_crowbar": true,
+MELEE_WEAPONS =
+    "m9k_knife": true
+    "m9k_damascus": true
+    "m9k_machete": true
+    "m9k_thrown_knife": true
+    "m9k_harpoon": true
+    "m9k_fists": true
+    "cw_ws_pamachete": true
+    "weapon_fists": true
+    "weapon_crowbar": true
     "weapon_stunstick": true
-}
 
 export ViperPowerup
 class ViperPowerup extends BasePowerup
@@ -37,11 +32,11 @@ class ViperPowerup extends BasePowerup
 
     CreateDamageWatcher: =>
         (recipient, dmg) ->
-            if not IsValid(recipient) and recipient\IsPlayer! return
+            return unless IsValid recipient and recipient\IsPlayer!
 
             attacker = dmg\GetAttacker!
 
-            if not IsValid(attacker) and attacker\IsPlayer! return
+            return unless IsValid(attacker) and attacker\IsPlayer!
             return unless attacker == @owner
 
             attackerWeapon = attacker\GetActiveWeapon!
@@ -54,7 +49,13 @@ class ViperPowerup extends BasePowerup
             dmg\ScaleDamage multiplier
 
     ApplyEffect: =>
-        @owner\SetColor PLAYER_COLOR
+        viperMaterial = getConf "viper_material"
+
+        with @owner
+            \SetMaterial viperMaterial
+            \DrawShadow false
+
+        wep\SetMaterial viperMaterial for wep in *@owner\GetWeapons!
 
         duration = getConf "viper_duration"
         timer.Create @timerName, duration, 1, -> @Remove!
@@ -72,8 +73,14 @@ class ViperPowerup extends BasePowerup
         timer.Remove @timerName
         hook.Remove "EntityTakeDamage", @hookName
 
-        if not IsValid(@owner) return
+        return unless IsValid @owner
 
-        @owner\ChatPrint "You've lost the Viper Powerup"
-        @owner\SetColor DEFAULT_PLAYER_COLOR
+        with @owner
+            \SetMaterial ""
+            \GetActiveWeapon\SetMaterial ""
+            \DrawShadow true
+            \ChatPrint "You've lost the Viper Powerup"
+
+        wep\SetMaterial "" for wep in *@owner\GetWeapons!
+
         @owner.Powerups[@@powerupID] = nil

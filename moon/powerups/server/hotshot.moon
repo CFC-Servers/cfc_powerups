@@ -24,7 +24,7 @@ explodeWatcher = (ply, inflictor, attacker) ->
     util.Effect effectName, effectData, true, true
     sound.Play explosionSound, playerPos, 120, explosionPitch, explosionVolume
 
-    e\Ignite explosionDuration for e in *ents.FindInSphere playerPos, explosionRadius
+    e\Ignite 5 for e in *ents.FindInSphere playerPos, 200
 
 hook.Add "PlayerDeath", "CFC_Powerups_Hotshot_OnPlayerDeath", explodeWatcher
 

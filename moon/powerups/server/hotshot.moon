@@ -16,11 +16,11 @@ explodeWatcher = (ply, inflictor, attacker) ->
     effectName = "HelicopterMegaBomb"
     effectData = EffectData!
     with effectData
-        \SetOrigin ply\GetPos!
+        \SetOrigin playerPos
         \SetMagnitude 5
         \SetScale 3
 
-    util.Effect effeectName, effectData, true, true
+    util.Effect effectName, effectData, true, true
     sound.Play explosionSound, playerPos, explosionLevel, explosionPitch, explosionVolume
     ply\Ignite explosionDuration, explosionRadius
 

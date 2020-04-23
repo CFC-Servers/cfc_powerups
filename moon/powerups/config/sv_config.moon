@@ -66,7 +66,7 @@
     helpText: "What value to multiply melee damage by for the Viper powerup"
 
 "cfc_powerups_viper_material":
-    default: "models/effects/vol_light001"
+    default: "models/shadertest/predator"
     helpText: "What material to set the player and their weapons to"
 -- =======================================================================
 

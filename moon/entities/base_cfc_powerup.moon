@@ -73,7 +73,6 @@ ENT.GivePowerup = (ply) =>
 
     PowerupManager.givePowerup ply, @Powerup
 
-    timer.Remove @watchTimerName
     @Remove!
 
 ENT.CheckForPlayers = =>
@@ -88,3 +87,6 @@ ENT.CheckForPlayers = =>
         -- This more efficient than Vector1:Distance(Vector2)
         if distance < @PickupDistance * @PickupDistance
             return @GivePowerup ply
+
+ENT.CallOnRemove = =>
+    timer.Remove @watchTimerName

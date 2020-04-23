@@ -21,13 +21,24 @@ class FeatherPowerup extends BasePowerup
 
         @ApplyEffect!
 
+    CreateDamageWatcher: =>
+        (ply, damageInfo) ->
+            return unless ply == @owner
+            return unless damageInfo\IsFallDamage!
+
+            -- Blocks fall damage
+            return true
+
     ApplyEffect: =>
         gravityMult = getConf "feather_gravity_multiplier"
         baseGravity = @owner\GetGravity!
 
         newGravity = baseGravity * gravityMult
 
+        hook.Add "EntityTakeDamage", @timerName, @CreateDamageWatcher!
+
         with @owner
+            .baseGravity = baseGravity
             \SetGravity newGravity
             \ChatPrint "You've gained #{getConf "feather_duration"} seconds of the Feather Powerup"
 
@@ -36,6 +47,9 @@ class FeatherPowerup extends BasePowerup
         @owner\ChatPrint "You've refreshed your duration of the Feather Powerup"
 
     Remove: =>
+        timer.Remove @timerName
+        hook.Remove "EntityTakeDamage", @timerName
+
         return unless IsValid @owner
 
         with @owner

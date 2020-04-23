@@ -54,20 +54,38 @@ class ViperPowerup extends BasePowerup
             Logger\info "Scaling damage by: #{multiplier}"
             dmg\ScaleDamage multiplier
 
-    ApplyEffect: =>
+    CreateWeaponChangeWatcher: =>
         viperMaterial = getConf "viper_material"
 
-        with @owner
-            \SetMaterial viperMaterial
-            \DrawShadow false
+        (ply, oldWeapon, newWeapon) ->
+            return unless IsValid newWeapon
 
-        wep\SetMaterial viperMaterial for wep in *@owner\GetWeapons!
+            newClass = newWeapon\GetClass!
 
+            if MELEE_WEAPONS[newClass]
+                with @owner
+                    \SetMaterial viperMaterial
+                    \DrawShadow false
+
+                newWeapon\SetMaterial viperMaterial
+            else
+                with @owner
+                    \SetMaterial ""
+                    \DrawShadow true
+
+                return unless IsValid oldWeapon
+
+                oldWeapon\SetMaterial ""
+
+    ApplyEffect: =>
         duration = getConf "viper_duration"
         timer.Create @timerName, duration, 1, -> @Remove!
 
-        watcher = @CreateDamageWatcher!
-        hook.Add "EntityTakeDamage", @hookName, watcher
+        damageWatcher = @CreateDamageWatcher!
+        hook.Add "EntityTakeDamage", @hookName, damageWatcher
+
+        weaponChangeWatcher = @CreateWeaponChangeWatcher!
+        hook.Add "PlayerSwitchWeapon", @hookName, weaponChangeWatcher
 
         @owner\ChatPrint "You've gained the Viper Powerup"
 
@@ -78,12 +96,12 @@ class ViperPowerup extends BasePowerup
     Remove: =>
         timer.Remove @timerName
         hook.Remove "EntityTakeDamage", @hookName
+        hook.Remove "PlayerSwitchWeapon", @hookName
 
         return unless IsValid @owner
 
         with @owner
             \SetMaterial ""
-            \GetActiveWeapon\SetMaterial ""
             \DrawShadow true
             \ChatPrint "You've lost the Viper Powerup"
 

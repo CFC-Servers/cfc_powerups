@@ -3,7 +3,7 @@ import Clamp from math
 
 explodeWatcher = (ply, inflictor, attacker) ->
     return unless IsValid ply
-    return unless ply.hotshotStacks
+    return unless ply.hotshotBurningDamage
 
     playerPos = ply\GetPos!
     explosionDuration = getConf "hotshot_explosion_ignite_duration"
@@ -20,21 +20,16 @@ hook.Add "PlayerDeath", "CFC_Powerups_Hotshot_OnPlayerDeath", explodeWatcher
 fireDamageWatcher = (ent, damageInfo) ->
     return unless IsValid ent
 
-    stacks = ent.hotshotStacks
-    return unless stacks
+    burningDamage = ent.hotshotBurningDamage
+    return unless burningDamage
 
     inflictor = damageInfo\GetInflictor!\GetClass!
     return unless inflictor == "entityflame"
 
-    maxStacks = getConf "hotshot_max_stacks"
-
-    newStacks = Clamp stacks + 1, 0, maxStacks
-    ent.hotshotStacks = newStacks
-
-    damageInfo\AddDamage newStacks
+    damageInfo\AddDamage burningDamage
 hook.Add "EntityTakeDamage", "CFC_Powerups_Hotshot_OnFireDamage", fireDamageWatcher
 
-calculateIgniteDuration = (damageInfo) ->
+calculateBurnDamage = (damageInfo) ->
     damageInfo\GetDamage! * getConf "hotshot_ignite_multiplier"
 
 export HotshotPowerup
@@ -69,16 +64,19 @@ class HotshotPowerup extends BasePowerup
             shouldIgnite = hook.Run "CFC_Powerups_Hotshot_ShouldIgnite"
             return if shouldIgnite == false
 
-            igniteDuration = calculateIgniteDuration damageInfo
+            igniteDuration = getConf "hotshot_ignite_duration"
             ent\Ignite igniteDuration
 
-            ent.hotshotStacks or= 0
+            addedFireDamage = calculateBurnDamage damageInfo
+
+            ent.hotshotBurningDamage or= 0
+            ent.hotshotBurningDamage += addedFireDamage
 
             timerIndex = ent\IsPlayer! and ent\SteamID64! or ent\EntIndex!
             timerName = "CFC_Powerups-Hotshot-OnExtinguish-#{timerIndex}"
 
             timer.Create timerName, igniteDuration + 1, 1, ->
-                ent.hotshotStacks = nil
+                ent.hotshotBurningDamage = nil
                 timer.Remove timerName
 
     ApplyEffect: =>

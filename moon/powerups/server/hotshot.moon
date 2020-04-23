@@ -2,13 +2,14 @@ get: getConf = CFCPowerups.Config
 import Clamp from math
 
 explodeWatcher = (ply, inflictor, attacker) ->
+    -- TODO: Fix the sound stuff here
     return unless IsValid ply
     return unless ply.hotshotBurningDamage
 
     playerPos = ply\GetPos!
     explosionDuration = getConf "hotshot_explosion_ignite_duration"
     explosionRadius = getConf "hotshot_explosion_radius"
-    explosionSound = getConf "hotshot_explosion_sound"
+    explosionSound = "ambient/fire/gascan_ignite1.wav"
     explosionLevel = getConf "hotshot_explosion_sound_level"
     explosionPitch = 100
     explosionVolume = 1
@@ -21,8 +22,9 @@ explodeWatcher = (ply, inflictor, attacker) ->
         \SetScale 3
 
     util.Effect effectName, effectData, true, true
-    sound.Play explosionSound, playerPos, explosionLevel, explosionPitch, explosionVolume
-    ply\Ignite explosionDuration, explosionRadius
+    sound.Play explosionSound, playerPos, 120, explosionPitch, explosionVolume
+
+    e\Ignite explosionDuration for e in *ents.FindInSphere playerPos, explosionRadius
 
 hook.Add "PlayerDeath", "CFC_Powerups_Hotshot_OnPlayerDeath", explodeWatcher
 

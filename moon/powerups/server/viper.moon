@@ -34,7 +34,7 @@ class ViperPowerup extends BasePowerup
 
     CreateDamageWatcher: =>
         (recipient, dmg) ->
-            return unless IsValid recipient and recipient\IsPlayer!
+            return unless IsValid(recipient) and recipient\IsPlayer!
             Logger\info "Receiving damage from #{recipient\Nick!}"
 
             attacker = dmg\GetAttacker!

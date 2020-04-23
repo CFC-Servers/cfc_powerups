@@ -1,5 +1,9 @@
+require "cfclogger"
+
 export CFCPowerups
 CFCPowerups = {}
+
+CFCPowerups.Logger = CFCLogger "CFC Powerups"
 
 include "utils/server/sv_config_manager.lua"
 include "utils/server/sv_powerups_manager.lua"

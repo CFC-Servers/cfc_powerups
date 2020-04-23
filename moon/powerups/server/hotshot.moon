@@ -34,6 +34,9 @@ fireDamageWatcher = (ent, damageInfo) ->
     damageInfo\AddDamage newStacks
 hook.Add "EntityTakeDamage", "CFC_Powerups_Hotshot_OnFireDamage", fireDamageWatcher
 
+calculateIgniteDuration = (damageInfo) ->
+    damageInfo\GetDamage! * getConf "hotshot_ignite_multiplier"
+
 export HotshotPowerup
 class HotshotPowerup extends BasePowerup
     @powerupID: "powerup_hotshot"
@@ -56,23 +59,17 @@ class HotshotPowerup extends BasePowerup
 
         @ApplyEffect!
 
-    CalculateIgniteDuration = (damageInfo) =>
-        damageInfo\GetDamage! * getConf "hotshot_ignite_multiplier"
-
     IgniteWatcher: =>
-        owner = @owner
-        calculateDuration = @CalculateIgniteDuration
-
         (ent, damageInfo, tookDamage) ->
             return unless IsValid ent
-            return unless damageInfo\GetAttacker! == owner
+            return unless damageInfo\GetAttacker! == @owner
             return unless tookDamage
             return if damageInfo\GetInflictor!\GetClass! == "entityflame"
 
             shouldIgnite = hook.Run "CFC_Powerups_Hotshot_ShouldIgnite"
             return if shouldIgnite == false
 
-            igniteDuration = calculateDuration damageInfo
+            igniteDuration = calculateIgniteDuration damageInfo
             ent\Ignite igniteDuration
 
             ent.hotshotStacks or= 0

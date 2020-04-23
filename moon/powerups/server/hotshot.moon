@@ -77,7 +77,7 @@ class HotshotPowerup extends BasePowerup
             timerIndex = ent\IsPlayer! and ent\SteamID64! or ent\EntIndex!
             timerName = "CFC_Powerups-Hotshot-OnExtinguish-#{timerIndex}"
 
-            timer.Create timerName, igniteDuration, 1, ->
+            timer.Create timerName, igniteDuration + 1, 1, ->
                 ent.hotshotStacks = nil
                 timer.Remove timerName
 

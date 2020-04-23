@@ -1,5 +1,7 @@
 get: getConf = CFCPowerups.Config
 
+import Logger from CFCPowerups
+
 MELEE_WEAPONS =
     "m9k_knife": true
     "m9k_damascus": true
@@ -33,19 +35,26 @@ class ViperPowerup extends BasePowerup
     CreateDamageWatcher: =>
         (recipient, dmg) ->
             return unless IsValid recipient and recipient\IsPlayer!
+            Logger\info "Receiving damage from #{recipient\Nick!}"
 
             attacker = dmg\GetAttacker!
 
             return unless IsValid(attacker) and attacker\IsPlayer!
             return unless attacker == @owner
+            Logger\info "Attacker is valid and is owner!"
 
             attackerWeapon = attacker\GetActiveWeapon!
 
             return unless IsValid attackerWeapon
 
+            Logger\info "Attacker weapon is valid!"
+
             return unless MELEE_WEAPONS[attackerWeapon]
 
+            Logger\info "Attacker weapon is a melee weapon!"
+
             multiplier = getConf "viper_multiplier"
+            Logger\info "Scaling damage by: #{multiplier}"
             dmg\ScaleDamage multiplier
 
     ApplyEffect: =>

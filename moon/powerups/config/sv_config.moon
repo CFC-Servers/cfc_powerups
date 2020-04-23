@@ -94,6 +94,10 @@
     default: 600
     helpText: "How long does the Hotshot powerup last, in seconds"
 
+"cfc_powerups_hotshot_ignite_duration":
+    default: 5
+    helpText: "How many seconds to ignite targets for"
+
 "cfc_powerups_hotshot_ignite_multiplier":
     default: 0.1
     helpText: "Cumulative ignite damage is calculated by multiplying the damage amount by this number"

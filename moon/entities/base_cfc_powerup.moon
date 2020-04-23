@@ -21,6 +21,8 @@ ENT.Sounds        = {
 
 ENT.Model         = "models/powerups/minigun.mdl"
 
+ENT.PickupDistance = 30
+
 -- Client --
 
 if CLIENT
@@ -33,11 +35,10 @@ if CLIENT return
 
 ENT.Initialize = =>
     @SetModel @Model
-    @SetMoveType MOVETYPE_VPHYSICS
-    @PhysicsInit SOLID_VPHYSICS
+    @SetMoveType MOVETYPE_NOCLIP
+    @PhysicsInit SOLID_NONE
     @SetModelScale 15
     @Activate!
-    @GetPhysicsObject!\EnableMotion false
 
     @originalPos = @GetPos!
 
@@ -45,7 +46,7 @@ ENT.Think = =>
     newPos = @originalPos + Vector 0, 0, math.sin(CurTime! * 2) * 10
     @SetPos newPos
 
-    @NextThink CurTime!
+    @NextThink CurTime! + 0.1
     true
 
 ENT.GivePowerup = (ply) =>
@@ -75,10 +76,17 @@ ENT.GivePowerup = (ply) =>
 
     @Remove!
 
-ENT.PhysicsCollide = (colData, collider) =>
-    collideEnt = colData.HitEntity
+ENT.CheckForPlayers = =>
+    pos = @GetPos!
 
-    isValidPlayer = IsValid(collideEnt) and collideEnt\IsPlayer!
+    for ply in *player.GetAll!
+        continue unless IsValid ply
 
-    if isValidPlayer
-        @GivePowerup collideEnt
+        distance = pos\DistToSqr ply\GetPos!
+
+        -- We square our pickup distance because distance is squared, too
+        -- This more efficient than Vector1:Distance(Vector2)
+        if distance < @PickupDistance * @PickupDistance
+            return @GivePowerup ply
+
+timer.Simple 0.1, -> ENT\CheckForPlayers!

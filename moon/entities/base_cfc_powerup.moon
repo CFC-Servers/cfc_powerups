@@ -23,13 +23,9 @@ ENT.Model         = "models/powerups/minigun.mdl"
 
 ENT.PickupDistance = 30
 
--- Client --
-
 if CLIENT
    ENT.Draw = =>
        @DrawModel!
-
--- Shared --
 
 if CLIENT return
 
@@ -42,11 +38,13 @@ ENT.Initialize = =>
 
     @originalPos = @GetPos!
 
+    timer.Simple 0.1, -> @CheckForPlayers!
+
 ENT.Think = =>
     newPos = @originalPos + Vector 0, 0, math.sin(CurTime! * 2) * 10
     @SetPos newPos
 
-    @NextThink CurTime! + 0.1
+    @NextThink CurTime! + 0.2
     true
 
 ENT.GivePowerup = (ply) =>
@@ -88,5 +86,3 @@ ENT.CheckForPlayers = =>
         -- This more efficient than Vector1:Distance(Vector2)
         if distance < @PickupDistance * @PickupDistance
             return @GivePowerup ply
-
-timer.Simple 0.1, -> ENT\CheckForPlayers!

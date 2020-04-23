@@ -61,6 +61,7 @@ class HotshotPowerup extends BasePowerup
 
     IgniteWatcher: =>
         owner = @owner
+        calculateDuration = @CalculateIgniteDuration
 
         (ent, damageInfo, tookDamage) ->
             return unless IsValid ent
@@ -71,7 +72,7 @@ class HotshotPowerup extends BasePowerup
             shouldIgnite = hook.Run "CFC_Powerups_Hotshot_ShouldIgnite"
             return if shouldIgnite == false
 
-            igniteDuration = @CalculateIgniteDuration damageInfo
+            igniteDuration = calculateDuration damageInfo
             ent\Ignite igniteDuration
 
             ent.hotshotStacks or= 0

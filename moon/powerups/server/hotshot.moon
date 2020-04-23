@@ -13,8 +13,17 @@ explodeWatcher = (ply, inflictor, attacker) ->
     explosionPitch = 100
     explosionVolume = 1
 
+    effectName = "HelicopterMegaBomb"
+    effectData = EffectData!
+    with effectData
+        \SetOrigin ply\GetPos!
+        \SetMagnitude 5
+        \SetScale 3
+
+    util.Effect effeectName, effectData, true, true
     sound.Play explosionSound, playerPos, explosionLevel, explosionPitch, explosionVolume
     ply\Ignite explosionDuration, explosionRadius
+
 hook.Add "PlayerDeath", "CFC_Powerups_Hotshot_OnPlayerDeath", explodeWatcher
 
 fireDamageWatcher = (ent, damageInfo) ->
@@ -75,7 +84,7 @@ class HotshotPowerup extends BasePowerup
             timerIndex = ent\IsPlayer! and ent\SteamID64! or ent\EntIndex!
             timerName = "CFC_Powerups-Hotshot-OnExtinguish-#{timerIndex}"
 
-            timer.Create timerName, igniteDuration + 1, 1, ->
+            timer.Create timerName, igniteDuration + 0.5, 1, ->
                 ent.hotshotBurningDamage = nil
                 timer.Remove timerName
 

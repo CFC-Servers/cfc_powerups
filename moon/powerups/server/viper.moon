@@ -13,6 +13,7 @@ MELEE_WEAPONS =
     "weapon_fists": true
     "weapon_crowbar": true
     "weapon_stunstick": true
+    "cw_extrema_ratio_official": true
 
 export ViperPowerup
 class ViperPowerup extends BasePowerup

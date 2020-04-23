@@ -73,7 +73,7 @@ ENT.GivePowerup = (ply) =>
 
     PowerupManager.givePowerup ply, @Powerup
 
-    timer.Remove "CFC_Powerups-Pick"
+    timer.Remove @watchTimerName
     @Remove!
 
 ENT.CheckForPlayers = =>

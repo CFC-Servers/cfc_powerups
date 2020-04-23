@@ -21,7 +21,7 @@ ENT.Sounds        = {
 
 ENT.Model         = "models/powerups/minigun.mdl"
 
-ENT.PickupDistance = 30
+ENT.PickupDistance = 50
 
 if CLIENT
    ENT.Draw = =>
@@ -38,13 +38,14 @@ ENT.Initialize = =>
 
     @originalPos = @GetPos!
 
-    timer.Simple 0.1, -> @CheckForPlayers!
+    @watchTimerName = "CFC_Powerups-PickupWatcher-#{@EntIndex!}"
+    timer.Create watchTimerName, 0.1, 0, -> @CheckForPlayers!
 
 ENT.Think = =>
     newPos = @originalPos + Vector 0, 0, math.sin(CurTime! * 2) * 10
     @SetPos newPos
 
-    @NextThink CurTime! + 0.2
+    @NextThink CurTime! + 0.1
     true
 
 ENT.GivePowerup = (ply) =>
@@ -72,6 +73,7 @@ ENT.GivePowerup = (ply) =>
 
     PowerupManager.givePowerup ply, @Powerup
 
+    timer.Remove "CFC_Powerups-Pick"
     @Remove!
 
 ENT.CheckForPlayers = =>

@@ -7,24 +7,39 @@ explodeWatcher = (ply, inflictor, attacker) ->
     return unless ply.hotshotBurningDamage
 
     playerPos = ply\GetPos!
-    explosionDuration = getConf "hotshot_explosion_ignite_duration"
-    explosionRadius = getConf "hotshot_explosion_radius"
+    burningDamage = ply.hotshotBurningDamage
+
+    baseRadius = getConf "hotshot_explosion_base_radius"
+    baseDuration = getConf "hotshot_explosion_ignite_duration"
+    baseLevel = getConf "hotshot_explosion_sound_level"
+
     explosionSound = "ambient/fire/gascan_ignite1.wav"
-    explosionLevel = getConf "hotshot_explosion_sound_level"
     explosionPitch = 100
     explosionVolume = 1
 
     effectName = "HelicopterMegaBomb"
     effectData = EffectData!
-    with effectData
-        \SetOrigin playerPos
-        \SetMagnitude 5
-        \SetScale 3
-
+    effectData\SetOrigin playerPos
     util.Effect effectName, effectData, true, true
-    sound.Play explosionSound, playerPos, 120, explosionPitch, explosionVolume
 
-    e\Ignite 5 for e in *ents.FindInSphere playerPos, 200
+    playExplosionSound = (pos) ->
+        sound.Play explosionSound, pos, 100, explosionPitch, explosionVolume
+
+    allowedToIgnite =
+        "prop_physics": true
+        "player": true
+
+    maxExplosionRadius = getConf "hotshot_explosion_max_radius"
+    scaledRadius = Clamp(baseRadius * burningDamage, 1, maxExplosionRadius)
+
+    CFCPowerups.Logger\info "Exploding #{ply\Nick!} with a radius of #{scaledRadius} units. (#{burningDamage} extra burning damage)"
+
+    nearbyEnts = ents.FindInSphere playerPos, scaledRadius
+    for ent in *nearbyEnts
+        continue unless allowedToIgnite[ent\GetClass!]
+
+        playExplosionSound ent\GetPos!
+        ent\Ignite 5
 
 hook.Add "PlayerDeath", "CFC_Powerups_Hotshot_OnPlayerDeath", explodeWatcher
 

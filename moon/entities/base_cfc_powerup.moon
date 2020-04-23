@@ -39,7 +39,7 @@ ENT.Initialize = =>
     @originalPos = @GetPos!
 
     @watchTimerName = "CFC_Powerups-PickupWatcher-#{@EntIndex!}"
-    timer.Create watchTimerName, 0.1, 0, -> @CheckForPlayers!
+    timer.Create @watchTimerName, 0.1, 0, -> @CheckForPlayers!
 
 ENT.Think = =>
     newPos = @originalPos + Vector 0, 0, math.sin(CurTime! * 2) * 10

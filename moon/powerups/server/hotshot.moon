@@ -62,7 +62,7 @@ class HotshotPowerup extends BasePowerup
     IgniteWatcher: =>
         (ent, damageInfo, tookDamage) ->
             return unless IsValid ent
-            return unless damageInfo\GetAttacker! == @owner
+            return unless damageInfo\GetAttacker! == @owner and damageInfo\GetInflictor! == @owner
             return unless tookDamage
             return if damageInfo\GetInflictor!\GetClass! == "entityflame"
 

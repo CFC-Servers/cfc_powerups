@@ -77,7 +77,6 @@ PowerupSpawner =
                 continue unless distance < threshold
 
                 powerup\GivePowerup ply
-                break
 
     start: ->
         spawnDelay = getConf "spawn_delay"

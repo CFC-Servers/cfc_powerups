@@ -129,10 +129,6 @@
     default: 600
     helpText: "How long does the Ammo powerup last, in seconds"
 
-"cfc_powerups_ammo_secondary_min":
-    default: 10
-    helpText: "How much secondary ammo to ensure the player has during the Ammo powerup"
-
 "cfc_powerups_ammo_refresh_interval":
     default: 0.25
     helpText: "How long to wait between each ammo refresh, in seconds"

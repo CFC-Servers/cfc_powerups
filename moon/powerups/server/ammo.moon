@@ -24,7 +24,7 @@ class AmmoPowerup extends BasePowerup
 
         @owner\ChatPrint "You've gained #{duration} seconds of the Ammo Powerup"
 
-    @RefreshAmmo: =>
+    RefreshAmmo: =>
         return unless IsValid @owner
 
         giveThreshold = getConf "ammo_secondary_min"

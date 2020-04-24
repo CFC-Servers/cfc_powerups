@@ -69,7 +69,7 @@ PowerupSpawner =
                 PowerupSpawner.spawnPowerup powerupClass, location
 
     watchForPickup: ->
-        for ply in ply.GetAll!
+        for ply in player.GetAll!
             for powerup in *PowerupSpawner.findAllPowerups
                 distance = powerup\GetPos!\DistToSqr ply\GetPos!
                 threshold = powerup.PickupDistance * powerup.PickupDistance

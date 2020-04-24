@@ -46,9 +46,12 @@ ENT.Think = =>
     true
 
 ENT.GivePowerup = (ply) =>
-    alertThreshold = 0.5
-    canGivePowerup = PowerupManager.plyCanGetPowerup ply, @Powerup
+    return unless IsValid ply
+
+    alertThreshold = 1
     lastFailedPickup = @FailedPickups[ply]
+
+    canGivePowerup = PowerupManager.plyCanGetPowerup ply, @Powerup
     shouldThrottleMessage = lastFailedPickup and (CurTime! - lastFailedPickup) < alertThreshold
 
     unless canGivePowerup

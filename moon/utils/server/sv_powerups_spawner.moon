@@ -1,8 +1,12 @@
-{get: getConf} = CFCPowerups.Config
+get: getConf = CFCPowerups.Config
+
+import FindByClass from ents
 
 export PowerupSpawner
 PowerupSpawner =
-    removeAllPowerups: -> ent\Remove! for ent in *ents.FindByClass("powerup_*")
+    findAllPowerups: -> FindByClass "powerup_*"
+
+    removeAllPowerups: -> ent\Remove! for ent in *@findAllPowerups
 
     getRandomPowerup: (tier) ->
         CFCBasePowerup = CFCPowerups["base_cfc_powerup"]
@@ -63,7 +67,21 @@ PowerupSpawner =
 
                 PowerupSpawner.spawnPowerup powerupClass, location
 
-    startSpawnTimer: (delay) ->
-        timer.Create "cfc_powerup_spawn", delay, 0, PowerupSpawner.spawnRandomPowerups
+    watchForPickup: ->
+        for ply in ply.GetAll!
+            for powerup in *PowerupSpawner.findAllPowerups
+                distance = powerup\GetPos!\DistToSqr ply\GetPos!
+                threshold = powerup.PickupDistance * powerup.PickupDistance
 
-PowerupSpawner.startSpawnTimer getConf "spawn_delay"
+                continue unless distance < threshold
+
+                powerup.GivePowerup ply
+                break
+
+    start: ->
+        spawnDelay = getConf "spawn_delay"
+
+        timer.Create "CFC_Powerups_SpawnInterval", delay, 0, PowerupSpawner.spawnRandomPowerups
+        timer.Create "CFC_Powerups_PickupWatcher", 0.1, 0, PowerupSpawner.watchForPickup
+
+PowerupSpawner.start!

@@ -90,7 +90,9 @@ class ViperPowerup extends BasePowerup
         @owner\ChatPrint "You've gained the Viper Powerup"
 
     Refresh: =>
-        timer.Start @timerName
+        duration = getConf "viper_duration"
+        timer.Create @timerName, duration, 1, -> @Remove!
+
         @owner\ChatPrint "You've refreshed the duration of the Viper Powerup"
 
     Remove: =>

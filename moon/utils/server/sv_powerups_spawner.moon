@@ -81,17 +81,17 @@ PowerupSpawner =
 
                 powerup\GivePowerup ply
 
-    stop: ->
+    stop: =>
         timer.Remove @spawnIntervalTimerName
         timer.Remove @pickupWatcherName
 
-    start: ->
+    start: =>
         spawnDelay = getConf "spawn_delay"
 
         timer.Create @spawnIntervalTimerName, spawnDelay, 0, PowerupSpawner.spawnRandomPowerups
         timer.Create @pickupWatcherName, 0.25, 0, PowerupSpawner.watchForPickup
 
-PowerupSpawner.start!
+PowerupSpawner\start!
 
-concommand.Add "cfc_powerups_enable_spawner", PowerupSpawner.start
-concommand.Add "cfc_powerups_disable_spawner", PowerupSpawner.stop
+concommand.Add "cfc_powerups_enable_spawner", -> PowerupSpawner\start!
+concommand.Add "cfc_powerups_disable_spawner", -> PowerupSpawner\stop!

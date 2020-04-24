@@ -6,7 +6,7 @@ export PowerupSpawner
 PowerupSpawner =
     findAllPowerups: -> FindByClass "powerup_*"
 
-    removeAllPowerups: -> ent\Remove! for ent in *@findAllPowerups
+    removeAllPowerups: -> ent\Remove! for ent in *@findAllPowerups when ent.spawnedAutomatically
 
     getRandomPowerup: (tier) ->
         CFCBasePowerup = CFCPowerups["base_cfc_powerup"]
@@ -47,12 +47,13 @@ PowerupSpawner =
         spawnLocations
 
     spawnPowerup: (powerupClass, position) ->
-        powerup = ents.Create powerupClass
-        powerup.originalPos = position
-        powerup\SetPos position
-        powerup\Spawn!
+        with ents.Create powerupClass
+            .spawnedAutomatically = true
+            .originalPos = position
+            \SetPos position
+            \Spawn!
 
-        powerup\EmitSound getConf("spawn_sound"), 90
+            \EmitSound getConf "spawn_sound", 90
 
     spawnRandomPowerups: ->
         PowerupSpawner.removeAllPowerups!

@@ -4,8 +4,8 @@ import FindByClass from ents
 
 export PowerupSpawner
 PowerupSpawner =
-    @spawnIntervalTimerName: "CFC_Powerups_SpawnInterval"
-    @pickupWatcherName: "CFC_Powerups_PikcupWatcher"
+    spawnIntervalTimerName: "CFC_Powerups_SpawnInterval"
+    pickupWatcherName: "CFC_Powerups_PickupWatcher"
 
     findAllPowerups: -> FindByClass "powerup_*"
 

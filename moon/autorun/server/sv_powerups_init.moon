@@ -35,7 +35,7 @@ hook.Add "PlayerSpawn", "CFC_Powerups_PlayerInit", (ply) ->
 hook.Add "PlayerDisconnected", "CFC_Powerups_Cleanup", (ply) ->
     powerup\Remove! for _, powerup in pairs ply.Powerups
 
-hook.Add "CFC_PlayerExitedPvp", "CFC_Powerups_PlayerExitPvp",(ply) ->
+hook.Add "CFC_PvP_PlayerExitPvp", "CFC_Powerups_PlayerExitPvp", (ply) ->
     powerup\Remove! for _, powerup in pairs ply.Powerups when powerup.RequiresPvp
 
 hook.Add "PostPlayerDeath", "CFC_Powerups_PlayerDeath", (ply) ->

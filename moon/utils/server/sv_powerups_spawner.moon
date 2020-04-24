@@ -83,6 +83,6 @@ PowerupSpawner =
         spawnDelay = getConf "spawn_delay"
 
         timer.Create "CFC_Powerups_SpawnInterval", delay, 0, PowerupSpawner.spawnRandomPowerups
-        timer.Create "CFC_Powerups_PickupWatcher", 0.1, 0, PowerupSpawner.watchForPickup
+        timer.Create "CFC_Powerups_PickupWatcher", 0.25, 0, PowerupSpawner.watchForPickup
 
 PowerupSpawner.start!

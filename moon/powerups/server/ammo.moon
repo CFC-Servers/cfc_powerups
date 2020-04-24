@@ -35,7 +35,7 @@ class AmmoPowerup extends BasePowerup
         ammo2 = ownerWeapon\GetSecondaryAmmoType!
         canSetAmmo2 = ammo2 ~= -1
         shouldSetAmmo2 = canSetAmmo2 and @owner\GetAmmoCount(ammo2) < giveThreshold
-        @owner\GiveAmmo(secondaryGiveAmount, ammo2) if shouldSetAmmo2
+        @owner\GiveAmmo(secondaryGiveAmount, ammo2, false) if shouldSetAmmo2
 
         ownerWeapon\SetClip1 100
 

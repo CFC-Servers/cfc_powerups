@@ -61,7 +61,6 @@ class ClusterBallPowerup extends BasePowerup
         for i = 1, count+1
             @owner\Give "item_ammo_ar2_altfire"
 
-
     -- Is the given ball a cluster created by owner?
     IsClusteredByOwner: (ball) =>
         -- The ball keeps a reference to the spawner that made it
@@ -134,8 +133,14 @@ class ClusterBallPowerup extends BasePowerup
         watcher = @ClusterBallWatcher!
         hook.Add "OnEntityCreated", @PowerupHookName, watcher
 
-        @GiveAmmo ballsToCluster
-        @owner\ChatPrint "You've gained #{ballsToCluster} uses of the Cluster Combine balls."
+        ar2 = "weapon_ar2"
+        ar2Ammo = 2
+
+        with @owner
+            \Give ar2
+            \GiveAmmo ballsToCluster, ar2Ammo, true
+            \SelectWeapon ar2
+            \ChatPrint "You've gained #{ballsToCluster} uses of the Cluster Combine balls."
 
     Refresh: =>
         ballsToCluster = getConf "cball_uses"

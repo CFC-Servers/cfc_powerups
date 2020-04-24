@@ -89,6 +89,7 @@
     default: 0.75
     helpText: "What value to multiply gravity by for the Feather powerup"
 -- =======================================================================
+
 -- Hotshot ===============================================================
 "cfc_powerups_hotshot_duration":
     default: 600
@@ -121,5 +122,15 @@
 "cfc_powerups_hotshot_explosion_sound_level":
     default: 180
     helpText: "How loud and how far the on-death explosion can be heard. (Range: 20 - 180)"
+-- =======================================================================
+
+-- Ammo ==================================================================
+"cfc_powerups_ammo_duration":
+    default: 600
+    helpText: "How long does the Ammo powerup last, in seconds"
+
+"cfc_powerups_ammo_secondary_min":
+    default: 10
+    helpText: "How much secondary ammo to ensure the player has during the Ammo powerup"
 -- =======================================================================
 }

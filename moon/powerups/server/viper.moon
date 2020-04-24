@@ -59,6 +59,7 @@ class ViperPowerup extends BasePowerup
 
         (ply, oldWeapon, newWeapon) ->
             return unless IsValid newWeapon
+            return unless ply == @owner
 
             newClass = newWeapon\GetClass!
 

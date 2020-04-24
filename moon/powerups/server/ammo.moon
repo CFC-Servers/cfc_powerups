@@ -55,7 +55,7 @@ class AmmoPowerup extends BasePowerup
             ammo2 = wep\GetSecondaryAmmoType!
             continue if ammo2 == -1
 
-            @owner\SetAmmo 0
+            @owner\SetAmmo 0, ammo2
 
         @owner\ChatPrint "You've lost the Ammo Powerup"
 

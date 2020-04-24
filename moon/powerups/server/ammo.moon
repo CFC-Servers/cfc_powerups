@@ -13,8 +13,13 @@ class AmmoPowerup extends BasePowerup
     new: (ply) =>
         super ply
 
-        @timerName = "CFC_Powerups-Ammo-#{@owner\SteamID64!}"
-        timer.Create @timerName, 0.1, 0, -> @EnsureFullAmmo
+        duration = getConf "ammo_duration"
+
+        @ensureAmmoTimer = "CFC_Powerups-Ammo-EnsureAmmo-#{@owner\SteamID64!}"
+        timer.Create @ensureAmmoTimer, 0.1, 0, -> @EnsureFullAmmo!
+
+        @durationTimer = "CFC_Powerups-Ammo-#{@owner\SteamID64!}"
+        timer.Create @durationTimer, duration, 1, -> @Remove!
 
         @owner\ChatPrint "You've gained #{timerDuration} seconds of the Ammo Powerup"
 
@@ -32,11 +37,13 @@ class AmmoPowerup extends BasePowerup
         ownerWeapon\SetClip1 100
 
     Refresh: =>
-        timer.Start @timerName
+        timer.Start @ensureAmmoTimer
         @owner\ChatPrint "You've refreshed the duration of the Ammo Powerup"
 
     Remove: =>
-        timer.Remove @timerName
+        timer.Remove @ensureAmmoTimer
+        timer.Remove @durationTimer
+
         return unless IsValid @owner
 
         for wep in *@owner\GetWeapons!

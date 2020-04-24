@@ -76,7 +76,7 @@ PowerupSpawner =
 
                 continue unless distance < threshold
 
-                powerup.GivePowerup ply
+                powerup\GivePowerup ply
                 break
 
     start: ->

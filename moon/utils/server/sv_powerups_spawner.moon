@@ -4,6 +4,9 @@ import FindByClass from ents
 
 export PowerupSpawner
 PowerupSpawner =
+    @spawnIntervalTimerName = "CFC_Powerups_SpawnInterval"
+    @pickupWatcherName = "CFC_Powerups_PikcupWatcher"
+
     findAllPowerups: -> FindByClass "powerup_*"
 
     removeAllPowerups: -> ent\Remove! for ent in *@findAllPowerups when ent.spawnedAutomatically
@@ -78,10 +81,17 @@ PowerupSpawner =
 
                 powerup\GivePowerup ply
 
+    stop: ->
+        timer.Remove @spawnIntervalTimerName
+        timer.Remove @pickupWatcherName
+
     start: ->
         spawnDelay = getConf "spawn_delay"
 
-        timer.Create "CFC_Powerups_SpawnInterval", spawnDelay, 0, PowerupSpawner.spawnRandomPowerups
-        timer.Create "CFC_Powerups_PickupWatcher", 0.25, 0, PowerupSpawner.watchForPickup
+        timer.Create @spawnIntervalTimerName, spawnDelay, 0, PowerupSpawner.spawnRandomPowerups
+        timer.Create @pickupWatcherName, 0.25, 0, PowerupSpawner.watchForPickup
 
 PowerupSpawner.start!
+
+concommand.Add "cfc_powerups_enable_spawner", PowerupSpawner.start
+concommand.Add "cfc_powerups_disable_spawner", PowerupSpawner.stop

@@ -136,6 +136,10 @@
 "cfc_powerups_ammo_secondary_refresh_amount":
     default: 1
     helpText: "How much secondary ammo to give the player each refresh interval"
+
+"cfc_powerups_ammo_secondary_min":
+    default: 10
+    helpText: "How much secondary ammo to give the player each refresh interval"
 -- =======================================================================
 
 -- Grenadier =============================================================

@@ -26,14 +26,17 @@ class AmmoPowerup extends BasePowerup
 
     RefreshAmmo: =>
         return unless IsValid @owner
+        return unless @owner\Alive!
 
         giveThreshold = getConf "ammo_secondary_min"
         secondaryGiveAmount = getConf "ammo_secondary_refresh_amount"
 
         ownerWeapon = @owner\GetActiveWeapon!
 
+        return unless IsValid ownerWeapon
+
         ammo2 = ownerWeapon\GetSecondaryAmmoType!
-        canSetAmmo2 = ammo2 ~= -1
+        canSetAmmo2 = ammo2 and ammo2 ~= -1
         shouldSetAmmo2 = canSetAmmo2 and @owner\GetAmmoCount(ammo2) < giveThreshold
         @owner\GiveAmmo(secondaryGiveAmount, ammo2, false) if shouldSetAmmo2
 

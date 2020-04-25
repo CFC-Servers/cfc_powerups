@@ -137,4 +137,42 @@
     default: 1
     helpText: "How much secondary ammo to give the player each refresh interval"
 -- =======================================================================
+
+-- Grenadier =============================================================
+"cfc_powerups_grenadier_duration":
+    default: 600
+    helpText: "How long does the Grenadier powerup last, in seconds"
+
+"cfc_powerups_grenadier_alt_fire_delay":
+    default: 0.2
+    helpText: "How long to wait before each smg alt-fire"
+
+"cfc_powerups_grenadier_cluster_min_distance":
+    default: 5
+    helpText: "What is the minimum distance the clustered grenades can spread"
+
+"cfc_powerups_grenadier_cluster_max_distance":
+    default: 300
+    helpText: "What is the maximum distance the clustered grenades can spread"
+
+"cfc_powerups_grenadier_cluster_min_height":
+    default: 15
+    helpText: "What is the minimum height the clustered grenades can spread"
+
+"cfc_powerups_grenadier_cluster_max_height":
+    default: 60
+    helpText: "What is the maximum height the clustered grenades can spread"
+
+"cfc_powerups_grenadier_cluster_delay":
+    default: 0.2
+    helpText: "How long after the parent grenade explodes will the clusters shoot"
+
+"cfc_powerups_grenadier_cluster_count":
+    default: 25
+    helpText: "How many clusters to create"
+
+"cfc_powerups_grenadier_cluster_impact_sound":
+    default: "ambient/machines/thumper_hit.wav"
+    helpText: "What sound to make when the parent grenade explodes"
+-- =======================================================================
 }

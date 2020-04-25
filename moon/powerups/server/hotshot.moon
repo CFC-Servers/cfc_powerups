@@ -16,7 +16,7 @@ playExplosionSound = (pos) ->
 playExplosionEffect = (pos) ->
     effectName = "HelicopterMegaBomb"
     effectData = EffectData!
-    effectData\SetOrigin playerPos
+    effectData\SetOrigin pos
 
     Effect effectName, effectData, true, true
 

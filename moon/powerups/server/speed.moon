@@ -17,7 +17,7 @@ class SpeedPowerup extends BasePowerup
 
         duration = getConf "speed_duration"
 
-        timer.Create @timerName, duration, 1, -> @Remove
+        timer.Create @timerName, duration, 1, -> @Remove!
 
         @ApplyEffect!
 

@@ -1,58 +1,85 @@
 get: getConf = CFCPowerups.Config
 import Clamp from math
+import Effect from util
 
-explodeWatcher = (ply, inflictor, attacker) ->
-    -- TODO: Fix the sound stuff here
-    return unless IsValid ply
-    return unless ply.hotshotBurningDamage
+allowedToIgnite =
+    "prop_physics": true
+    "player": true
 
-    playerPos = ply\GetPos!
-    burningDamage = ply.hotshotBurningDamage
-
-    baseRadius = getConf "hotshot_explosion_base_radius"
-    baseDuration = getConf "hotshot_explosion_ignite_duration"
-    baseLevel = getConf "hotshot_explosion_sound_level"
-
+playExplosionSound = (pos) ->
     explosionSound = "ambient/fire/gascan_ignite1.wav"
     explosionPitch = 100
     explosionVolume = 1
 
+    sound.Play explosionSound, pos, 100, explosionPitch, explosionVolume
+
+playExplosionEffect = (pos) ->
     effectName = "HelicopterMegaBomb"
     effectData = EffectData!
     effectData\SetOrigin playerPos
-    util.Effect effectName, effectData, true, true
 
-    playExplosionSound = (pos) ->
-        sound.Play explosionSound, pos, 100, explosionPitch, explosionVolume
+    Effect effectName, effectData, true, true
 
-    allowedToIgnite =
-        "prop_physics": true
-        "player": true
+explodeWatcher = (ply, inflictor, attacker) ->
+    return unless IsValid ply
+    return unless ply.affectedByHotshot
+
+    playerPos = ply\GetPos!
+    burningDamage = ply.hotshotBurningDamage + (ply.hotshotExplosionBurningDamage or 0)
+
+    baseRadius = getConf "hotshot_explosion_base_radius"
+    baseDamage = getConf "hotshot_explosion_base_damage"
 
     maxExplosionRadius = getConf "hotshot_explosion_max_radius"
-    scaledRadius = Clamp(baseRadius * burningDamage, 1, maxExplosionRadius)
+    maxExplosionDamage = getConf "hotshot_explosion_max_damage"
+    maxExplosionBurnDuration = getConf "hotshot_explosion_max_burn_duration"
 
-    CFCPowerups.Logger\info "Exploding #{ply\Nick!} with a radius of #{scaledRadius} units. (#{burningDamage} extra burning damage)"
+    scaledRadius = Clamp baseRadius * burningDamage, 1, maxExplosionRadius
+    scaledDamage = Clamp baseDamage * burningDamage, 10, maxExplosionDamage
+    scaledDuration = Clamp burningDamage, 1, maxBurnDuration
+
+    playExplosionEffect ply\GetPos!
+    CFCPowerups.Logger\info "Exploding #{ply\Nick!} with a radius of #{scaledRadius} units. (#{scaledDamage} extra burning damage)"
 
     nearbyEnts = ents.FindInSphere playerPos, scaledRadius
-    for ent in *nearbyEnts
-        continue unless allowedToIgnite[ent\GetClass!]
+    goodEnts = [ent for ent in *nearbyEnts when allowedToIgnite[ent\GetClass!]]
 
+    damageInfo = DamageInfo!
+    with damageInfo
+        \SetDamage scaledDamage
+        \SetDamageType DMG_BLAST
+        \SetAttacker ply
+
+    for ent in *goodEnts
         playExplosionSound ent\GetPos!
-        ent\Ignite 5
+
+        with ent
+            \Ignite scaledDuration
+            \TakeDamageInfo damageInfo
+            .hotshotExplosionBurningDamage = burningDamage
+
+    timer.Simple scaledDuration, ->
+        for ent in *goodEnts
+            ent.hotshotExplosionBurningDamage = nil
 
 hook.Add "PlayerDeath", "CFC_Powerups_Hotshot_OnPlayerDeath", explodeWatcher
 
 fireDamageWatcher = (ent, damageInfo) ->
     return unless IsValid ent
 
-    burningDamage = ent.hotshotBurningDamage
-    return unless burningDamage
-
     inflictor = damageInfo\GetInflictor!\GetClass!
     return unless inflictor == "entityflame"
 
-    damageInfo\AddDamage burningDamage
+    burningDamage = ent.hotshotBurningDamage
+    explosionBurningDamage = ent.hotshotExplosionBurningDamage
+    return unless burningDamage or explosionBurningDamage
+
+    addedDamage = (burningDamage or 0) + (explosionBurningDamage or 0)
+
+    ent\ChatPrint "You took an extra #{addedDamage} damage from fire damage due to Hotshot Stacks"
+
+    damageInfo\AddDamage addedDamage
+
 hook.Add "EntityTakeDamage", "CFC_Powerups_Hotshot_OnFireDamage", fireDamageWatcher
 
 calculateBurnDamage = (damageInfo) ->
@@ -95,6 +122,7 @@ class HotshotPowerup extends BasePowerup
 
             addedFireDamage = calculateBurnDamage damageInfo
 
+            ent.affectedByHotshot = true
             ent.hotshotBurningDamage or= 0
             ent.hotshotBurningDamage += addedFireDamage
 
@@ -102,6 +130,7 @@ class HotshotPowerup extends BasePowerup
             timerName = "CFC_Powerups-Hotshot-OnExtinguish-#{timerIndex}"
 
             timer.Create timerName, igniteDuration + 0.5, 1, ->
+                ent.affectedByHotshot = nil
                 ent.hotshotBurningDamage = nil
                 timer.Remove timerName
 

@@ -20,7 +20,7 @@ playExplosionEffect = (pos) ->
 
     Effect effectName, effectData, true, true
 
-explodeWatcher = (ply, inflictor, attacker) ->
+explodeWatcher = (ply) ->
     return unless IsValid ply
     return unless ply.affectedByHotshot
 
@@ -42,7 +42,7 @@ explodeWatcher = (ply, inflictor, attacker) ->
     CFCPowerups.Logger\info "Exploding #{ply\Nick!} with a radius of #{scaledRadius} units. (#{scaledDamage} extra burning damage)"
 
     nearbyEnts = ents.FindInSphere playerPos, scaledRadius
-    goodEnts = [ent for ent in *nearbyEnts when allowedToIgnite[ent\GetClass!]]
+    goodEnts = [ent for ent in *nearbyEnts when allowedToIgnite[ent\GetClass!] and ent ~= ply]
 
     damageInfo = DamageInfo!
     with damageInfo
@@ -64,7 +64,7 @@ explodeWatcher = (ply, inflictor, attacker) ->
             continue unless IsValid ent
             ent.hotshotExplosionBurningDamage = nil
 
-hook.Add "PlayerDeath", "CFC_Powerups_Hotshot_OnPlayerDeath", explodeWatcher
+hook.Add "PostPlayerDeath", "CFC_Powerups_Hotshot_OnPlayerDeath", explodeWatcher
 
 fireDamageWatcher = (ent, damageInfo) ->
     return unless IsValid ent
@@ -114,6 +114,7 @@ class HotshotPowerup extends BasePowerup
             return unless IsValid ent
             return unless damageInfo\GetAttacker! == @owner and damageInfo\GetInflictor! == @owner
             return unless tookDamage
+            return if ent == @owner
             return if damageInfo\GetInflictor!\GetClass! == "entityflame"
 
             shouldIgnite = hook.Run "CFC_Powerups_Hotshot_ShouldIgnite"

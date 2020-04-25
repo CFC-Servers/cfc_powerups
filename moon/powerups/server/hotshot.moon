@@ -49,6 +49,7 @@ explodeWatcher = (ply, inflictor, attacker) ->
         \SetDamage scaledDamage
         \SetDamageType DMG_BLAST
         \SetAttacker ply
+        \SetInflictor ply
 
     for ent in *goodEnts
         playExplosionSound ent\GetPos!
@@ -60,6 +61,7 @@ explodeWatcher = (ply, inflictor, attacker) ->
 
     timer.Simple scaledDuration, ->
         for ent in *goodEnts
+            continue unless IsValid ent
             ent.hotshotExplosionBurningDamage = nil
 
 hook.Add "PlayerDeath", "CFC_Powerups_Hotshot_OnPlayerDeath", explodeWatcher

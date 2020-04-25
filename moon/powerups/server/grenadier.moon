@@ -2,6 +2,7 @@ get: getConf = CFCPowerups.Config
 
 import Rand, cos, sin from math
 import Create from ents
+import SpriteTrail from util
 
 export GrenadierPowerup
 class GrenadierPowerup extends BasePowerup

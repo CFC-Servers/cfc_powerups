@@ -36,7 +36,7 @@ explodeWatcher = (ply, inflictor, attacker) ->
 
     scaledRadius = Clamp baseRadius * burningDamage, 1, maxExplosionRadius
     scaledDamage = Clamp baseDamage * burningDamage, 10, maxExplosionDamage
-    scaledDuration = Clamp burningDamage, 1, maxBurnDuration
+    scaledDuration = Clamp burningDamage, 1, maxExplosionBurnDuration
 
     playExplosionEffect ply\GetPos!
     CFCPowerups.Logger\info "Exploding #{ply\Nick!} with a radius of #{scaledRadius} units. (#{scaledDamage} extra burning damage)"

@@ -112,7 +112,7 @@ class GrenadierPowerup extends BasePowerup
 
     Remove: =>
         timer.Remove @durationTimer
-        timer.Create @adjustorTimer
+        timer.Remove @adjustorTimer
         hook.Remove "EntityRemoved", @explosionWatcher
         hook.Remove "OnEntityCreated", @altFireWatcher
 

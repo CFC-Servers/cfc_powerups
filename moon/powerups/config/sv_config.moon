@@ -103,10 +103,6 @@
     default: 0.25
     helpText: "Cumulative ignite damage is calculated by multiplying the damage amount by this number"
 
-"cfc_powerups_hotshot_explosion_ignite_duration":
-    default: 10
-    helpText: "The ignite duration for the on-death explosion of players affected by Hotshot"
-
 "cfc_powerups_hotshot_explosion_base_radius":
     default: 50
     helpText: "What distance (in units) from the on-death explosion will entites be ignited by default"
@@ -114,6 +110,18 @@
 "cfc_powerups_hotshot_explosion_max_radius":
     default: 2000
     helpText: "What distance (in units) from the on-death explosion, after being scaled by damage, will entities be ignited"
+
+"cfc_powerups_hotshot_explosion_base_damage":
+    default: 10
+    helpText: "How much damage to apply to nearby entities when a Hotshot victim explodes"
+
+"cfc_powerups_hotshot_explosion_max_damage":
+    default: 100
+    helpText: "What is the maximum damage a Hotshot explosion can deal"
+
+"cfc_powerups_hotshot_explosion_max_burn_duration":
+    default: 15
+    helpText: "What is the maximum duration a victim of a Hotshot explosion can burn for"
 
 "cfc_powerups_hotshot_explosion_sound":
     default: "ambient/fire/gascan_ignite1.wav"

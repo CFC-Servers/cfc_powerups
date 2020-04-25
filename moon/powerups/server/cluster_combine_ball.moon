@@ -64,6 +64,8 @@ class ClusterBallPowerup extends BasePowerup
     -- Is the given ball a cluster created by owner?
     IsClusteredByOwner: (ball) =>
         -- The ball keeps a reference to the spawner that made it
+        return true if ball\GetOwner! == @owner
+
         spawner = ball\GetSaveTable!["m_hSpawner"]
         if not IsValid spawner return false
 
@@ -108,6 +110,7 @@ class ClusterBallPowerup extends BasePowerup
             timer.Simple 0, ->
                 if @IsClusteredByOwner thing
                     setClusterVelocity thing, @ParentBallVelocity
+                    thing\SetOwner @owner
                     return configureClusterBall thing
 
                 -- FiredBy implemented by CFC PvP

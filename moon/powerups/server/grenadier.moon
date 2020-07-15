@@ -104,7 +104,14 @@ class GrenadierPowerup extends BasePowerup
         @adjustorTimer = "CFC_Powerups-Grenadier-AltFireAdjustor-#{steamID}"
         timer.Create @adjustorTimer, 0.1, 0, -> @AltFireAdjustor!
 
-        @owner\ChatPrint "You've gained #{getConf "grenadier_duration"} seconds of the Grenadier Powerup"
+        smg1 = "weapon_smg1"
+        smg1ammo = 9
+
+        with @owner
+            \Give smg1
+            \GiveAmmo 15, smg1ammo, true
+            \SelectWeapon smg1
+            \ChatPrint "You've gained #{getConf "grenadier_duration"} seconds of the Grenadier Powerup"
 
     Refresh: =>
         timer.Start @durationTimer

@@ -13,7 +13,7 @@ drawHalos = () ->
     -- TODO: Have clients keep track of this as players gain/lose powerups
     playersWithPowerups = [ply for ply in *player.GetAll! when ply\GetNWBool("HasPowerup", false)]
 
-    halo.Add playersWithPowerups, Color(255,0,0), 3, 3, 2, true, true
+    halo.Add playersWithPowerups, Color(255,0,0), 2, 1, 1, false, true
 hook.Add "PreDrawHalos", "DrawPowerupHalos", drawHalos
 
 stopPvpHalos = (ply) ->

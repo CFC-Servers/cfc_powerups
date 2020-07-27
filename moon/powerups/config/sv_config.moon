@@ -1,7 +1,8 @@
 {
 -- Powerups ==============================================================
 "cfc_powerups_spawn_delay":
-    default: 60 * 60
+    --default: 60 * 60
+    default: 45
     helpText: "How often the powerups spawn in random locations"
     min: 1
 

@@ -9,7 +9,7 @@ PowerupSpawner =
 
     findAllPowerups: -> FindByClass "powerup_*"
 
-    removeAllPowerups: -> ent\Remove! for ent in *@findAllPowerups when ent.spawnedAutomatically
+    removeAllPowerups: -> ent\Remove! for ent in *PowerupSpawner.findAllPowerups when ent.spawnedAutomatically
 
     getRandomPowerup: (tier) ->
         CFCBasePowerup = CFCPowerups["base_cfc_powerup"]

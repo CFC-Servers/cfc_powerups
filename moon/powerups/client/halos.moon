@@ -11,5 +11,9 @@ drawHalos = () ->
     playersWithPowerups = [ply for ply in player.GetAll! when ply\GetNWBool("HasPowerup", false)]
 
     halo.Add playersWithPowerups, Color(255,0,0), 3, 3, 2, true, true
-
 hook.Add "PreDrawHalos", "DrawPowerupHalos", drawHalos
+
+stopPvpHalos = (ply) ->
+    if ply\GetNWBool("HasPowerup", false)
+        return false
+hook.Add "CFC_PvP_SetPlayerHalo", "PreventPvPHalosForPowerups", stopPvpHalos

@@ -1,6 +1,9 @@
 drawHalos = () ->
     me = LocalPlayer!
 
+    isInPvp = me\GetNWBool "CFC_PvP_Mode", false
+    return unless isInPvp
+
     activeWeapon = me\GetActiveWeapon!
     hasWeapon = IsValid activeWeapon
     hasCameraOut = hasWeapon and activeWeapon\GetClass! == "gmod_camera"

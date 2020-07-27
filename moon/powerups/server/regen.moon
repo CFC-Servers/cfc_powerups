@@ -12,11 +12,12 @@ class RegenPowerup extends BasePowerup
 
     new: (ply) =>
         super ply
+
+        @timerName = "CFC_Powerups-Regen-#{ply\SteamID64!}"
         @ApplyEffect!
 
     ApplyEffect: =>
         super self
-        @timerName = "CFC_Powerups-Regen-#{ply\SteamID64!}"
 
         duration = getConf "regen_duration"
         interval = getConf "regen_interval"

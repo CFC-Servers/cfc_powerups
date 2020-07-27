@@ -8,7 +8,7 @@ drawHalos = () ->
     if hasCameraOut then return
 
     -- TODO: Have clients keep track of this as players gain/lose powerups
-    playersWithPowerups = [ply for ply in player.GetAll! when ply\GetNWBool("HasPowerup", false)]
+    playersWithPowerups = [ply for ply in *player.GetAll! when ply\GetNWBool("HasPowerup", false)]
 
     halo.Add playersWithPowerups, Color(255,0,0), 3, 3, 2, true, true
 hook.Add "PreDrawHalos", "DrawPowerupHalos", drawHalos

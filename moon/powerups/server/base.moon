@@ -27,16 +27,13 @@ class BasePowerup
         @IsRefreshable = @@IsRefreshable
 
     ApplyEffect: =>
-        @owner\ChatPrint "Powerup Get!"
-        @owner\Kill!
+        @owner\SetNWBool "HasPowerup", true
 
     Refresh: =>
-        @owner\ChatPrint "Powerup Refreshed!"
-        @owner\Kill!
+        nil
 
     Remove: =>
-        @owner\ChatPrint "Powerup Removed!"
-        @owner\Kill!
+        @owner\SetNWBool "HasPowerup", false
 
     @__inherited: ( child ) =>
         table.insert @powerupList, child

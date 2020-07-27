@@ -22,6 +22,7 @@ class SpeedPowerup extends BasePowerup
         @ApplyEffect!
 
     ApplyEffect: =>
+        super self
         with @owner
             .baseDuckSpeed = @owner\GetDuckSpeed!
             .baseUnDuckSpeed = @owner\GetUnDuckSpeed!
@@ -46,10 +47,12 @@ class SpeedPowerup extends BasePowerup
             \ChatPrint "You've gained #{getConf "speed_duration"} seconds of the Speed Powerup"
 
     Refresh: =>
+        super self
         timer.Start @timerName
         @owner\ChatPrint "You've refreshed your duration of the Speed Powerup"
 
     Remove: =>
+        super self
         return unless IsValid @owner
 
         with @owner

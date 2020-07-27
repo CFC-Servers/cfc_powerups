@@ -129,6 +129,7 @@ class ClusterBallPowerup extends BasePowerup
                 @RemainingClusterBalls -= 1
 
     ApplyEffect: =>
+        super self
         ballsToCluster = getConf "cball_uses"
 
         hook.Remove "OnEntityCreated", @PowerupHookName
@@ -146,6 +147,7 @@ class ClusterBallPowerup extends BasePowerup
             \ChatPrint "You've gained #{ballsToCluster} uses of the Cluster Combine balls."
 
     Refresh: =>
+        super self
         ballsToCluster = getConf "cball_uses"
         
         @RemainingClusterBalls += ballsToCluster
@@ -154,6 +156,7 @@ class ClusterBallPowerup extends BasePowerup
         @owner\ChatPrint "You've gained #{ballsToCluster} more uses of the Cluster Combine balls. (Total: #{@RemainingClusterBalls})"
 
     Remove: =>
+        super self
         hook.Remove "OnEntityCreated", @PowerupHookName
 
         return unless IsValid @owner

@@ -89,6 +89,7 @@ class GrenadierPowerup extends BasePowerup
                     cluster\SetVelocity (newPos - entPos) * 5
 
     ApplyEffect: =>
+        super self
         -- Watch for new smgalts and set trail + properties
         -- Watch for smgalt explosions, create cluster nades
         -- Create timer to reduce smg's altfire delay
@@ -114,10 +115,12 @@ class GrenadierPowerup extends BasePowerup
             \ChatPrint "You've gained #{getConf "grenadier_duration"} seconds of the Grenadier Powerup"
 
     Refresh: =>
+        super self
         timer.Start @durationTimer
         @owner\ChatPrint "You've refreshed your duration of the Grenadier Powerup"
 
     Remove: =>
+        super self
         timer.Remove @durationTimer
         timer.Remove @adjustorTimer
         hook.Remove "EntityRemoved", @explosionWatcher

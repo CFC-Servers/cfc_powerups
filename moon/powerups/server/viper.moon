@@ -79,6 +79,7 @@ class ViperPowerup extends BasePowerup
                 oldWeapon\SetMaterial ""
 
     ApplyEffect: =>
+        super self
         duration = getConf "viper_duration"
         timer.Create @timerName, duration, 1, -> @Remove!
 
@@ -91,11 +92,13 @@ class ViperPowerup extends BasePowerup
         @owner\ChatPrint "You've gained the Viper Powerup"
 
     Refresh: =>
+        super self
         timer.Start @timerName
 
         @owner\ChatPrint "You've refreshed the duration of the Viper Powerup"
 
     Remove: =>
+        super self
         timer.Remove @timerName
         hook.Remove "EntityTakeDamage", @hookName
         hook.Remove "PlayerSwitchWeapon", @hookName

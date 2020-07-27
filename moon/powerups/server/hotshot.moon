@@ -139,14 +139,17 @@ class HotshotPowerup extends BasePowerup
                 timer.Remove timerName
 
     ApplyEffect: =>
+        super self
         -- Timer name is appropriate for our hook name
         hook.Add "PostEntityTakeDamage", @timerName, @IgniteWatcher!
 
     Refresh: =>
+        super self
         timer.Start @timerName
         @owner\ChatPrint "You've refreshed the duration of the Hotshot Powerup"
 
     Remove: =>
+        super self
         timer.Remove @timerName
         hook.Remove "PostEntityTakeDamage", @timerName
 

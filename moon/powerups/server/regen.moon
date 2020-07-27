@@ -12,7 +12,10 @@ class RegenPowerup extends BasePowerup
 
     new: (ply) =>
         super ply
+        @ApplyEffect!
 
+    ApplyEffect: =>
+        super self
         @timerName = "CFC_Powerups-Regen-#{ply\SteamID64!}"
 
         duration = getConf "regen_duration"
@@ -23,6 +26,7 @@ class RegenPowerup extends BasePowerup
 
         @RegenSound = CreateSound @owner, getConf "regen_sound"
         @owner\ChatPrint "You've gained #{timerDuration} seconds of the Regen Powerup"
+
 
     PowerupTick: =>
         powerup = self
@@ -50,10 +54,12 @@ class RegenPowerup extends BasePowerup
                 powerup.PlayingRegenSound = false
 
     Refresh: =>
+        super self
         timer.Start @timerName
         @owner\ChatPrint "You've refreshed the duration of the Regen Powerup"
 
     Remove: =>
+        super self
         @RegenSound\Stop!
         timer.Remove @timerName
 

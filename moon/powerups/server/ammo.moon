@@ -12,7 +12,10 @@ class AmmoPowerup extends BasePowerup
 
     new: (ply) =>
         super ply
+        @ApplyEffect!
 
+    ApplyEffect: =>
+        super self
         duration = getConf "ammo_duration"
         refreshInterval = getConf "ammo_refresh_interval"
 
@@ -43,10 +46,12 @@ class AmmoPowerup extends BasePowerup
         ownerWeapon\SetClip1 100
 
     Refresh: =>
+        super self
         timer.Start @ensureAmmoTimer
         @owner\ChatPrint "You've refreshed the duration of the Ammo Powerup"
 
     Remove: =>
+        super self
         timer.Remove @ensureAmmoTimer
         timer.Remove @durationTimer
 

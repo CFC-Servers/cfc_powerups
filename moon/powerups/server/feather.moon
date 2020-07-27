@@ -30,6 +30,7 @@ class FeatherPowerup extends BasePowerup
             return true
 
     ApplyEffect: =>
+        super self
         gravityMult = getConf "feather_gravity_multiplier"
         baseGravity = @owner\GetGravity!
 
@@ -43,10 +44,12 @@ class FeatherPowerup extends BasePowerup
             \ChatPrint "You've gained #{getConf "feather_duration"} seconds of the Feather Powerup"
 
     Refresh: =>
+        super self
         timer.Start @timerName
         @owner\ChatPrint "You've refreshed your duration of the Feather Powerup"
 
     Remove: =>
+        super self
         timer.Remove @timerName
         hook.Remove "EntityTakeDamage", @timerName
 

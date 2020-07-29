@@ -33,7 +33,7 @@ class WatchedBolt
                     "trails/plasma"
 
     pointTowardsTarget: (target) =>
-        newVel = target\EyePos! - Vector(0, 0, 10) - @bolt\GetPos!
+        newVel = target\WorldSpaceCenter! - Vector(0, 0, 10) - @bolt\GetPos!
         velDiff = newVel - @bolt\GetVelocity!
 
         @bolt\SetVelocity @bolt\GetVelocity! * -1
@@ -70,7 +70,7 @@ class WatchedBolt
             continue unless @canTargetEnt target
             insert eligableTargets,
                 :target,
-                distanceSqr: @bolt\GetPos!\DistToSqr target\EyePos!
+                distanceSqr: @bolt\GetPos!\DistToSqr target\WorldSpaceCenter!
 
         SortByMember eligableTargets, "distanceSqr"
 

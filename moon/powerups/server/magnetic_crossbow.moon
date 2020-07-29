@@ -49,11 +49,16 @@ class WatchedBolt
         true
 
     canTargetEnt: (ent) ->
+        print "Can target ent?"
         return false unless IsValid ent
+        print "Is a valid ent"
 
         isValidNPC = ent\IsNPC! and ent\Health! > 0
+        print "Is valid npc?: #{isValidNPC}"
         isValidPlayer = @canTargetPlayer ent
+        print "Is valid player?: #{isValidPlayer}"
 
+        print "Is either?: " .. isValidNPC or isValidPlayer
         isValidNPC or isValidPlayer
 
     -- Sorted by distance
@@ -63,8 +68,6 @@ class WatchedBolt
         normal = @bolt\GetVelocity!
         range = getConf "magnetic_crossbow_cone_range"
         angle = cos rad getConf "magnetic_crossbow_cone_arc"
-
-        print origin, normal, range, angle
 
         potentialTargets = ents.FindInCone origin, normal, 300, math.cos(math.rad(35))
         eligableTargets = {}

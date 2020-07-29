@@ -69,7 +69,7 @@ class WatchedBolt
                 :target,
                 distanceSqr: @bolt\GetPos!\DistToSqr target\EyePos!
 
-        SortByMember eligableTargets "distanceSqr"
+        SortByMember eligableTargets, "distanceSqr"
 
     handleMovement: =>
         targets = @getPotentialTargets!

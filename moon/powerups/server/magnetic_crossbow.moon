@@ -64,7 +64,10 @@ class WatchedBolt
         range = getConf "magnetic_crossbow_cone_range"
         angle = cos rad getConf "magnetic_crossbow_cone_arc"
 
+        print origin, normal, range, angle
+
         potentialTargets = FindInCone origin, normal, range, angle
+        PrintTable( potentialTargets )
         eligableTargets = {}
         for target in *potentialTargets
             continue unless @canTargetEnt target

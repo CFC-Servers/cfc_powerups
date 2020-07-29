@@ -78,10 +78,10 @@ class WatchedBolt
 
     handleMovement: =>
         targets = @getPotentialTargets!
-        return unless targets
+        --return unless targets
 
         closestTarget = targets[1]
-        return unless IsValid closestTarget
+        --return unless IsValid closestTarget
 
         @stopWatcher!
 

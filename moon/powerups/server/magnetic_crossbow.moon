@@ -48,21 +48,12 @@ class WatchedBolt
         return false if ply == @getBoltShooter!
         true
 
-    canTargetEnt: (ent) ->
-        print "Can target ent?:"
-        if ent.GetClass
-            print ent\GetClass!
-        print ent
-        PrintTable ent
+    canTargetEnt: (ent) =>
         return false unless IsValid ent
-        print "Is a valid ent"
 
         isValidNPC = ent\IsNPC! and ent\Health! > 0
-        print "Is valid npc?: #{isValidNPC}"
         isValidPlayer = @canTargetPlayer ent
-        print "Is valid player?: #{isValidPlayer}"
 
-        print "Is either?: " .. isValidNPC or isValidPlayer
         isValidNPC or isValidPlayer
 
     -- Sorted by distance
@@ -76,8 +67,6 @@ class WatchedBolt
         potentialTargets = ents.FindInCone origin, normal, 300, math.cos(math.rad(35))
         eligableTargets = {}
         for target in *potentialTargets
-            print "Eligable target:"
-            print target
             continue unless @canTargetEnt target
             print "Inserting eligable targets"
             insert eligableTargets,

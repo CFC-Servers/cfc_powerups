@@ -87,7 +87,7 @@ class WatchedBolt
 
         @pointTowardsTarget closestTarget
         timer.Simple 0.1, ->
-            @pointTowardsTarget closestEnt
+            @pointTowardsTarget closestTarget
 
     stopWatcher: =>
         timer.Remove @timerName

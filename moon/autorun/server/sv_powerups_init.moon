@@ -18,6 +18,7 @@ include "powerups/server/hotshot.lua"
 include "powerups/server/feather.lua"
 include "powerups/server/ammo.lua"
 include "powerups/server/grenadier.lua"
+include "powerups/server/magnetic_crossbow.lua"
 
 AddCSLuaFile "autorun/client/cl_powerups_init.lua"
 AddCSLuaFile "powerups/client/halos.lua"

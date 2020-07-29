@@ -68,6 +68,7 @@ class WatchedBolt
         eligableTargets = {}
         for target in *potentialTargets
             continue unless @canTargetEnt target
+            print "Inserting eligable targets"
             insert eligableTargets,
                 :target,
                 distanceSqr: @bolt\GetPos!\DistToSqr target\EyePos!
@@ -78,6 +79,7 @@ class WatchedBolt
 
     handleMovement: =>
         targets = @getPotentialTargets!
+        PrintTable targets
         --return unless targets
 
         closestTarget = targets[1]

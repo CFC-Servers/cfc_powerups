@@ -1,6 +1,8 @@
+{get: getConf} = CFCPowerups.Config
+
 export TemplatePowerup
 class TemplatePowerup
-    @powerupID: "template_cfc_powerup"
+    @powerupID: "powerup_template"
     
     @powerupWeights:
         tier1: 1
@@ -30,4 +32,5 @@ class TemplatePowerup
         super self
         -- What happens when the powerup is removed
 
-CFCPowerups[BasePowerup.powerupID] = TemplatePowerup
+        -- TODO: Should the PowerupManager do this?
+        @owner.Powerups[@@powerupID] = nil

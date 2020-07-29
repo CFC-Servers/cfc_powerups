@@ -188,4 +188,15 @@
     default: "ambient/machines/thumper_hit.wav"
     helpText: "What sound to make when the parent grenade explodes"
 -- =======================================================================
+
+
+-- Thorns ================================================================
+"cfc_powerups_thorns_duration":
+    default: 600
+    helpText: "How long does the Thorns powerup last, in seconds"
+
+"cfc_powerups_thorns_return_percentage":
+    default: 25
+    helpText: "What percentage of damage should be returned to the attacker?"
+-- =======================================================================
 }

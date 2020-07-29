@@ -7,10 +7,10 @@ class WatchedBolt
 
         @addTrail!
 
-        timer.Create @timerName 0 0 ->
+        timer.Create @timerName, 0, 0, ->
             @handleMovement!
 
-        bolt\CallOnRemove "CFC-Powerups-Remove-Handler" ->
+        bolt\CallOnRemove "CFC-Powerups-Remove-Handler", ->
             @stopWatcher!
 
     getBoltShooter: =>
@@ -28,12 +28,12 @@ class WatchedBolt
                     "trails/plasma"
 
     pointTowardsTarget: (target) =>
-        newVel = target\EyePos! - Vector( 0, 0 10 ) - @bolt\GetPos!
+        newVel = target\EyePos! - Vector(0, 0, 10) - @bolt\GetPos!
         velDiff = newVel - @bolt\GetVelocity!
 
         @bolt\SetVelocity @boly\GetVelocity! * -1
 
-        timer.Simple 0.01 ->
+        timer.Simple 0.01, ->
             @bolt\SetVelocity newVel * getConf "magnetic_crossbow_speed_multiplier"
 
     canTargetPlayer: (ply) =>
@@ -59,7 +59,7 @@ class WatchedBolt
 
         -- TODO: import
         potentialTargets = FindInCone origin normal range angle
-        eligableTargets = []
+        eligableTargets = {}
         for target in *potentialTargets
             -- TODO: import table.insert
             insert eligableTargets,
@@ -116,7 +116,7 @@ class MagneticCrossbowPowerup extends BasePowerup
 
         duration = getConf "magnetic_crossbow_duration"
 
-        hook.Add "OnEntityCreated" @PowerupHookName CrossbowWatcher!
+        hook.Add "OnEntityCreated", @PowerupHookName, CrossbowWatcher!
         timer.Create @TimerName, duration, 1, ->
             @Remove
 
@@ -131,7 +131,7 @@ class MagneticCrossbowPowerup extends BasePowerup
     Remove: =>
         super self
 
-        hook.Remove "OnEntityCreated" @PowerupHookName
+        hook.Remove "OnEntityCreated", @PowerupHookName
         timer.Remove @TimerName
 
         -- TODO: Should the PowerupManager do this?

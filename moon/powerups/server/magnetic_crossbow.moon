@@ -1,5 +1,10 @@
 {get: getConf} = CFCPowerups.Config
 
+import SpriteTrail from util
+import cos, rad from math
+import FindInCone from ents
+import insert, SortByMember from table
+
 class WatchedBolt
     new: (bolt) =>
         @bolt = bolt
@@ -57,16 +62,13 @@ class WatchedBolt
         range = getConf "magnetic_crossbow_cone_range"
         angle = cos rad getConf "magnetic_crossbow_cone_arc"
 
-        -- TODO: import
         potentialTargets = FindInCone origin normal range angle
         eligableTargets = {}
         for target in *potentialTargets
-            -- TODO: import table.insert
             insert eligableTargets,
                 :target,
                 distanceSqr: @bolt\GetPos!\DistToSqr target\EyePos!
 
-        -- TODO: import
         SortByMember eligableTargets "distanceSqr"
 
     handleMovement: =>

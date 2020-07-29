@@ -50,7 +50,10 @@ class WatchedBolt
 
     canTargetEnt: (ent) ->
         print "Can target ent?:"
+        if ent.GetClass
+            print ent\GetClass!
         print ent
+        PrintTable ent
         return false unless IsValid ent
         print "Is a valid ent"
 

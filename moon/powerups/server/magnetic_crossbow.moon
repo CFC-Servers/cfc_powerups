@@ -62,7 +62,7 @@ class WatchedBolt
         range = getConf "magnetic_crossbow_cone_range"
         angle = cos rad getConf "magnetic_crossbow_cone_arc"
 
-        potentialTargets = FindInCone origin normal range angle
+        potentialTargets = FindInCone origin, normal, range, angle
         eligableTargets = {}
         for target in *potentialTargets
             insert eligableTargets,

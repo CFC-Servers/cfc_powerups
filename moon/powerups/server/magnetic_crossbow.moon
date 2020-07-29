@@ -67,9 +67,11 @@ class WatchedBolt
         print origin, normal, range, angle
 
         potentialTargets = FindInCone origin, normal, range, angle
+        print "Potential targets:"
         PrintTable( potentialTargets )
         eligableTargets = {}
         for target in *potentialTargets
+            print target
             continue unless @canTargetEnt target
             print "Inserting eligable targets"
             insert eligableTargets,

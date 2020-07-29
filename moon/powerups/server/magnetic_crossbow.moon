@@ -85,9 +85,13 @@ class WatchedBolt
 
         @stopWatcher!
 
-        @pointTowardsTarget closestTarget
-        timer.Simple 0.1, ->
+        point = ->
+            return unless IsValid @bolt
+            return unless IsValid closestTarget
             @pointTowardsTarget closestTarget
+
+        point!
+        timer.Simple 0.1, point
 
     stopWatcher: =>
         timer.Remove @timerName

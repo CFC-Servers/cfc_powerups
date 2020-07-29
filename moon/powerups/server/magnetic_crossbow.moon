@@ -65,6 +65,7 @@ class WatchedBolt
         potentialTargets = FindInCone origin, normal, range, angle
         eligableTargets = {}
         for target in *potentialTargets
+            continue unless canTargetEnt target
             insert eligableTargets,
                 :target,
                 distanceSqr: @bolt\GetPos!\DistToSqr target\EyePos!

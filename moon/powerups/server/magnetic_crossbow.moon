@@ -33,7 +33,9 @@ class WatchedBolt
                     "trails/plasma"
 
     pointTowardsTarget: (target) =>
-        newVel = target\WorldSpaceCenter! - @bolt\GetPos!
+        targetPyhsicsObj = target\GetPhysicsObject!
+        targetPos = targetPhysicsObj\GetPos! + targetPysicsObj\GetMassCenter!
+        newVel = targetPos- @bolt\GetPos!
         velDiff = newVel - @bolt\GetVelocity!
 
         @bolt\SetVelocity @bolt\GetVelocity! * -1

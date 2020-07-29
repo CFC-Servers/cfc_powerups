@@ -104,7 +104,7 @@ class MagneticCrossbowPowerup extends BasePowerup
 
         @ApplyEffect!
     
-    CrossbowWatcher: ->
+    CrossbowWatcher: =>
         (ent) ->
             return unless IsValid ent
             return unless ent\GetClass! == "crossbow_bolt"
@@ -116,7 +116,7 @@ class MagneticCrossbowPowerup extends BasePowerup
 
         duration = getConf "magnetic_crossbow_duration"
 
-        hook.Add "OnEntityCreated", @PowerupHookName, CrossbowWatcher!
+        hook.Add "OnEntityCreated", @PowerupHookName, @CrossbowWatcher!
         timer.Create @TimerName, duration, 1, ->
             @Remove
 

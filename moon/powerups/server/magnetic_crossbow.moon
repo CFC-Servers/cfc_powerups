@@ -49,6 +49,8 @@ class WatchedBolt
         true
 
     canTargetEnt: (ent) ->
+        return false unless IsValid ent
+
         isValidNPC = ent\IsNPC! and ent\Health! > 0
         isValidPlayer = @canTargetPlayer ent
 

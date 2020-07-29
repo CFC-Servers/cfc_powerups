@@ -36,7 +36,7 @@ class WatchedBolt
         newVel = target\EyePos! - Vector(0, 0, 10) - @bolt\GetPos!
         velDiff = newVel - @bolt\GetVelocity!
 
-        @bolt\SetVelocity @boly\GetVelocity! * -1
+        @bolt\SetVelocity @bolt\GetVelocity! * -1
 
         timer.Simple 0.01, ->
             @bolt\SetVelocity newVel * getConf "magnetic_crossbow_speed_multiplier"
@@ -66,7 +66,7 @@ class WatchedBolt
 
         print origin, normal, range, angle
 
-        potentialTargets = FindInCone origin, normal, range, angle
+        potentialTargets = ents.FindInCone origin, normal, range, angle
         print "Potential targets:"
         PrintTable( potentialTargets )
         eligableTargets = {}

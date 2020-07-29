@@ -72,6 +72,8 @@ class WatchedBolt
 
         SortByMember eligableTargets, "distanceSqr"
 
+        eligableTargets
+
     handleMovement: =>
         targets = @getPotentialTargets!
         return unless targets

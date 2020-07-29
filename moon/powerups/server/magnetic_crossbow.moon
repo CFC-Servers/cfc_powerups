@@ -49,7 +49,8 @@ class WatchedBolt
         true
 
     canTargetEnt: (ent) ->
-        print "Can target ent?"
+        print "Can target ent?:"
+        print ent
         return false unless IsValid ent
         print "Is a valid ent"
 

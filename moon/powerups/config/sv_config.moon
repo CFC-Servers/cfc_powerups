@@ -188,4 +188,22 @@
     default: "ambient/machines/thumper_hit.wav"
     helpText: "What sound to make when the parent grenade explodes"
 -- =======================================================================
+
+-- Speed =================================================================
+"cfc_powerups_magnetic_crossbow_duration":
+    default: 600
+    helpText: "How long does the Magnetic Crossbow powerup last, in seconds"
+
+"cfc_powerups_magnetic_crossbow_speed_multiplier":
+    default: 16
+    helpText: "What value to multiply crossbow bolt speed by for the Magnetic Crossbow powerup"
+
+"cfc_powerups_magnetic_crossbow_cone_range":
+    default: 300
+    helpText: "What range to use when finding targets in a cone (read the wiki for more info)"
+
+"cfc_powerups_magnetic_crossbow_cone_arc":
+    default: 20
+    helpText: "What arc degree to use when calculating targeting cone"
+-- =======================================================================
 }

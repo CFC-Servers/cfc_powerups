@@ -8,45 +8,85 @@ import insert, SortByMember from table
 class WatchedBolt
     new: (bolt) =>
         @bolt = bolt
-        @timerName = "CFC-Powerups-TrackedBolt-#{bolt\EntIndex!}"
+        @boltShooter = @bolt\GetSaveTAble!["m_hOwnerEntity"]
+        @holo = @createHolo
+
+        @movementHandler = "CFC-Powerups-TrackedBolt-#{bolt\EntIndex!}"
+        @soundPath = getConf "magnetic_crossbow_magnet_sound"
+        @soundId = nil
 
         @addTrail!
 
-        timer.Create @timerName, 0, 0, ->
+        timer.Create @movementHandler, 0, 0, ->
             @handleMovement!
 
-        bolt\CallOnRemove "CFC-Powerups-Remove-Handler", ->
-            @stopWatcher!
+        @bolt\CallOnRemove "CFC-Powerups-Remove-Handler", ->
+            @cleanup!
 
-    getBoltShooter: =>
-        @bolt\GetSaveTable!["m_hOwnerEntity"]
+    createHolo: =>
+        holo = ents.Create "base_anim"
+        with holo
+            \SetPos @bolt\GetPos!
+            \SetModel ""
+            \SetRenderGroup RENDERMODE_NONE
+            \DrawShadow false
+            \SetParent @bolt
+            \Spawn!
+
+        holo
+
+    startSound: =>
+        return if @soundId
+        @soundId = @holo\StartLoopingSound @soundPath
+
+    stopSound: =>
+        return unless @soundId
+        @holo\StopLoopingSound @soundId
 
     addTrail: =>
-        SpriteTrail @bolt,
-                    0,
-                    Color( 255, 0, 0 ),
-                    false,
-                    15,
-                    1,
-                    4,
-                    1 / (15 + 1) * 0.5,
-                    "trails/plasma"
+        lingerTime = getConf "magnetic_crossbow_effect_linger_time"
+        color = Color 255, 0, 0
+        texture = "trails/plasma"
+
+        attachmentId = 0
+        additive = false
+        startWidth = 15
+        endWidth = 1
+        textureRes = 1 / ( startWidth + endWidth ) * 0.5
+
+        SpriteTrail @holo,
+                    attachmentId,
+                    color,
+                    additive,
+                    startWidth,
+                    endWidth,
+                    lingerTime,
+                    textureRes,
+                    texture
 
     pointTowardsTarget: (target) =>
-        targetPos = target\GetPos! + Vector(0,0,36)
-        newVel = targetPos- @bolt\GetPos!
-        velDiff = newVel - @bolt\GetVelocity!
+        -- A player's center of mass is ~36 units above their position
+        targetOffset = Vector(0, 0, 36)
+        targetPos = target\GetPos! + targetOffset
 
+        newVel = targetPos- @bolt\GetPos!
+        -- We can either modify the current velocity with the difference, or halt it and start it again
+        --velDiff = newVel - @bolt\GetVelocity!
+
+        -- Halt the velocity
         @bolt\SetVelocity @bolt\GetVelocity! * -1
 
+        -- Reset the velocity a short delay after
         timer.Simple 0.01, ->
             @bolt\SetVelocity newVel * getConf "magnetic_crossbow_speed_multiplier"
 
     canTargetPlayer: (ply) =>
+        -- TODO: How to ignore faction mates in here?
+        return false if ply == @boltShooter
         return false unless ply\IsPlayer!
         return false unless ply\Alive!
         return false unless ply\GetNWBool "CFC_PvP_Mode"
-        return false if ply == @getBoltShooter!
+        return false unless @bolt\TestPVS ply
         true
 
     canTargetEnt: (ent) =>
@@ -65,8 +105,10 @@ class WatchedBolt
         range = getConf "magnetic_crossbow_cone_range"
         angle = cos rad getConf "magnetic_crossbow_cone_arc"
 
+        -- TODO: Figure out if we can use range and angle in here
         potentialTargets = ents.FindInCone origin, normal, 300, math.cos(math.rad(35))
         eligableTargets = {}
+
         for target in *potentialTargets
             continue unless @canTargetEnt target
             insert eligableTargets,
@@ -84,7 +126,8 @@ class WatchedBolt
         closestTarget = targets[1].target
         return unless IsValid closestTarget
 
-        @stopWatcher!
+        timer.Remove @movementHandler
+        @startSound!
 
         point = ->
             return unless IsValid @bolt
@@ -92,10 +135,17 @@ class WatchedBolt
             @pointTowardsTarget closestTarget
 
         point!
+
+        -- Do a second adjustment slightly after the initial adjustment
         timer.Simple 0.1, point
 
-    stopWatcher: =>
-        timer.Remove @timerName
+    cleanup: =>
+        @stopSound!
+
+        -- We delay the removal of our holo until the trails dissipate 
+        lingerTime = getConf "magnetic_crossbow_effect_linger_time"
+        timer.Simple lingerTime, ->
+            @holo\Remove!
 
 
 export MagneticCrossbowPowerup
@@ -120,6 +170,8 @@ class MagneticCrossbowPowerup extends BasePowerup
         (ent) ->
             return unless IsValid ent
             return unless ent\GetClass! == "crossbow_bolt"
+
+            -- Wait for it to initialize fully
             timer.Simple 0, ->
                 WatchedBolt ent
 
@@ -129,8 +181,7 @@ class MagneticCrossbowPowerup extends BasePowerup
         duration = getConf "magnetic_crossbow_duration"
 
         hook.Add "OnEntityCreated", @PowerupHookName, @CrossbowWatcher!
-        timer.Create @TimerName, duration, 1, ->
-            @Remove
+        timer.Create @TimerName, duration, 1, -> @Remove!
 
         @owner\ChatPrint "You've gained #{duration} seconds of the Magnetic Crossbow Powerup"
 
@@ -145,6 +196,8 @@ class MagneticCrossbowPowerup extends BasePowerup
 
         hook.Remove "OnEntityCreated", @PowerupHookName
         timer.Remove @TimerName
+
+        @owner\ChatPrint "You've lost the Magnetic Crossbow Powerup"
 
         -- TODO: Should the PowerupManager do this?
         @owner.Powerups[@@powerupID] = nil

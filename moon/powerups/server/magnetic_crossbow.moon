@@ -66,7 +66,7 @@ class WatchedBolt
 
         print origin, normal, range, angle
 
-        potentialTargets = ents.FindInCone origin, normal, range, angle
+        potentialTargets = ents.FindInCone origin, normal, 300, math.cos(math.rad(35))
         print "Potential targets:"
         PrintTable( potentialTargets )
         eligableTargets = {}

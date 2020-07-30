@@ -8,7 +8,7 @@ import insert, SortByMember from table
 class WatchedBolt
     new: (bolt) =>
         @bolt = bolt
-        @boltShooter = @bolt\GetSaveTAble!["m_hOwnerEntity"]
+        @boltShooter = @bolt\GetSaveTable!["m_hOwnerEntity"]
         @holo = @createHolo
 
         @movementHandler = "CFC-Powerups-TrackedBolt-#{bolt\EntIndex!}"

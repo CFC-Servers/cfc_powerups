@@ -38,8 +38,9 @@ class FluxShieldPowerup extends BasePowerup
 
     StartScreenEffect: =>
         net.Start "CFC_Powerups-FluxShield-Start"
-        net.WriteUInt 10, @duration
-        net.WriteUInt 7, @maxReduction
+        net.WriteUInt @duration, 10
+        net.WriteUInt @maxReduction, 7
+        net.WriteFloat @tickInterval
         net.Send @owner
 
     StopScreenEffect: =>

@@ -39,12 +39,12 @@ class FluxShield
 
             --DrawBloom(alpha * 0.3, alpha * 2, alpha * 8, alpha * 8, 15, 1, 0, 0.8, 1)
             DrawSharpen 0.2 * alpha, 10 * alpha
-            DrawSunbeams 1 * alpha, alpha, 0.08 * alpha, 0, 0
+            -- DrawSunbeams 0.1 * alpha, alpha, 0.08 * alpha, 0, 0
 
             DrawMaterialOverlay "effects/CombineShield/comshieldwall", -0.2 * alpha
 
             tab = {}
-            tab["$pp_colour_colour"] = alpha
+            tab["$pp_colour_colour"] = 1 - alpha
             tab["$pp_colour_contrast"] = Clamp 2 * alpha, 1, 2
             tab["$pp_colour_brightness"] = Clamp -0.3 * alpha, -1, 1
             tab["$pp_colour_addb"] = 0.3 * alpha
@@ -70,6 +70,8 @@ net.Receive "CFC_Powerups-FluxShield-Start", ->
     duration = net.ReadUInt 10
     maxReduction = net.ReadUInt 7
     tickInterval = net.ReadFloat!
+
+    print duration, maxReduction, tickInterval
 
     currentFluxShield = FluxShield duration, maxReduction, tickInterval
 

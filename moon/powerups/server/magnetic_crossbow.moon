@@ -30,7 +30,6 @@ class WatchedBolt
             \SetModel ""
             \SetRenderGroup RENDERMODE_NONE
             \DrawShadow false
-            \SetParent @bolt
             \Spawn!
 
         holo
@@ -120,6 +119,8 @@ class WatchedBolt
         eligableTargets
 
     handleMovement: =>
+        @holo\SetPos @bolt\GetPos!
+
         targets = @getPotentialTargets!
         return unless targets and #targets > 0
 

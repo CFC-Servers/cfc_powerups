@@ -189,7 +189,7 @@
     helpText: "What sound to make when the parent grenade explodes"
 -- =======================================================================
 
--- Speed =================================================================
+-- Magnetic Crossbow =====================================================
 "cfc_powerups_magnetic_crossbow_duration":
     default: 600
     helpText: "How long does the Magnetic Crossbow powerup last, in seconds"
@@ -205,5 +205,9 @@
 "cfc_powerups_magnetic_crossbow_cone_arc":
     default: 20
     helpText: "What arc degree to use when calculating targeting cone"
+
+"cfc_powerups_magnetic_crossbow_magnet_sound":
+    default: "ambient/machines/fluorescent_hum_1.wav"
+    helpText: "What sound should play when the bolt acquires a target?"
 -- =======================================================================
 }

@@ -23,6 +23,10 @@ class FluxShieldPowerup extends BasePowerup
         @damageScale = 1
         @scaleDirection = "increasing"
 
+        @holo = @createHolo!
+        @soundPath = "ambient/energy/force_field_loop1.wav"
+        @shieldSound = CreateSound @holo, @soundPath
+
         @duration = getConf "flux_shield_duration"
         @maxReduction = getConf "flux_shield_max_reduction"
         @tickInterval = getConf "flux_shield_tick_interval"
@@ -35,6 +39,17 @@ class FluxShieldPowerup extends BasePowerup
         @hookName = @durationTimer
 
         @ApplyEffect!
+
+    createHolo: =>
+        holo = ents.Create "base_anim"
+        with holo
+            \SetPos @owner\GetPos!
+            \SetModel ""
+            \SetRenderMode RENDERMODE_NONE
+            \DrawShadow false
+            \Spawn!
+
+        holo
 
     StartScreenEffect: =>
         net.Start "CFC_Powerups-FluxShield-Start"
@@ -55,7 +70,10 @@ class FluxShieldPowerup extends BasePowerup
 
         @damageScale = Clamp @damageScale, 0, 1
 
-        print "New Damage scale: #{@damageScale}"
+        soundLevel = ( 1 - @damageScale ) / ( @maxReduction / 100 )
+        @shieldSound\ChangeVolume soundLevel, @tickInterval
+
+        print "New Damage scale: #{@damageScale} (sound level: adjusting to #{soundLevel} over #{@tickInterval} seconds)"
 
     DamageWatcher: =>
         (ent, dmg) ->
@@ -74,6 +92,9 @@ class FluxShieldPowerup extends BasePowerup
 
         hook.Add "EntityTakeDamage", @hookName, @DamageWatcher!
 
+        @shieldSound\Play!
+        @shieldSound\ChangeVolume 0
+
         @StartScreenEffect!
 
         @owner\ChatPrint "You've gained #{@duration} seconds of the Flux Armor powerup"
@@ -87,6 +108,11 @@ class FluxShieldPowerup extends BasePowerup
         hook.Remove "EntityTakeDamage", @hookName
 
         @StopScreenEffect!
+
+        @shieldSound\Stop!
+        @holo\Remove!
+
+        return unless IsValid @owner
 
         @owner\ChatPrint "You've lost the Flux Armor powerup"
         @owner.Powerups[@@powerupID] = nil

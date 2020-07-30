@@ -46,8 +46,8 @@ class FluxShield
             tab["$pp_colour_colour"] = 1 - alpha
             tab["$pp_colour_contrast"] = Clamp 2 * alpha, 1, 2
             tab["$pp_colour_brightness"] = Clamp -0.3 * alpha, -1, 1
-            tab["$pp_colour_addb"] = 0.3 * alpha
-            tab["$pp_colour_addg"] = 0.2 * alpha
+            --tab["$pp_colour_addb"] = 0.3 * alpha
+            --tab["$pp_colour_addg"] = 0.2 * alpha
 
             DrawColorModify tab
 

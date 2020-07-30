@@ -44,10 +44,14 @@ class FluxShieldPowerup extends BasePowerup
         holo = ents.Create "base_anim"
         with holo
             \SetPos @owner\GetPos!
+            \SetParent @owner
             \SetModel ""
             \SetRenderMode RENDERMODE_NONE
             \DrawShadow false
             \Spawn!
+
+        holo\CallOnRemove "StopSoundBeforeRemove", ->
+            @shieldSound\Stop!
 
         holo
 

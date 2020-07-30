@@ -46,7 +46,6 @@ class FluxShieldPowerup extends BasePowerup
             \SetPos @owner\GetPos!
             \SetParent @owner
             \SetModel ""
-            \SetAlpha 0
             \SetRenderMode RENDERMODE_NONE
             \DrawShadow false
             \Spawn!

@@ -9,7 +9,7 @@ class WatchedBolt
     new: (bolt) =>
         @bolt = bolt
         @boltShooter = @bolt\GetSaveTable!["m_hOwnerEntity"]
-        @holo = @createHolo
+        @holo = @createHolo!
 
         @movementHandler = "CFC-Powerups-TrackedBolt-#{bolt\EntIndex!}"
         @soundPath = getConf "magnetic_crossbow_magnet_sound"

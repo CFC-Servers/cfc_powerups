@@ -46,6 +46,7 @@ class FluxShieldPowerup extends BasePowerup
             \SetPos @owner\GetPos!
             \SetParent @owner
             \SetModel ""
+            \SetAlpha 0
             \SetRenderMode RENDERMODE_NONE
             \DrawShadow false
             \Spawn!
@@ -96,6 +97,8 @@ class FluxShieldPowerup extends BasePowerup
 
         hook.Add "EntityTakeDamage", @hookName, @DamageWatcher!
 
+        @owner\SetSubMaterial 3, "models/props_combine/com_shield001a"
+
         @shieldSound\Play!
         @shieldSound\ChangeVolume 0
 
@@ -117,6 +120,8 @@ class FluxShieldPowerup extends BasePowerup
         @holo\Remove!
 
         return unless IsValid @owner
+
+        @owner\SetSubMaterial 3, nil
 
         @owner\ChatPrint "You've lost the Flux Armor powerup"
         @owner.Powerups[@@powerupID] = nil

@@ -67,7 +67,7 @@ class FluxShield
 net.Receive "CFC_Powerups-FluxShield-Start", ->
     duration = net.ReadUInt 10
     maxReduction = net.ReadUInt 7
-    tickInterval = net.ReadFloat
+    tickInterval = net.ReadFloat!
 
     currentFluxShield = FluxShield duration, maxReduction, tickInterval
 

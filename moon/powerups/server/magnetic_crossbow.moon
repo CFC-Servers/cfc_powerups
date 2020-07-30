@@ -28,7 +28,7 @@ class WatchedBolt
         with holo
             \SetPos @bolt\GetPos!
             \SetModel ""
-            \SetRenderGroup RENDERMODE_NONE
+            \SetRenderMode RENDERMODE_NONE
             \DrawShadow false
             \Spawn!
 

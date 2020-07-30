@@ -23,7 +23,7 @@ class ThornsPowerup extends BasePowerup
     DamageWatcher: =>
         (ent, dmg, took) ->
             return unless ent == @owner
-            return unless took
+            return if took == false
 
             originalAttacker = dmg\GetAttacker!
             return unless IsValid originalAttacker

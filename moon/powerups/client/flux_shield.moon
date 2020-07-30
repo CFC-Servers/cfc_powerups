@@ -33,6 +33,7 @@ class FluxShield
     ScreenEffect: =>
         ->
             alpha = ( 1 - @damageScale ) / ( @maxReduction / 100 )
+            print alpha
 
             --DrawBloom(alpha * 0.3, alpha * 2, alpha * 8, alpha * 8, 15, 1, 0, 0.8, 1)
             DrawSharpen 0.2 * alpha, 10 * alpha

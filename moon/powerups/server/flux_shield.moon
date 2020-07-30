@@ -1,3 +1,5 @@
+{get: getConf} = CFCPowerups.Config
+
 export FluxShieldPowerup
 class FluxShieldPowerup extends BasePowerup
     @powerupID: "powerup_flux_shield"

@@ -188,4 +188,18 @@
     default: "ambient/machines/thumper_hit.wav"
     helpText: "What sound to make when the parent grenade explodes"
 -- =======================================================================
+
+-- Flux Shield ===========================================================
+"cfc_powerups_flux_shield_duration":
+    default: 600
+    helpText: "How long does the Flux Shield powerup last, in seconds"
+
+"cfc_powerups_flux_shield_max_reduction":
+    default: 50
+    helpText: "What is the maximum percentage of damage Flux Shield can reduce"
+
+"cfc_powerups_flux_shield_tick_interval":
+    default: 1
+    helpText: "How often should Flus Shield adjust the damage reduction value, in seconds"
+-- =======================================================================
 }

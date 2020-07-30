@@ -171,10 +171,11 @@ class MagneticCrossbowPowerup extends BasePowerup
         (ent) ->
             return unless IsValid ent
             return unless ent\GetClass! == "crossbow_bolt"
-            return unless ent\GetSaveTable!["m_hOwnerEntity"] == @owner
 
             -- Wait for it to initialize fully
             timer.Simple 0, ->
+                return unless ent\GetSaveTable!["m_hOwnerEntity"] == @owner
+
                 WatchedBolt ent
 
     ApplyEffect: =>

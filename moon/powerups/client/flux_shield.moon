@@ -20,7 +20,7 @@ class FluxShield
         @flipTimer = "#{@durationTimer}-flipper"
         @hookName = @durationTimer
 
-        ApplyEffect!
+        @ApplyEffect!
 
     PowerupTick: =>
         if @scaleDirection == "increasing"

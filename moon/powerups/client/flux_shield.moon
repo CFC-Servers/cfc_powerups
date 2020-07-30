@@ -12,6 +12,8 @@ class FluxShield
         @duration = duration
         @maxReduction = maxReduction
         @tickInterval = tickInterval
+
+        print duration, maxReduction, tickInterval
         @totalTicks = @duration / @tickInterval
         @changePerTick = ( @maxReduction / ( @totalTicks / 2 ) ) / 100
 

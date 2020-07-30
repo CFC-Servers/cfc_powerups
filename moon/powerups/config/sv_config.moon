@@ -191,7 +191,7 @@
 
 -- Flux Shield ===========================================================
 "cfc_powerups_flux_shield_duration":
-    default: 600
+    default: 120
     helpText: "How long does the Flux Shield powerup last, in seconds"
 
 "cfc_powerups_flux_shield_max_reduction":

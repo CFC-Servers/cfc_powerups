@@ -201,5 +201,9 @@
 "cfc_powerups_flux_shield_tick_interval":
     default: 1
     helpText: "How often should Flus Shield adjust the damage reduction value, in seconds"
+
+"cfc_powerups_flux_shield_active_sound_level":
+    default: 130
+    helpText: "What sound level should the Flux Shield use for its active playing sound? (Look into GLua sound levels)"
 -- =======================================================================
 }

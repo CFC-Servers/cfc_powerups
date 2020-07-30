@@ -13,7 +13,6 @@ class FluxShield
         @maxReduction = maxReduction
         @tickInterval = tickInterval
 
-        print duration, maxReduction, tickInterval
         @totalTicks = @duration / @tickInterval
         @changePerTick = ( @maxReduction / ( @totalTicks / 2 ) ) / 100
 
@@ -32,6 +31,22 @@ class FluxShield
 
         @damageScale = Clamp @damageScale, 0, 1
 
+    DrawOverlay: (alpha) =>
+		render.UpdateScreenEffectTexture!
+
+		overlay = Material "effects/combine_binocoverlay"
+		clampedAlpha = Clamp alpha, 0, 0.6
+
+		with overlay
+            \SetFloat "$alpha", clampedAlpha
+            \SetFloat "$envmap", 0
+            \SetFloat "$envmaptint", 0
+            \SetFloat "$refractamount", 0
+            \SetInt "$ignorez", 1
+
+		render.SetMaterial overlay
+		render.DrawScreenQuad!
+
     ScreenEffect: =>
         ->
             alpha = ( 1 - @damageScale ) / ( @maxReduction / 100 )
@@ -40,12 +55,17 @@ class FluxShield
             DrawSharpen 0.2 * alpha, 5 * alpha
             -- DrawSunbeams 0.1 * alpha, alpha, 0.08 * alpha, 0, 0
 
-            DrawMaterialOverlay "effects/CombineShield/comshieldwall", -0.4 * alpha
+            --DrawMaterialOverlay "effects/CombineShield/comshieldwall", -0.4 * alpha
+            @DrawOverlay alpha
+
+            minColor = 0.1
+            maxContrast = 1.4
+            minBrightness = -0.3
 
             tab = {}
-            tab["$pp_colour_colour"] = Clamp 1 - alpha, 0.1, 1
-            tab["$pp_colour_contrast"] = 1 + alpha, 1, 2
-            tab["$pp_colour_brightness"] = Clamp -0.3 * alpha, -1, 1
+            tab["$pp_colour_colour"] = Clamp 1 - alpha, minColor, 1
+            tab["$pp_colour_contrast"] = 1 + alpha, 1, maxContrast
+            tab["$pp_colour_brightness"] = Clamp -0.3 * alpha, minBrightness, 1
             --tab["$pp_colour_addb"] = 0.3 * alpha
             --tab["$pp_colour_addg"] = 0.2 * alpha
 

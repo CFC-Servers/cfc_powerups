@@ -22,10 +22,12 @@ class FluxShieldPowerup extends BasePowerup
 
         @damageScale = 1
         @scaleDirection = "increasing"
+        @peakPercent = 0
 
         @holo = @createHolo!
-        @soundPath = "ambient/energy/force_field_loop1.wav"
+        @soundPath = "ambient/atmosphere/city_beacon_loop1.wav"
         @shieldSound = CreateSound @holo, @soundPath
+        @shieldSound\SetSoundLevel 130
 
         @duration = getConf "flux_shield_duration"
         @maxReduction = getConf "flux_shield_max_reduction"
@@ -66,6 +68,16 @@ class FluxShieldPowerup extends BasePowerup
         net.Start "CFC_Powerups-FluxShield-Stop"
         net.Send @owner
 
+    UpdateSound: =>
+        @shieldSound\ChangeVolume @peakPercent, @tickInterval
+
+    UpdatePlayerColor: =>
+        minColor = 80
+        diff = 255 - minColor
+        newColor = 255 - ( diff * @peakPercent )
+
+        @owner\SetColor Color newColor, newColor, newColor
+
     PowerupTick: =>
         if @scaleDirection == "increasing"
             @damageScale -= @changePerTick
@@ -74,10 +86,12 @@ class FluxShieldPowerup extends BasePowerup
 
         @damageScale = Clamp @damageScale, 0, 1
 
-        soundLevel = ( 1 - @damageScale ) / ( @maxReduction / 100 )
-        @shieldSound\ChangeVolume soundLevel, @tickInterval
+        @peakPercent = ( 1 - @damageScale ) / ( @maxReduction / 100 )
 
-        print "New Damage scale: #{@damageScale} (sound level: adjusting to #{soundLevel} over #{@tickInterval} seconds)"
+        @UpdateSound!
+        @UpdatePlayerColor!
+
+        print "New Damage scale: #{@damageScale}"
 
     DamageWatcher: =>
         (ent, dmg) ->
@@ -98,6 +112,7 @@ class FluxShieldPowerup extends BasePowerup
 
         @owner\SetSubMaterial 3, "models/props_combine/com_shield001a"
 
+        soundLevel = getConf "flux_shield_active_sound_level"
         @shieldSound\Play!
         @shieldSound\ChangeVolume 0
 
@@ -113,14 +128,15 @@ class FluxShieldPowerup extends BasePowerup
         timer.Remove @flipTimer
         hook.Remove "EntityTakeDamage", @hookName
 
-        @StopScreenEffect!
-
         @shieldSound\Stop!
         @holo\Remove!
 
         return unless IsValid @owner
 
+        @StopScreenEffect!
+
         @owner\SetSubMaterial 3, nil
+        @owner\SetColor Color 255, 255, 255
 
         @owner\ChatPrint "You've lost the Flux Armor powerup"
         @owner.Powerups[@@powerupID] = nil

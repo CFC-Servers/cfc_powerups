@@ -26,7 +26,7 @@ class FluxShieldPowerup extends BasePowerup
         @totalTicks = @duration / @tickInterval
         @changePerTick = ( @maxReduction / ( @totalTicks / 2 ) ) / 100
 
-        print duration, maxReduction, tickInterval, totalTicks, changePerTick
+        print @duration, @maxReduction, @tickInterval, @totalTicks, @changePerTick
 
         @durationTimer = "CFC-Powerups_FluxShield-#{@owner\SteamID64!}"
         @tickTimer = "#{@durationTimer}-tick"

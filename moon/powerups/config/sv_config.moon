@@ -206,6 +206,10 @@
     default: 20
     helpText: "What arc degree to use when calculating targeting cone"
 
+"cfc_powerups_magnetic_crossbow_effect_linger_time":
+    default: 10
+    helpText: "How long should the effects relating to the Magnetic Crossbow powerup last?"
+
 "cfc_powerups_magnetic_crossbow_magnet_sound":
     default: "ambient/machines/fluorescent_hum_1.wav"
     helpText: "What sound should play when the bolt acquires a target?"

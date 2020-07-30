@@ -1,6 +1,9 @@
 {get: getConf} = CFCPowerups.Config
 
-import Round from math
+import Clamp, Round from math
+
+util.AddNetworkString "CFC_Powerups-FluxShield-Start"
+util.AddNetworkString "CFC_Powerups-FluxShield-Stop"
 
 export FluxShieldPowerup
 class FluxShieldPowerup extends BasePowerup
@@ -37,6 +40,11 @@ class FluxShieldPowerup extends BasePowerup
         net.Start "CFC_Powerups-FluxShield-Start"
         net.WriteUInt 10, @duration
         net.WriteUInt 7, @maxReduction
+        net.Send @owner
+
+    StopScreenEffect: =>
+        net.Start "CFC_Powerups-FluxShield-Stop"
+        net.Send @owner
 
     PowerupTick: =>
         if @scaleDirection == "increasing"
@@ -65,6 +73,8 @@ class FluxShieldPowerup extends BasePowerup
 
         hook.Add "EntityTakeDamage", @hookName, @DamageWatcher!
 
+        @StartScreenEffect!
+
         @owner\ChatPrint "You've gained #{@duration} seconds of the Flux Armor powerup"
 
     Remove: =>
@@ -74,6 +84,8 @@ class FluxShieldPowerup extends BasePowerup
         timer.Remove @tickTimer
         timer.Remove @flipTimer
         hook.Remove "EntityTakeDamage", @hookName
+
+        @StopScreenEffect!
 
         @owner\ChatPrint "You've lost the Flux Armor powerup"
         @owner.Powerups[@@powerupID] = nil

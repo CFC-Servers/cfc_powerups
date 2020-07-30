@@ -1,6 +1,6 @@
 export FluxShieldPowerup
 class FluxShieldPowerup extends BasePowerup
-    @powerupID: "flux_shield_powerup"
+    @powerupID: "powerup_flux_shield"
     
     @powerupWeights:
         tier1: 1

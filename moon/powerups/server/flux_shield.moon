@@ -1,5 +1,7 @@
 {get: getConf} = CFCPowerups.Config
 
+import Round from math
+
 export FluxShieldPowerup
 class FluxShieldPowerup extends BasePowerup
     @powerupID: "powerup_flux_shield"

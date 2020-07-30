@@ -69,3 +69,4 @@ class FluxShieldPowerup extends BasePowerup
         hook.Remove "EntityTakeDamage", @hookName
 
         @owner\ChatPrint "You've lost the Flux Armor powerup"
+        @owner.Powerups[@@powerupID] = nil

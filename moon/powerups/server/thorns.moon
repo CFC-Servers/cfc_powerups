@@ -46,7 +46,11 @@ class ThornsPowerup extends BasePowerup
 
         duration = getConf "thorns_duration"
 
-        hook.Add "PostEntityTakeDamage", @HookName, @DamageWatcher!
+        damageWatcher = @DamageWatcher!
+        hook.Add "PostEntityTakeDamage", @HookName, damageWatcher
+        hook.Add "DoPlayerDeath", @HookName, (ply, _, dmg ) ->
+            damageWatcher ply, dmg
+
         timer.Create @TimerName, duration, 1, -> @Remove!
 
         @owner\ChatPrint "You've gained #{duration} seconds of the Thorns Powerup"
@@ -61,6 +65,7 @@ class ThornsPowerup extends BasePowerup
         super self
 
         hook.Remove "PostEntityTakeDamage", @HookName
+        hook.Remove "DoPlayerDeath", @HookName
         timer.Remove @TimerName
 
         @owner\ChatPrint "You've lost the Thorns Powerup"

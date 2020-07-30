@@ -1,5 +1,5 @@
 export FluxShieldPowerup
-class FluxShieldPowerup
+class FluxShieldPowerup extends BasePowerup
     @powerupID: "flux_shield_powerup"
     
     @powerupWeights:

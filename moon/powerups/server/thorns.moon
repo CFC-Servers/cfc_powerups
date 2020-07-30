@@ -3,7 +3,7 @@
 import Round from math
 
 export ThornsPowerup
-class ThornsPowerup
+class ThornsPowerup extends BasePowerup
     @powerupID: "powerup_thorns"
     
     @powerupWeights:

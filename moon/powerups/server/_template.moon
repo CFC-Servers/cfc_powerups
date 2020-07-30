@@ -1,7 +1,7 @@
 {get: getConf} = CFCPowerups.Config
 
 export TemplatePowerup
-class TemplatePowerup
+class TemplatePowerup extends BasePowerup
     @powerupID: "powerup_template"
     
     @powerupWeights:

@@ -37,14 +37,14 @@ class FluxShield
             alpha = ( 1 - @damageScale ) / ( @maxReduction / 100 )
 
             --DrawBloom(alpha * 0.3, alpha * 2, alpha * 8, alpha * 8, 15, 1, 0, 0.8, 1)
-            DrawSharpen 0.2 * alpha, 10 * alpha
+            DrawSharpen 0.2 * alpha, 5 * alpha
             -- DrawSunbeams 0.1 * alpha, alpha, 0.08 * alpha, 0, 0
 
             DrawMaterialOverlay "effects/CombineShield/comshieldwall", -0.4 * alpha
 
             tab = {}
-            tab["$pp_colour_colour"] = 1 - alpha
-            tab["$pp_colour_contrast"] = Clamp 2 * alpha, 1, 2
+            tab["$pp_colour_colour"] = Clamp 1 - alpha, 0.1, 1
+            tab["$pp_colour_contrast"] = 1 + alpha, 1, 2
             tab["$pp_colour_brightness"] = Clamp -0.3 * alpha, -1, 1
             --tab["$pp_colour_addb"] = 0.3 * alpha
             --tab["$pp_colour_addg"] = 0.2 * alpha

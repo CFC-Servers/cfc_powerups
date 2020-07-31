@@ -22,6 +22,7 @@ include "powerups/server/thorns.lua"
 
 AddCSLuaFile "autorun/client/cl_powerups_init.lua"
 AddCSLuaFile "powerups/client/halos.lua"
+AddCSLuaFile "powerups/client/thorns.lua"
 
 -- TODO: Automatically include all powerups after including the base powerup
 --foundPowerups = file.Find "powerups/server/*.lua", "LUA"

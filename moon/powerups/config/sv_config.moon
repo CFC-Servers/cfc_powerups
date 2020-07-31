@@ -206,4 +206,40 @@
     default: 130
     helpText: "What sound level should the Flux Shield use for its active playing sound? (Look into GLua sound levels)"
 -- =======================================================================
+
+-- Thorns ================================================================
+"cfc_powerups_thorns_duration":
+    default: 600
+    helpText: "How long does the Thorns powerup last, in seconds"
+
+"cfc_powerups_thorns_return_percentage":
+    default: 25
+    helpText: "What percentage of damage should be returned to the attacker?"
+-- =======================================================================
+
+-- Magnetic Crossbow =====================================================
+"cfc_powerups_magnetic_crossbow_duration":
+    default: 600
+    helpText: "How long does the Magnetic Crossbow powerup last, in seconds"
+
+"cfc_powerups_magnetic_crossbow_speed_multiplier":
+    default: 16
+    helpText: "What value to multiply crossbow bolt speed by for the Magnetic Crossbow powerup"
+
+"cfc_powerups_magnetic_crossbow_cone_range":
+    default: 300
+    helpText: "What range to use when finding targets in a cone (read the wiki for more info)"
+
+"cfc_powerups_magnetic_crossbow_cone_arc":
+    default: 20
+    helpText: "What arc degree to use when calculating targeting cone"
+
+"cfc_powerups_magnetic_crossbow_effect_linger_time":
+    default: 10
+    helpText: "How long should the effects relating to the Magnetic Crossbow powerup last?"
+
+"cfc_powerups_magnetic_crossbow_magnet_sound":
+    default: "ambient/machines/fluorescent_hum_1.wav"
+    helpText: "What sound should play when the bolt acquires a target?"
+-- =======================================================================
 }

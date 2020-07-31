@@ -18,10 +18,12 @@ include "powerups/server/hotshot.lua"
 include "powerups/server/feather.lua"
 include "powerups/server/ammo.lua"
 include "powerups/server/grenadier.lua"
+include "powerups/server/thorns.lua"
 include "powerups/server/magnetic_crossbow.lua"
 
 AddCSLuaFile "autorun/client/cl_powerups_init.lua"
 AddCSLuaFile "powerups/client/halos.lua"
+AddCSLuaFile "powerups/client/thorns.lua"
 
 -- TODO: Automatically include all powerups after including the base powerup
 --foundPowerups = file.Find "powerups/server/*.lua", "LUA"

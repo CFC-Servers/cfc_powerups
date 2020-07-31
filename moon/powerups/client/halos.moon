@@ -1,5 +1,7 @@
 drawHalos = () ->
-    return if true
+    do
+        return nil
+
     me = LocalPlayer!
 
     isInPvp = me\GetNWBool "CFC_PvP_Mode", false

@@ -189,6 +189,24 @@
     helpText: "What sound to make when the parent grenade explodes"
 -- =======================================================================
 
+-- Flux Shield ===========================================================
+"cfc_powerups_flux_shield_duration":
+    default: 120
+    helpText: "How long does the Flux Shield powerup last, in seconds"
+
+"cfc_powerups_flux_shield_max_reduction":
+    default: 50
+    helpText: "What is the maximum percentage of damage Flux Shield can reduce"
+
+"cfc_powerups_flux_shield_tick_interval":
+    default: 1
+    helpText: "How often should Flus Shield adjust the damage reduction value, in seconds"
+
+"cfc_powerups_flux_shield_active_sound_level":
+    default: 130
+    helpText: "What sound level should the Flux Shield use for its active playing sound? (Look into GLua sound levels)"
+-- =======================================================================
+
 -- Thorns ================================================================
 "cfc_powerups_thorns_duration":
     default: 600

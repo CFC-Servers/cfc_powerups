@@ -90,7 +90,7 @@ class ThornsPowerup extends BasePowerup
         expired = diff >= @BroadcastInterval
 
         if expired or overLimit
-            @BroadcastDamage
+            @BroadcastDamage!
 
     DamageWatcher: =>
         (ent, dmg, took) ->

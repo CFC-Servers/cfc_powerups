@@ -105,7 +105,7 @@ net.Receive "CFC_Powerups-ThornsDamage", ->
     damageData = JSONToTable damageJSON
     -- TODO: look into how much overhead this decompression and json stuff adds
 
-    for damage in *damageData
+    for damage in *damageData do
         :ply, :attacker, :amount = damage
 
         thorn = Thorn ply, attacker, amount

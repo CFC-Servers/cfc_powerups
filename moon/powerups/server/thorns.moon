@@ -1,6 +1,6 @@
 {get: getConf} = CFCPowerups.Config
 
-import AddNetworkString, Effect from util
+import AddNetworkString, Compress, Effect, TableToJSON from util
 import random, Round from math
 
 AddNetworkString "CFC_Powerups-PlyTookThornsDamage"
@@ -21,9 +21,15 @@ class ThornsPowerup extends BasePowerup
         @holo = @MakeHolo!
         @aoeEffect = @MakeAoeEffect!
 
+        -- We batch up damage broadcasts to lessen the network load
+        -- Interval is in seconds
+        @LastDamageBroadcast = CurTime!
+        @BroadcastQueue = {}
+        @BroadcastInterval = 0.1
+
+        @passiveSound\SetSoundLevel 100
         @passiveSoundPath = "ambient/energy/force_field_loop1.wav"
         @passiveSound = CreateSound @holo, @passiveSoundPath
-        @passiveSound\SetSoundLevel 100
 
         @TimerName = "CFC-Powerups_Thorns-#{ply\SteamID64!}"
         @HookName = @TimerName
@@ -59,20 +65,30 @@ class ThornsPowerup extends BasePowerup
 
         holo
 
-    GetSparkSound: =>
-        sparkNumber = random 1, 11
-        "ambient/energy/newspark#{string.format "%02d", sparkNumber}.wav"
+    BroadcastDamage: =>
+        damageJSON = TableToJSON @QBroadcastQueue
+        compressedJSON = Compress damageJSON
 
-    PlaySparkSound: (target) =>
-        sparkSound = @GetSparkSound!
-        target\EmitSound sparkSound, 75, 100, 0.6
-
-    BroadcastDamage: (attacker, amount) =>
-        net.Start "CFC_Powerups-PlyTookThornsDamage"
-        net.WriteEntity @owner
-        net.WriteEntity attacker
-        net.WriteFloat amount
+        net.Start "CFC_Powerups-ThornsDamage"
+        net.WriteString compressedJSON
         net.Broadcast!
+
+        @LastDamageBroadcast = CurTime!
+        @BroadcastQueue = {}
+
+    QueueDamageForBroadcast: (attacker, amount) =>
+        ply = @owner
+        struct = :ply, :attacker, :amount
+        insert @BroadcastQueue, struct
+
+        now = CurTime!
+        diff = now - @LastDamageBroadcast
+
+        overLimit = #@BroadcastQueue > @MaxBatchSize
+        expired = diff >= @BroadcastInteravl
+
+        if expired or overLimit
+            @BroadcastDamage
 
     DamageWatcher: =>
         (ent, dmg, took) ->
@@ -87,6 +103,7 @@ class ThornsPowerup extends BasePowerup
             damageAmount = dmg\GetDamage!
 
             return unless damageAmount > 0
+            return unless originalAttacker\Alive! -- TODO: Does this actually prevent reflect damage being reflected?
 
             damageScale = getConf "thorns_return_percentage"
             damageScale = damageScale / 100
@@ -96,7 +113,7 @@ class ThornsPowerup extends BasePowerup
             dmg\ScaleDamage damageScale
 
             newDamageAmount = damageAmount * damageScale
-            @BroadcastDamage originalAttacker, newDamageAmount
+            @QueueDamageForBroadcast originalAttacker, newDamageAmount
 
             originalAttacker\TakeDamageInfo dmg
             @PlaySparkSound originalAttacker

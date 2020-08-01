@@ -1,17 +1,25 @@
 import insert, remove from table
 import DrawBeam, SetMaterial from render
 import Clamp, ceil, random from math
+import Decompress, JSONToTable from util
 
 class ThornManager
     new: =>
         @thorns = {}
-        --@thornMat = "cable/blue_elec"
-        --@thornMat = Material "effects/beam_generic01"
         @thornMat = Material "cable/blue_elec"
         @thornDuration = 0.25
+        @thornDamageMult = 5
 
         hook.Add "PostDrawTranslucentRenderables", "CFC_Powerups-ThornsRenderer", ->
             @drawThorns!
+
+    getSparkSound: =>
+        sparkNumber = random 1, 11
+        "ambient/energy/newspark#{string.format "%02d", sparkNumber}.wav"
+
+    playSparkSound: (target) =>
+        sparkSound = @getSparkSound!
+        target\EmitSound sparkSound, 75, 100, 0.6
 
     generateThornSegments: (thorn) =>
         :ply, :attacker, :amount, :createdAt = thorn
@@ -69,9 +77,10 @@ class ThornManager
                 lastPos = segments[k - 1] or segment
 
                 t = k / #segments
-                --width = amount * (1 - t) * (1 - lifetime / 0.25)
-                --width = Clamp width, 1, 35
-                width = ( amount * 5 ) * (1 - lifetime / @thornDuration)
+
+                widthModifier = amount * @thornDamageMult
+                thornAge = 1 - lifetime / @thornDuration
+                width = widthModifier * thornAge
 
                 SetMaterial @thornMat
                 DrawBeam lastPos, segment, width, 0, 0, Color(93, 227, 232)
@@ -79,6 +88,7 @@ class ThornManager
     addThorn: (thorn) =>
         @generateThornSegments thorn
         insert @thorns, thorn
+        @playSparkSound thorn.target
 
 class Thorn
     new: (thornyPly, attacker, amount) =>
@@ -89,10 +99,14 @@ class Thorn
 
 manager = ThornManager!
 
-net.Receive "CFC_Powerups-PlyTookThornsDamage", ->
-    thornyPly = net.ReadEntity!
-    attacker = net.ReadEntity!
-    amount = net.ReadFloat!
+net.Receive "CFC_Powerups-ThornsDamage", ->
+    compressedDamage = net.ReadString!
+    damageJSON = Decompress compressedDamage
+    damageData = JSONToTable damageJSON
+    -- TODO: look into how much overhead this decompression and json stuff adds
 
-    thorn = Thorn thornyPly, attacker, amount
-    manager\addThorn thorn
+    for damage in *damageData
+        :ply, :attacker, :amount = damage
+
+        thorn = Thorn ply, attacker, amount
+        manager\addThorn thorn

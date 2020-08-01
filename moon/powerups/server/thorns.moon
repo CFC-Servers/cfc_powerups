@@ -27,9 +27,9 @@ class ThornsPowerup extends BasePowerup
         @BroadcastQueue = {}
         @BroadcastInterval = 0.1
 
-        @passiveSound\SetSoundLevel 100
         @passiveSoundPath = "ambient/energy/force_field_loop1.wav"
         @passiveSound = CreateSound @holo, @passiveSoundPath
+        @passiveSound\SetSoundLevel 100
 
         @TimerName = "CFC-Powerups_Thorns-#{ply\SteamID64!}"
         @HookName = @TimerName

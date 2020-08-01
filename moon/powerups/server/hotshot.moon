@@ -78,8 +78,8 @@ fireDamageWatcher = (ent, damageInfo) ->
 
     addedDamage = (burningDamage or 0) + (explosionBurningDamage or 0)
 
-    if ent\IsPlayer!
-        ent\ChatPrint "You took an extra #{addedDamage} damage from fire damage due to Hotshot Stacks"
+    --if ent\IsPlayer!
+    --    ent\ChatPrint "You took an extra #{addedDamage} damage from fire damage due to Hotshot Stacks"
 
     damageInfo\AddDamage addedDamage
 

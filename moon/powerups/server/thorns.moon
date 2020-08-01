@@ -143,7 +143,6 @@ class ThornsPowerup extends BasePowerup
         return unless IsValid @owner
 
         @owner\SetNWBool "CFC_Powerups-HasThorns", false
-
         @owner\ChatPrint "You've lost the Thorns Powerup"
 
         -- TODO: Should the PowerupManager do this?

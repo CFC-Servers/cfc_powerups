@@ -97,7 +97,7 @@ class FluxShieldPowerup extends BasePowerup
         (ent, dmg) ->
             return unless ent == @owner
 
-            @owner\ChatPrint "Reducing #{Round dmg\GetDamage!} damage by #{100 - Round(@damageScale * 100)}%"
+            --@owner\ChatPrint "Reducing #{Round dmg\GetDamage!} damage by #{100 - Round(@damageScale * 100)}%"
             dmg\ScaleDamage @damageScale
 
     ApplyEffect: =>

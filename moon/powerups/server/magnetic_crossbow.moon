@@ -199,7 +199,7 @@ class MagneticCrossbowPowerup extends BasePowerup
         super self
 
         @UsesRemaining += 10
-        @owner\ChatPrint "You've gained #{10} extra Magnetic Crossbow Bolts (total: #{@UsesRemaining}"
+        @owner\ChatPrint "You've gained #{10} extra Magnetic Crossbow Bolts (total: #{@UsesRemaining})"
 
     Remove: =>
         super self

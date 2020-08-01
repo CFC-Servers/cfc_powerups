@@ -2,6 +2,7 @@
 
 import AddNetworkString, Compress, Effect, TableToJSON from util
 import random, Round from math
+import insert from table
 
 AddNetworkString "CFC_Powerups-PlyTookThornsDamage"
 

@@ -128,7 +128,7 @@ class WatchedBolt
         return unless IsValid closestTarget
 
         timer.Remove @movementHandler
-        @startSound!
+        --@startSound!
 
         point = ->
             return unless IsValid @bolt
@@ -163,10 +163,18 @@ class MagneticCrossbowPowerup extends BasePowerup
         super ply
 
         @PowerupHookName = "CFC-Powerups_MagneticCrossbow-#{@owner\SteamID64!}"
-        @TimerName = @PowerupHookName
+        @UsesRemaining = 10
 
         @ApplyEffect!
-    
+
+    CreateWatchedBolt: (bolt) =>
+        @UsesRemaining -= 1
+
+        WatchedBolt bolt
+
+        if @UsesRemaining == 0
+            @Remove!
+
     CrossbowWatcher: =>
         (ent) ->
             return unless IsValid ent
@@ -176,7 +184,7 @@ class MagneticCrossbowPowerup extends BasePowerup
             timer.Simple 0, ->
                 return unless ent\GetSaveTable!["m_hOwnerEntity"] == @owner
 
-                WatchedBolt ent
+                @CreateWatchedBolt ent
 
     ApplyEffect: =>
         super self
@@ -184,21 +192,19 @@ class MagneticCrossbowPowerup extends BasePowerup
         duration = getConf "magnetic_crossbow_duration"
 
         hook.Add "OnEntityCreated", @PowerupHookName, @CrossbowWatcher!
-        timer.Create @TimerName, duration, 1, -> @Remove!
 
-        @owner\ChatPrint "You've gained #{duration} seconds of the Magnetic Crossbow Powerup"
+        @owner\ChatPrint "You've gained #{@UsesRemaining} Magnetic Crossbow Bolts"
 
     Refresh: =>
         super self
 
-        timer.Start @TimerName
-        @owner\ChatPrint "You've refreshed the duration of the Magnetic Crossbow Powerup"
+        @UsesRemaining += 10
+        @owner\ChatPrint "You've gained #{10} extra Magnetic Crossbow Bolts (total: #{@UsesRemaining}"
 
     Remove: =>
         super self
 
         hook.Remove "OnEntityCreated", @PowerupHookName
-        timer.Remove @TimerName
 
         @owner\ChatPrint "You've lost the Magnetic Crossbow Powerup"
 

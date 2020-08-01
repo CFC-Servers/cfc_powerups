@@ -4,7 +4,7 @@ import AddNetworkString, Compress, Effect, TableToJSON from util
 import random, Round from math
 import insert from table
 
-AddNetworkString "CFC_Powerups-PlyTookThornsDamage"
+AddNetworkString "CFC_Powerups-ThornsDamage"
 
 export ThornsPowerup
 class ThornsPowerup extends BasePowerup

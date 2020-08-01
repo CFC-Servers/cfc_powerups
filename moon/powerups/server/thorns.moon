@@ -118,7 +118,6 @@ class ThornsPowerup extends BasePowerup
             @QueueDamageForBroadcast originalAttacker, newDamageAmount
 
             originalAttacker\TakeDamageInfo dmg
-            @PlaySparkSound originalAttacker
 
             --originalAttacker\ChatPrint "[CFC Powerups] You took #{Round newDamageAmount} reflected damage!"
 

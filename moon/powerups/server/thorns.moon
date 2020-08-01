@@ -87,7 +87,7 @@ class ThornsPowerup extends BasePowerup
         diff = now - @LastDamageBroadcast
 
         overLimit = #@BroadcastQueue > @BroadcastQueueLimit
-        expired = diff >= @BroadcastInteravl
+        expired = diff >= @BroadcastInterval
 
         if expired or overLimit
             @BroadcastDamage

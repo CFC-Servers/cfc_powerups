@@ -27,6 +27,7 @@ class ThornsPowerup extends BasePowerup
         @LastDamageBroadcast = CurTime!
         @BroadcastQueue = {}
         @BroadcastInterval = 0.1
+        @BroadcastQueueLimit = 25
 
         @passiveSoundPath = "ambient/energy/force_field_loop1.wav"
         @passiveSound = CreateSound @holo, @passiveSoundPath
@@ -85,7 +86,7 @@ class ThornsPowerup extends BasePowerup
         now = CurTime!
         diff = now - @LastDamageBroadcast
 
-        overLimit = #@BroadcastQueue > @MaxBatchSize
+        overLimit = #@BroadcastQueue > @BroadcastQueueLimit
         expired = diff >= @BroadcastInteravl
 
         if expired or overLimit

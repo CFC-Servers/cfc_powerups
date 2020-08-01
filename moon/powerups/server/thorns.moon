@@ -68,7 +68,7 @@ class ThornsPowerup extends BasePowerup
         holo
 
     BroadcastDamage: =>
-        damageJSON = TableToJSON @QBroadcastQueue
+        damageJSON = TableToJSON @BroadcastQueue
         compressedJSON = Compress damageJSON
 
         net.Start "CFC_Powerups-ThornsDamage"

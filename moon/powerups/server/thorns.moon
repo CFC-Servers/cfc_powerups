@@ -2,7 +2,7 @@
 
 import AddNetworkString, Compress, Effect, TableToJSON from util
 import random, Round from math
-import insert from table
+import Count, insert from table
 
 AddNetworkString "CFC_Powerups-ThornsDamage"
 
@@ -28,6 +28,12 @@ class ThornsPowerup extends BasePowerup
         @BroadcastQueue = {}
         @BroadcastInterval = 0.1
         @BroadcastQueueLimit = 25
+        @BroadcastQueueSize = ->
+            count = 0
+            for ply, targets in pairs @BroadcastQueue
+                count += Count targets
+
+            count
 
         @passiveSoundPath = "ambient/energy/force_field_loop1.wav"
         @passiveSound = CreateSound @holo, @passiveSoundPath
@@ -79,14 +85,20 @@ class ThornsPowerup extends BasePowerup
         @BroadcastQueue = {}
 
     QueueDamageForBroadcast: (attacker, amount) =>
-        ply = @owner
-        struct = :ply, :attacker, :amount
-        insert @BroadcastQueue, struct
+        queue = @BroadcastQueue
+
+        queue[@owner] or= {}
+        ownerToAttacker = queue[@owner][attacker]
+
+        if ownerToAttacker
+            ownerToAttacker.amount += amount
+        else
+            ownerToAttacker = amount
 
         now = CurTime!
         diff = now - @LastDamageBroadcast
 
-        overLimit = #@BroadcastQueue > @BroadcastQueueLimit
+        overLimit = @BroadcastQueueSize! > @BroadcastQueueLimit
         expired = diff >= @BroadcastInterval
 
         if expired or overLimit

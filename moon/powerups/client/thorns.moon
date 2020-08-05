@@ -17,9 +17,9 @@ class ThornManager
         sparkNumber = random 1, 11
         "ambient/energy/newspark#{string.format "%02d", sparkNumber}.wav"
 
-    playSparkSound: (target) =>
+    playSparkSound: (attacker) =>
         sparkSound = @getSparkSound!
-        target\EmitSound sparkSound, 75, 100, 0.6
+        attacker\EmitSound sparkSound, 75, 100, 0.6
 
     generateThornSegments: (thorn) =>
         :ply, :attacker, :amount, :createdAt = thorn
@@ -88,7 +88,7 @@ class ThornManager
     addThorn: (thorn) =>
         @generateThornSegments thorn
         insert @thorns, thorn
-        @playSparkSound thorn.target
+        @playSparkSound thorn.attacker
 
 class Thorn
     new: (thornyPly, attacker, amount) =>

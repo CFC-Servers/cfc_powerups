@@ -86,7 +86,7 @@ class ThornsPowerup extends BasePowerup
 
     QueueDamageForBroadcast: (attacker, amount) =>
         @BroadcastQueue[@owner] or= {}
-        ownerToAttacker = BroadcastQueue[@owner][attacker]
+        ownerToAttacker = @BroadcastQueue[@owner][attacker]
 
         if ownerToAttacker
             ownerToAttacker += amount

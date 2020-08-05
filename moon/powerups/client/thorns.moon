@@ -100,10 +100,9 @@ class Thorn
 manager = ThornManager!
 
 net.Receive "CFC_Powerups-ThornsDamage", ->
-    compressedDamage = net.ReadString!
-    damageJSON = Decompress compressedDamage
-    damageData = JSONToTable damageJSON
-    -- TODO: look into how much overhead this decompression and json stuff adds
+    print "Receiving thorns damage.."
+    damageData = net.ReadTable!
+    PrintTable damageData
 
     for ply, attackers in pairs damageData do
         for attacker, amount in pairs attackers

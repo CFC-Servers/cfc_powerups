@@ -74,16 +74,12 @@ class ThornsPowerup extends BasePowerup
         holo
 
     BroadcastDamage: =>
-        print "Beginning broadcast of BroadcastQueue:"
-        PrintTable @BroadcastQueue
-        damageJSON = TableToJSON @BroadcastQueue
-        print "BroadcastQueue JSON: '#{damageJSON}'"
-        compressedJSON = Compress damageJSON
-        print "Compressed JSON"
-        print compressedJSON
-
         net.Start "CFC_Powerups-ThornsDamage"
-        net.WriteString compressedJSON
+
+        print "Preparing to broadcast damage queue:"
+        PrintTable @BroadcastQueue
+
+        net.WriteTable @BroadcastQueue
         net.Broadcast!
 
         @LastDamageBroadcast = CurTime!

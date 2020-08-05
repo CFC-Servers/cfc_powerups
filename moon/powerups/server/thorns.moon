@@ -74,8 +74,13 @@ class ThornsPowerup extends BasePowerup
         holo
 
     BroadcastDamage: =>
+        print "Beginning broadcast of BroadcastQueue:"
+        PrintTable @BroadcastQueue
         damageJSON = TableToJSON @BroadcastQueue
+        print "BroadcastQueue JSON: '#{damageJSON}'"
         compressedJSON = Compress damageJSON
+        print "Compressed JSON"
+        print compressedJSON
 
         net.Start "CFC_Powerups-ThornsDamage"
         net.WriteString compressedJSON
@@ -89,9 +94,12 @@ class ThornsPowerup extends BasePowerup
         ownerToAttacker = @BroadcastQueue[@owner][attacker]
 
         if ownerToAttacker
-            ownerToAttacker += amount
+            @BroadcastQueue[@owner][attacker] += amount
         else
-            ownerToAttacker = amount
+            @BroadcastQueue[@owner][attacker] = amount
+
+        print "Queued damage of amount #{amount} for broadcast. New queue:"
+        PrintTable @BroadcastQueue
 
         now = CurTime!
         diff = now - @LastDamageBroadcast

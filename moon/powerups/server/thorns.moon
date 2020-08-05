@@ -85,13 +85,11 @@ class ThornsPowerup extends BasePowerup
         @BroadcastQueue = {}
 
     QueueDamageForBroadcast: (attacker, amount) =>
-        queue = @BroadcastQueue
-
-        queue[@owner] or= {}
-        ownerToAttacker = queue[@owner][attacker]
+        @BroadcastQueue[@owner] or= {}
+        ownerToAttacker = BroadcastQueue[@owner][attacker]
 
         if ownerToAttacker
-            ownerToAttacker.amount += amount
+            ownerToAttacker += amount
         else
             ownerToAttacker = amount
 
@@ -117,7 +115,7 @@ class ThornsPowerup extends BasePowerup
             damageAmount = dmg\GetDamage!
 
             return unless damageAmount > 0
-            return unless originalAttacker\Alive! -- TODO: Does this actually prevent reflect damage being reflected?
+            --return unless originalAttacker\Alive! -- TODO: Does this actually prevent reflect damage being reflected?
 
             damageScale = getConf "thorns_return_percentage"
             damageScale = damageScale / 100

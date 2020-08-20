@@ -26,8 +26,8 @@ class ThornsPowerup extends BasePowerup
         -- Interval is in seconds
         @LastDamageBroadcast = CurTime!
         @BroadcastQueue = {}
-        @BroadcastInterval = 0.1
-        @BroadcastQueueLimit = 25
+        @BroadcastInterval = 0.5
+        @BroadcastQueueLimit = 75
         @BroadcastQueueSize = ->
             count = 0
             for ply, targets in pairs @BroadcastQueue

@@ -21,20 +21,20 @@ jobs:
       - name: Install LuaRocks
         run: sudo apt-get install -y luarocks
 
-      - name: Enable extended globbing
-        run: shopt -s extglob
-
       - name: Install Moonscript
         run: sudo luarocks install moonscript
 
       - name: Build Lua
         run: moonc -t lua moon/*
 
+      - name: Enable extended globbing
+        run: shopt -s extglob
+
       - name: Prepare Release Asset
         run: rm -rf moon .git*
 
       - name: Create subdirectory
-        run: mkdir ../${{ github.event.repository.name }}
+        run: mkdir ${{ github.event.repository.name }}
 
       - name: Move files into sub directory
         run: mv !(${{ github.event.repository.name }}) ${{ github.event.repository.name }}

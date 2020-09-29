@@ -34,7 +34,7 @@ jobs:
         run: mkdir ${{ github.event.repository.name }}
         
       - name: Move files into sub directory
-        run: mv !(${{ github.event.repository.name }}) ${{ github.event.repository.name }}
+        run: /bin/bash -c "mv !(${{ github.event.repository.name }}) ${{ github.event.repository.name }}"
       
       - name: Create Release Asset
         run: zip -r9 ${{ github.event.repository.name }}.zip .

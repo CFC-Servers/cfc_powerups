@@ -27,9 +27,6 @@ jobs:
       - name: Build Lua
         run: moonc -t lua moon/*
 
-      - name: Enable extended globbing
-        run: shopt -s extglob
-
       - name: Prepare Release Asset
         run: rm -rf moon .git*
 
@@ -37,7 +34,7 @@ jobs:
         run: mkdir ${{ github.event.repository.name }}
 
       - name: Move files into sub directory
-        run: mv !(${{ github.event.repository.name }}) ${{ github.event.repository.name }}
+        run: ls | grep -v ${{ github.event.repository.name }} | xargs mv -t ${{ github.event.repository.name }}
 
       - name: Create Release Asset
         run: zip -r9 ${{ github.event.repository.name }}.zip .

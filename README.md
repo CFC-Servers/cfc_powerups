@@ -6,11 +6,7 @@ Randomly spawning powerups
  - [CFC Logger](https://github.com/CFC-Servers/cfc_logger)
 
 ## Using
-Because Powerups is a Moonscript addon, you'll need to use a tool to compile it into Lua.
-Numerous tools exist for this purpose, I'll leave it up to you to do some quick research on how to do this for your platform.
-(Eventually we'll be placing compiled versions in the GitHub releases tab)
-
-Once you have the compiled lua, you can just plop the whole thing into your addons directory.
+You can download the latest release from our [Releases](https://github.com/CFC-Servers/cfc_powerups/releases) tab, or you can clone our [`lua` branch](https://github.com/CFC-Servers/cfc_powerups/tree/lua) and use it to stay up-to-date.
 
 
 ## Adding a new powerup

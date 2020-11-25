@@ -1,5 +1,4 @@
 name: Create Moonscript Release
-:wa
 
 on:
   push:

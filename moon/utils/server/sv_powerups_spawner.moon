@@ -94,7 +94,7 @@ PowerupSpawner =
 concommand.Add "cfc_powerups_enable_spawner", -> PowerupSpawner\start!
 concommand.Add "cfc_powerups_disable_spawner", -> PowerupSpawner\stop!
 
-CreateConVar "cfc_powerups_spawner_enabled", 1, FCVAR_ARCHIVE, "Whether or not powerups automaticalyl spawn on the map", 0, 1
+CreateConVar "cfc_powerups_spawner_enabled", 1, FCVAR_ARCHIVE, "Whether or not powerups automatically spawn on the map", 0, 1
 shouldStart = GetConVar "cfc_powerups_spawner_enabled"
 shouldStart and= shouldStart\GetInt() == 1
 

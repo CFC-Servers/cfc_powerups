@@ -4,8 +4,8 @@ drawHalos = () ->
 
     me = LocalPlayer!
 
-    isInPvp = me\GetNWBool "CFC_PvP_Mode", false
-    return unless isInPvp
+    shouldDraw = hook.Run "CFC_Powerups_ShouldDrawPowerupHalo", me
+    return false if shouldDraw == false
 
     activeWeapon = me\GetActiveWeapon!
     hasWeapon = IsValid activeWeapon
@@ -17,9 +17,11 @@ drawHalos = () ->
     playersWithPowerups = [ply for ply in *player.GetAll! when ply\GetNWBool("HasPowerup", false)]
 
     halo.Add playersWithPowerups, Color(255,0,0), 2, 1, 1, false, true
+
 hook.Add "PreDrawHalos", "DrawPowerupHalos", drawHalos
 
 stopPvpHalos = (ply) ->
     if ply\GetNWBool("HasPowerup", false)
         return false
+
 hook.Add "CFC_PvP_SetPlayerHalo", "PreventPvPHalosForPowerups", stopPvpHalos

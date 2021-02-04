@@ -80,11 +80,13 @@ class WatchedBolt
             @bolt\SetVelocity newVel * getConf "magnetic_crossbow_speed_multiplier"
 
     canTargetPlayer: (ply) =>
-        -- TODO: How to ignore faction mates in here?
         return false if ply == @boltShooter
         return false unless ply\IsPlayer!
         return false unless ply\Alive!
-        return false unless ply\GetNWBool "CFC_PvP_Mode"
+
+        canTarget = hook.Run "CFC_Powerups_MagneticCrossbow_CanTarget", ply, @boltShooter
+        return false if canTarget == false
+
         return false unless @bolt\TestPVS ply
         true
 
@@ -143,7 +145,7 @@ class WatchedBolt
     cleanup: =>
         @stopSound!
 
-        -- We delay the removal of our holo until the trails dissipate 
+        -- We delay the removal of our holo until the trails dissipate
         lingerTime = getConf "magnetic_crossbow_effect_linger_time"
         timer.Simple lingerTime, ->
             @holo\Remove!

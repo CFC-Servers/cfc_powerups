@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/cfc/powerups/powerup_colorable"
+	"$blendtintbybasealpha" 1
+
+}
+

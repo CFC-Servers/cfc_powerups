@@ -18,7 +18,7 @@ ENT.Sounds        =
     Pickup: "vo/npc/female01/hacks01.wav"
     PickupFailed: "common/warning.wav"
 
-ENT.Model         = "models/powerups/minigun.mdl"
+ENT.Model         = "models/cfc/powerups/powerup.mdl"
 
 ENT.PickupDistance = 50
 ENT.FailedPickups = {}

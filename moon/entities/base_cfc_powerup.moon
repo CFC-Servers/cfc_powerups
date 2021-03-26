@@ -33,17 +33,7 @@ ENT.Initialize = =>
     @SetModel @Model
     @SetMoveType MOVETYPE_NOCLIP
     @PhysicsInit SOLID_NONE
-    @SetModelScale 15
     @Activate!
-
-    @originalPos = @GetPos!
-
-ENT.Think = =>
-    newPos = @originalPos + Vector 0, 0, math.sin(CurTime! * 2) * 10
-    @SetPos newPos
-
-    @NextThink CurTime! + 0.1
-    true
 
 ENT.GivePowerup = (ply) =>
     return unless IsValid ply

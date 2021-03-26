@@ -19,6 +19,7 @@ ENT.Sounds        =
     PickupFailed: "common/warning.wav"
 
 ENT.Model         = "models/cfc/powerups/powerup.mdl"
+ENT.Color         = Color 255, 255, 255
 
 ENT.PickupDistance = 50
 ENT.FailedPickups = {}
@@ -31,6 +32,7 @@ if CLIENT
 
 ENT.Initialize = =>
     @SetModel @Model
+    @SetColor @Color
     @SetMoveType MOVETYPE_NOCLIP
     @PhysicsInit SOLID_NONE
     @Activate!

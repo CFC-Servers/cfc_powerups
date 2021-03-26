@@ -4,3 +4,4 @@ include "shared.lua"
 
 ENT.Base = "base_cfc_powerup"
 ENT.Powerup = "powerup_grenadier"
+ENT.Color = Color 181, 83, 93

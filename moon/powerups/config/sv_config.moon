@@ -9,6 +9,10 @@
 "cfc_powerups_spawn_sound":
     default: "ambient/machines/teleport4.wav"
     helpText: "The sound that each powerup makes when it spawns on the map"
+
+"cfc_powerups_spawn_height":
+    default: 20
+    helpText: "The height offset to add to a powerup spawn position"
 -- =======================================================================
 
 -- Cluster Combine Ball ==================================================

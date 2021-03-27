@@ -53,7 +53,7 @@ PowerupSpawner =
         with ents.Create powerupClass
             .spawnedAutomatically = true
             .originalPos = position
-            \SetPos position
+            \SetPos position + Vector 0, 0, getConf "spawn_height"
             \Spawn!
 
             \EmitSound getConf "spawn_sound", 90

@@ -3,7 +3,7 @@ class BasePowerup
     @powerupList: {}
 
     @powerupID: "base_cfc_powerup"
-    
+
     @powerupTotalWeights:
         tier1: 0
         tier2: 0
@@ -28,16 +28,21 @@ class BasePowerup
 
     ApplyEffect: =>
         @owner\SetNWBool "HasPowerup", true
+        hook.Run "CFCPowerups_PowerupApplied", @owner, @powerupID
+        nil
 
     Refresh: =>
+        hook.Run "CFCPowerups_PowerupRefreshed", @owner, @powerupID
         nil
 
     Remove: =>
         @owner\SetNWBool "HasPowerup", false
+        hook.Run "CFCPowerups_PowerupRemoved", @owner, @powerupID
+        nil
 
     @__inherited: ( child ) =>
         table.insert @powerupList, child
-        
+
         CFCPowerups[child.powerupID] = child
 
         for tier = 1, 4

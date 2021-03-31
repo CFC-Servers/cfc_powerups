@@ -106,8 +106,9 @@ net.Receive "CFC_Powerups-ThornsDamage", ->
 
     for ply, attackers in pairs damageData do
         for attacker, amount in pairs attackers
-            thorn = Thorn ply, attacker, amount
-            manager\addThorn thorn
+            if IsValid( ply ) and IsValid( attacker )
+                thorn = Thorn ply, attacker, amount
+                manager\addThorn thorn
 
-            -- Hard limit the amount of beams rendered by the client
-            return if #manager.thorns >= 25
+                -- Hard limit the amount of beams rendered by the client
+                return if #manager.thorns >= 25

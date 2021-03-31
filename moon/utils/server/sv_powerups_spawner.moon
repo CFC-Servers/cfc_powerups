@@ -84,21 +84,21 @@ PowerupSpawner =
                 powerup\GivePowerup ply
 
     stop: =>
-        timer.Remove @spawnIntervalTimerName
         timer.Remove @pickupWatcherName
+
+    stopSpawner: =>
+        timer.Remove @spawnIntervalTimerName
 
     start: =>
         spawnDelay = getConf "spawn_delay"
+        shouldStartSpawner = GetConVar("cfc_powerups_spawner_enabled")\GetBool!
 
-        timer.Create @spawnIntervalTimerName, spawnDelay, 0, PowerupSpawner.spawnRandomPowerups
+        if shouldStartSpawner
+            timer.Create @spawnIntervalTimerName, spawnDelay, 0, PowerupSpawner.spawnRandomPowerups
         timer.Create @pickupWatcherName, 0.25, 0, PowerupSpawner.watchForPickup
 
 concommand.Add "cfc_powerups_enable_spawner", -> PowerupSpawner\start!
-concommand.Add "cfc_powerups_disable_spawner", -> PowerupSpawner\stop!
+concommand.Add "cfc_powerups_disable_spawner", -> PowerupSpawner\stopSpawner!
 
 CreateConVar "cfc_powerups_spawner_enabled", 1, FCVAR_ARCHIVE, "Whether or not powerups automatically spawn on the map", 0, 1
-shouldStart = GetConVar "cfc_powerups_spawner_enabled"
-shouldStart and= shouldStart\GetInt() == 1
-
-if shouldStart
-    PowerupSpawner\start!
+PowerupSpawner\start!

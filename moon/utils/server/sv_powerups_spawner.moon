@@ -50,13 +50,15 @@ PowerupSpawner =
         spawnLocations
 
     spawnPowerup: (powerupClass, position) ->
-        with ents.Create powerupClass
+        with powerup = ents.Create powerupClass
             .spawnedAutomatically = true
             .originalPos = position
             \SetPos position + Vector 0, 0, getConf "spawn_height"
             \Spawn!
 
             \EmitSound getConf "spawn_sound", 90
+
+            hook.Run "CFC_Powerups_PowerupSpawned", powerup
 
     spawnRandomPowerups: ->
         PowerupSpawner.removeAllPowerups!

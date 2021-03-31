@@ -28,16 +28,16 @@ class BasePowerup
 
     ApplyEffect: =>
         @owner\SetNWBool "HasPowerup", true
-        hook.Run "CFCPowerups_PowerupApplied", @owner, @powerupID
+        hook.Run "CFC_Powerups_PowerupApplied", @owner, @powerupID
         nil
 
     Refresh: =>
-        hook.Run "CFCPowerups_PowerupRefreshed", @owner, @powerupID
+        hook.Run "CFC_Powerups_PowerupRefreshed", @owner, @powerupID
         nil
 
     Remove: =>
         @owner\SetNWBool "HasPowerup", false
-        hook.Run "CFCPowerups_PowerupRemoved", @owner, @powerupID
+        hook.Run "CFC_Powerups_PowerupRemoved", @owner, @powerupID
         nil
 
     @__inherited: ( child ) =>

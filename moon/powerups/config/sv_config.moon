@@ -156,9 +156,9 @@
 -- =======================================================================
 
 -- Grenadier =============================================================
-"cfc_powerups_grenadier_duration":
-    default: 600
-    helpText: "How long does the Grenadier powerup last, in seconds"
+"cfc_powerups_grenadier_uses":
+    default: 5
+    helpText: "How many uses of the Grenadier powerup is given"
 
 "cfc_powerups_grenadier_alt_fire_delay":
     default: 0.2

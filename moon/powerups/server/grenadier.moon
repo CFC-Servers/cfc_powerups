@@ -17,9 +17,7 @@ class GrenadierPowerup extends BasePowerup
     new: (ply) =>
         super ply
 
-        duration = getConf "grenadier_duration"
-        @durationTimer = "CFC_Powerups-Grenadier-#{ply\SteamID64!}"
-        timer.Create @durationTimer, duration, 1, -> @Remove!
+        @UsesRemaining = getConf "grenadier_uses"
 
         @ApplyEffect!
 
@@ -29,8 +27,11 @@ class GrenadierPowerup extends BasePowerup
         activeWeapon = @owner\GetActiveWeapon!
         return unless activeWeapon\GetClass! == "weapon_smg1"
         return unless activeWeapon\GetNextSecondaryFire! > CurTime! + altFireDelay
+        return if @UsesRemaining < 1
 
         activeWeapon\SetNextSecondaryFire CurTime! + altFireDelay
+
+        @UsesRemaining -= 1
 
     NewAltFireWatcher: =>
         (ent) ->
@@ -88,6 +89,9 @@ class GrenadierPowerup extends BasePowerup
                     cluster\SetPos entPos
                     cluster\SetVelocity (newPos - entPos) * 5
 
+            if @UsesRemaining < 1
+                @Remove!
+
     ApplyEffect: =>
         super self
         -- Watch for new smgalts and set trail + properties
@@ -112,16 +116,19 @@ class GrenadierPowerup extends BasePowerup
             \Give smg1
             \GiveAmmo 15, smg1ammo, true
             \SelectWeapon smg1
-            \ChatPrint "You've gained #{getConf "grenadier_duration"} seconds of the Grenadier Powerup"
+            \ChatPrint "You've gained #{@UsesRemaining} Grenadier rounds"
 
     Refresh: =>
         super self
-        timer.Start @durationTimer
-        @owner\ChatPrint "You've refreshed your duration of the Grenadier Powerup"
+
+        usesGained = getConf "grenadier_uses"
+
+        @UsesRemaining += usesGained
+        @owner\ChatPrint "You've gained #{usesGained} extra Grenadier rounds (total: #{@UsesRemaining})"
 
     Remove: =>
         super self
-        timer.Remove @durationTimer
+
         timer.Remove @adjustorTimer
         hook.Remove "EntityRemoved", @explosionWatcher
         hook.Remove "OnEntityCreated", @altFireWatcher

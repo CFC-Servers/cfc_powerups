@@ -17,7 +17,7 @@ class GrenadierPowerup extends BasePowerup
     new: (ply) =>
         super ply
 
-        @UsesRemaining = getConf "grenadier_uses"
+        @usesRemaining = getConf "grenadier_uses"
 
         @ApplyEffect!
 

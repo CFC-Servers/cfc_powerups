@@ -222,9 +222,9 @@
 -- =======================================================================
 
 -- Magnetic Crossbow =====================================================
-"cfc_powerups_magnetic_crossbow_duration":
-    default: 600
-    helpText: "How long does the Magnetic Crossbow powerup last, in seconds"
+"cfc_powerups_magnetic_crossbow_uses":
+    default: 10
+    helpText: "How many uses of the Magnetic Crossbow powerup is given"
 
 "cfc_powerups_magnetic_crossbow_speed_multiplier":
     default: 16

@@ -1,5 +1,6 @@
 {get: getConf} = CFCPowerups.Config
 
+import IsValid from _G
 import SpriteTrail from util
 import cos, rad from math
 import FindInCone from ents
@@ -15,6 +16,10 @@ class WatchedBolt
         @soundPath = getConf "magnetic_crossbow_magnet_sound"
         @soundId = nil
 
+        -- A player's center of mass is ~36 units above their position
+        @targetOffset = Vector 0, 0, 36
+        @findAngle = cos rad 35
+
         @addTrail!
 
         timer.Create @movementHandler, 0, 0, ->
@@ -29,8 +34,10 @@ class WatchedBolt
             \SetPos @bolt\GetPos!
             \SetModel ""
             \SetRenderMode RENDERMODE_NONE
+            \SetMoveType MOVETYPE_NONE
             \DrawShadow false
             \Spawn!
+            \SetParent @bolt
 
         holo
 
@@ -64,11 +71,9 @@ class WatchedBolt
                     texture
 
     pointTowardsTarget: (target) =>
-        -- A player's center of mass is ~36 units above their position
-        targetOffset = Vector(0, 0, 36)
-        targetPos = target\GetPos! + targetOffset
+        targetPos = target\GetPos! + @targetOffset
 
-        newVel = targetPos- @bolt\GetPos!
+        newVel = targetPos - @bolt\GetPos!
         -- We can either modify the current velocity with the difference, or halt it and start it again
         --velDiff = newVel - @bolt\GetVelocity!
 
@@ -80,7 +85,6 @@ class WatchedBolt
             @bolt\SetVelocity newVel * getConf "magnetic_crossbow_speed_multiplier"
 
     canTargetPlayer: (ply) =>
-        -- TODO: How to ignore faction mates in here?
         return false if ply == @boltShooter
         return false unless ply\IsPlayer!
         return false unless ply\Alive!
@@ -105,7 +109,7 @@ class WatchedBolt
         angle = cos rad getConf "magnetic_crossbow_cone_arc"
 
         -- TODO: Figure out if we can use range and angle in here
-        potentialTargets = ents.FindInCone origin, normal, 300, math.cos(math.rad(35))
+        potentialTargets = FindInCone origin, normal, 300, @findAngle
         eligableTargets = {}
 
         for target in *potentialTargets
@@ -119,6 +123,7 @@ class WatchedBolt
         eligableTargets
 
     handleMovement: =>
+        return unless IsValid @bolt
         @holo\SetPos @bolt\GetPos!
 
         targets = @getPotentialTargets!

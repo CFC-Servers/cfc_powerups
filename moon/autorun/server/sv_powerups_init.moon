@@ -37,7 +37,11 @@ AddCSLuaFile "powerups/client/thorns.lua"
 --    include powerup
 
 mapConfigPath = "powerups/config/maps/#{game.GetMap!}.lua"
-CFCPowerups.spawnLocations = include mapConfigPath
+CFCPowerups.spawnLocations = {}
+
+if file.Exists mapConfigPath, "LUA"
+    CFCPowerups.spawnLocations = include mapConfigPath
+
 
 hook.Add "PlayerSpawn", "CFC_Powerups_PlayerInit", (ply) ->
     ply.Powerups or= {}

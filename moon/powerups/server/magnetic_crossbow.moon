@@ -148,7 +148,7 @@ class WatchedBolt
     cleanup: =>
         @stopSound!
 
-        -- We delay the removal of our holo until the trails dissipate 
+        -- We delay the removal of our holo until the trails dissipate
         lingerTime = getConf "magnetic_crossbow_effect_linger_time"
         timer.Simple lingerTime, ->
             @holo\Remove!
@@ -187,6 +187,7 @@ class MagneticCrossbowPowerup extends BasePowerup
 
             -- Wait for it to initialize fully
             timer.Simple 0, ->
+                return unless IsValid ent
                 return unless ent\GetSaveTable!["m_hOwnerEntity"] == @owner
 
                 @CreateWatchedBolt ent

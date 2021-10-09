@@ -4,8 +4,7 @@ drawHalos = () ->
 
     me = LocalPlayer!
 
-    isInPvp = me\GetNWBool "CFC_PvP_Mode", false
-    return unless isInPvp
+    return unless me\isInPvp!
 
     activeWeapon = me\GetActiveWeapon!
     hasWeapon = IsValid activeWeapon

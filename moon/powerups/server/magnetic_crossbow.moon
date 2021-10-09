@@ -84,7 +84,7 @@ class WatchedBolt
         return false if ply == @boltShooter
         return false unless ply\IsPlayer!
         return false unless ply\Alive!
-        return false unless ply\GetNWBool "CFC_PvP_Mode"
+        return false unless ply\isInPvp!
         return false unless @bolt\TestPVS ply
         true
 

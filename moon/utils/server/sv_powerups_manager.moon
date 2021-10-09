@@ -12,7 +12,6 @@ PowerupManager =
         ply.Powerups[powerupId] = CFCPowerups[powerupId](ply)
 
     plyCanGetPowerup: (ply, powerupId) ->
-        isInPvp = ply\GetNWBool("CFC_PvP_Mode", false)
         powerupBase = CFCPowerups[powerupId]
         existingPowerup = ply.Powerups[powerupId]
 
@@ -22,7 +21,7 @@ PowerupManager =
         baseRequiresPvp = powerupBase.RequiresPvp
 
         return true unless baseRequiresPvp
-        return true if isInPvp
+        return true if ply\isInPvp!
 
         false
 

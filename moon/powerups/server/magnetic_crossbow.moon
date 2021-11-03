@@ -163,7 +163,7 @@ class MagneticCrossbowPowerup extends BasePowerup
         super ply
 
         @PowerupHookName = "CFC-Powerups_MagneticCrossbow-#{@owner\SteamID64!}"
-        @usesRemaining = getConf "crossbow_uses"
+        @UsesRemaining = getConf "crossbow_uses"
 
         @ApplyEffect!
 

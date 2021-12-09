@@ -65,13 +65,13 @@ class ViperPowerup extends BasePowerup
 
             if MELEE_WEAPONS[newClass]
                 with @owner
-                    \SetMaterial viperMaterial
+                    \SetMaterialForced viperMaterial
                     \DrawShadow false
 
                 newWeapon\SetMaterial viperMaterial
             else
                 with @owner
-                    \SetMaterial ""
+                    \SetMaterialForced ""
                     \DrawShadow true
 
                 return unless IsValid oldWeapon
@@ -106,7 +106,7 @@ class ViperPowerup extends BasePowerup
         return unless IsValid @owner
 
         with @owner
-            \SetMaterial ""
+            \SetMaterialForced ""
             \DrawShadow true
             \ChatPrint "You've lost the Viper Powerup"
 

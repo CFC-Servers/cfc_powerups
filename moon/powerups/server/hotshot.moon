@@ -69,8 +69,11 @@ hook.Add "PostPlayerDeath", "CFC_Powerups_Hotshot_OnPlayerDeath", explodeWatcher
 fireDamageWatcher = (ent, damageInfo) ->
     return unless IsValid ent
 
-    inflictor = damageInfo\GetInflictor!\GetClass!
-    return unless inflictor == "entityflame"
+    inflictor = damageInfo\GetInflictor!
+    return unless inflictor
+    inflictorClass = inflictor\GetClass!
+    return unless inflictorClass
+    return unless inflictorClass == "entityflame"
 
     burningDamage = ent.hotshotBurningDamage
     explosionBurningDamage = ent.hotshotExplosionBurningDamage

@@ -27,6 +27,7 @@ class GrenadierPowerup extends BasePowerup
         altFireDelay = getConf "grenadier_alt_fire_delay"
 
         activeWeapon = @owner\GetActiveWeapon!
+        return unless IsValid activeWeapon
         return unless activeWeapon\GetClass! == "weapon_smg1"
         return unless activeWeapon\GetNextSecondaryFire! > CurTime! + altFireDelay
 

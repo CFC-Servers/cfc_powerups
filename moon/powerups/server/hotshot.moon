@@ -1,6 +1,7 @@
 get: getConf = CFCPowerups.Config
 import Clamp from math
 import Effect from util
+import IsValid from _G
 
 allowedToIgnite =
     "prop_physics": true
@@ -70,7 +71,8 @@ fireDamageWatcher = (ent, damageInfo) ->
     return unless IsValid ent
 
     inflictor = damageInfo\GetInflictor!
-    return unless inflictor
+    return unless IsValid inflictor
+
     inflictorClass = inflictor\GetClass!
     return unless inflictorClass
     return unless inflictorClass == "entityflame"

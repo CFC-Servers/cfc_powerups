@@ -74,7 +74,6 @@ fireDamageWatcher = (ent, damageInfo) ->
     return unless IsValid inflictor
 
     inflictorClass = inflictor\GetClass!
-    return unless inflictorClass
     return unless inflictorClass == "entityflame"
 
     burningDamage = ent.hotshotBurningDamage
@@ -87,6 +86,8 @@ fireDamageWatcher = (ent, damageInfo) ->
     --    ent\ChatPrint "You took an extra #{addedDamage} damage from fire damage due to Hotshot Stacks"
 
     damageInfo\AddDamage addedDamage
+
+    return nil
 
 hook.Add "EntityTakeDamage", "CFC_Powerups_Hotshot_OnFireDamage", fireDamageWatcher
 

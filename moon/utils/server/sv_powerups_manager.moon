@@ -21,7 +21,7 @@ PowerupManager =
         baseRequiresPvp = powerupBase.RequiresPvp
 
         return true unless baseRequiresPvp
-        return true if ply\isInPvp!
+        return true if ply\IsInPvp!
 
         false
 

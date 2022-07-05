@@ -4,7 +4,7 @@ drawHalos = () ->
 
     me = LocalPlayer!
 
-    return unless me\isInPvp!
+    return unless me\IsInPvp!
 
     activeWeapon = me\GetActiveWeapon!
     hasWeapon = IsValid activeWeapon

@@ -24,6 +24,7 @@ class ThornManager
     generateThornSegments: (thorn) =>
         :ply, :attacker, :amount, :createdAt = thorn
 
+        return unless IsValid attacker
         -- Vertical offsets
         startOffset = random 45, 50
         offset = random 20, 50

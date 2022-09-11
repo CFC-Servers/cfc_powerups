@@ -170,7 +170,8 @@ class ThornsPowerup extends BasePowerup
         timer.Remove @TimerName
         timer.Remove @ZapperName
         @passiveSound\Stop!
-        @holo\Remove!
+        if IsValid @holo
+            @holo\Remove!
 
         return unless IsValid @owner
 

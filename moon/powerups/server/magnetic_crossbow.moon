@@ -168,7 +168,7 @@ class MagneticCrossbowPowerup extends BasePowerup
         super ply
 
         @PowerupHookName = "CFC-Powerups_MagneticCrossbow-#{@owner\SteamID64!}"
-        @UsesRemaining = 10
+        @UsesRemaining = getConf "crossbow_uses"
 
         @ApplyEffect!
 
@@ -195,8 +195,6 @@ class MagneticCrossbowPowerup extends BasePowerup
     ApplyEffect: =>
         super self
 
-        duration = getConf "magnetic_crossbow_duration"
-
         hook.Add "OnEntityCreated", @PowerupHookName, @CrossbowWatcher!
 
         @owner\ChatPrint "You've gained #{@UsesRemaining} Magnetic Crossbow Bolts"
@@ -204,8 +202,10 @@ class MagneticCrossbowPowerup extends BasePowerup
     Refresh: =>
         super self
 
-        @UsesRemaining += 10
-        @owner\ChatPrint "You've gained #{10} extra Magnetic Crossbow Bolts (total: #{@UsesRemaining})"
+        usesGained = getConf "crossbow_uses"
+
+        @UsesRemaining += usesGained
+        @owner\ChatPrint "You've gained #{usesGained} extra Magnetic Crossbow Bolts (total: #{@UsesRemaining})"
 
     Remove: =>
         super self

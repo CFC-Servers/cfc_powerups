@@ -106,7 +106,11 @@ net.Receive "CFC_Powerups-ThornsDamage", ->
     PrintTable damageData
 
     for ply, attackers in pairs damageData do
+        continue unless IsValid ply
+
         for attacker, amount in pairs attackers
+            continue unless IsValid attacker
+
             thorn = Thorn ply, attacker, amount
             manager\addThorn thorn
 

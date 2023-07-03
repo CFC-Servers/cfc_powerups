@@ -11,7 +11,7 @@
     helpText: "The sound that each powerup makes when it spawns on the map"
 
 "cfc_powerups_spawn_height":
-    default: 20
+    default: 0
     helpText: "The height offset to add to a powerup spawn position"
 -- =======================================================================
 
@@ -156,9 +156,9 @@
 -- =======================================================================
 
 -- Grenadier =============================================================
-"cfc_powerups_grenadier_duration":
-    default: 600
-    helpText: "How long does the Grenadier powerup last, in seconds"
+"cfc_powerups_grenadier_uses":
+    default: 5
+    helpText: "How many uses of the Grenadier powerup is given"
 
 "cfc_powerups_grenadier_alt_fire_delay":
     default: 0.2
@@ -222,9 +222,9 @@
 -- =======================================================================
 
 -- Magnetic Crossbow =====================================================
-"cfc_powerups_magnetic_crossbow_duration":
-    default: 600
-    helpText: "How long does the Magnetic Crossbow powerup last, in seconds"
+"cfc_powerups_magnetic_crossbow_uses":
+    default: 10
+    helpText: "How many uses of the Magnetic Crossbow powerup is given"
 
 "cfc_powerups_magnetic_crossbow_speed_multiplier":
     default: 16

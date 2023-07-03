@@ -89,8 +89,7 @@ class GrenadierPowerup extends BasePowerup
                     cluster\SetPos entPos
                     cluster\SetVelocity (newPos - entPos) * 5
 
-            if @UsesRemaining < 1
-                @Remove!
+            @Remove! if @UsesRemaining < 1
 
     ApplyEffect: =>
         super self

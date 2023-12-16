@@ -27,6 +27,8 @@ AddCSLuaFile "powerups/client/halos.lua"
 AddCSLuaFile "powerups/client/flux_shield.lua"
 AddCSLuaFile "powerups/client/thorns.lua"
 
+resource.AddWrokshop "3114946264"
+
 -- TODO: Automatically include all powerups after including the base powerup
 --foundPowerups = file.Find "powerups/server/*.lua", "LUA"
 

@@ -43,7 +43,7 @@ explodeWatcher = (ply) ->
     CFCPowerups.Logger\info "Exploding #{ply\Nick!} with a radius of #{scaledRadius} units. (#{scaledDamage} extra burning damage)"
 
     nearbyEnts = ents.FindInSphere playerPos, scaledRadius
-    goodEnts = [ent for ent in *nearbyEnts when allowedToIgnite[ent\GetClass!] and ent ~= ply]
+    goodEnts = [ent for ent in *nearbyEnts when allowedToIgnite[ent\GetClass!] and ent ~= ply and ( ent.Powerups == nil or ent.Powerups.powerup_hotshot == nil )]
 
     damageInfo = DamageInfo!
     with damageInfo

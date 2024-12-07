@@ -32,6 +32,8 @@ class SpeedPowerup extends BasePowerup
         @baseLadderClimbSpeed = @owner\GetLadderClimbSpeed!
         @baseMaxSpeed = @owner\GetMaxSpeed!
 
+        @owner\ChatPrint "You've gained #{duration} seconds of the Speed Powerup"
+
         @ApplyEffect!
 
     ApplyEffect: =>
@@ -47,8 +49,6 @@ class SpeedPowerup extends BasePowerup
             \SetRunSpeed @baseRunSpeed * speedMultiplier
             \SetLadderClimbSpeed @baseLadderClimbSpeed * speedMultiplier
             \SetMaxSpeed @baseMaxSpeed * speedMultiplier
-
-            \ChatPrint "You've gained #{getConf "speed_duration"} seconds of the Speed Powerup"
 
     PowerupTick: =>
         powerup = self

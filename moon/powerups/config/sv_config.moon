@@ -114,15 +114,15 @@
     helpText: "Cumulative ignite damage is calculated by multiplying the damage amount by this number"
 
 "cfc_powerups_hotshot_explosion_base_radius":
-    default: 50
+    default: 20
     helpText: "What distance (in units) from the on-death explosion will entites be ignited by default"
 
 "cfc_powerups_hotshot_explosion_max_radius":
-    default: 2000
+    default: 750
     helpText: "What distance (in units) from the on-death explosion, after being scaled by damage, will entities be ignited"
 
 "cfc_powerups_hotshot_explosion_base_damage":
-    default: 10
+    default: 5
     helpText: "How much damage to apply to nearby entities when a Hotshot victim explodes"
 
 "cfc_powerups_hotshot_explosion_max_damage":

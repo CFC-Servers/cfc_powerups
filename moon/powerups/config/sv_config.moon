@@ -80,6 +80,11 @@
     default: 600
     helpText: "How long does the Speed powerup last, in seconds"
 
+"cfc_powerups_speed_interval":
+    default: 1
+    helpText: "How often to check if the speed powerup needs to be re-applied"
+    min: 0.01
+
 "cfc_powerups_speed_multiplier":
     default: 2.25
     helpText: "What value to multiply speed by for the Speed powerup"

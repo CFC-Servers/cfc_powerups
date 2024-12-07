@@ -43,30 +43,7 @@ explodeWatcher = (ply) ->
     playExplosionEffect ply\GetPos!
     CFCPowerups.Logger\info "Exploding #{ply\Nick!} with a radius of #{scaledRadius} units. (#{scaledDamage} extra burning damage)"
 
-    nearbyEnts = ents.FindInSphere playerPos, scaledRadius
-    goodEnts = [ent for ent in *nearbyEnts when allowedToIgnite[ent\GetClass!] and ent ~= ply and ( ent.Powerups == nil or ent.Powerups.powerup_hotshot == nil )]
-    explosionPos = ply\GetPos!
-
-    -- If a pvp system exists, exclude players who are not in pvp (props will be included regardless)
-    if ply.IsInPvp
-        goodEnts = [ent for ent in *goodEnts when ent.IsInPvp == nil or ent\IsInPvp!]
-
-    for ent in *goodEnts
-        playExplosionSound ent\GetPos!
-
-        with ent
-            damageInfo = DamageInfo! -- Needs to be a new damaginfo per ent since each receives a different damage amount
-            with damageInfo
-                \SetDamageType DMG_BLAST
-                \SetAttacker powerup.owner
-                \SetInflictor powerup.damageInflictor
-
-                -- Reduce damage based on distance from the explosion
-                dist = explosionPos\Distance ent\GetPos!
-                mult = 1 - dist / scaledRadius
-                damageInfo\SetDamage scaledDamage * Clamp mult, 0, 1
-
-            \TakeDamageInfo damageInfo
+    util.BlastDamage powerup.damageInflictor, powerup.owner, ply\WorldSpaceCenter!, scaledRadius, scaledDamage
 
 hook.Add "PostPlayerDeath", "CFC_Powerups_Hotshot_OnPlayerDeath", explodeWatcher
 
@@ -98,6 +75,22 @@ fireDamageWatcher = (ent, damageInfo) ->
     return nil
 
 hook.Add "EntityTakeDamage", "CFC_Powerups_Hotshot_OnFireDamage", fireDamageWatcher, HOOK_HIGH
+
+-- Prevents hotshot users from receiving damage from hotshot death explosions
+explosionImmunityWatcher = (ent, damageInfo) ->
+    return unless IsValid ent
+    return unless damageInfo\IsExplosionDamage!
+
+    inflictor = damageInfo\GetInflictor!
+    return unless IsValid inflictor
+
+    inflictorClass = inflictor\GetClass!
+    return unless inflictorClass == "cfc_powerup_hotshot_inflictor"
+    return unless ent.Powerups and ent.Powerups.powerup_hotshot
+
+    return true
+
+hook.Add "EntityTakeDamage", "CFC_Powerups_Hotshot_DeathExplosionImmunity", explosionImmunityWatcher, HOOK_HIGH
 
 calculateBurnDamage = (damageInfo) ->
     damageInfo\GetDamage! * getConf "hotshot_ignite_multiplier"
@@ -134,6 +127,7 @@ class HotshotPowerup extends BasePowerup
             return unless tookDamage
             return if ent == @owner
             return unless damageInfo\GetAttacker! == @owner
+            return unless allowedToIgnite[ent\GetClass!]
 
             -- Only allow if it's from the owner shooting directly with a SWEP, or if it's from the hotshot death explosion
             inflictor = damageInfo\GetInflictor!

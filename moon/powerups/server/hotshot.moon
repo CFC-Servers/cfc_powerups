@@ -74,6 +74,9 @@ hook.Add "PostPlayerDeath", "CFC_Powerups_Hotshot_OnPlayerDeath", explodeWatcher
 fireDamageWatcher = (ent, damageInfo) ->
     return unless IsValid ent
 
+    powerup = ent.latestHotshotPowerup
+    return unless powerup and not powerup.expired
+
     inflictor = damageInfo\GetInflictor!
     return unless IsValid inflictor
 
@@ -89,11 +92,14 @@ fireDamageWatcher = (ent, damageInfo) ->
     --if ent\IsPlayer!
     --    ent\ChatPrint "You took an extra #{addedDamage} damage from fire damage due to Hotshot Stacks"
 
+    -- Use our own inflictor for its custom killfeed icon, tracking the kill correctly, and bypassing anything that normally blocks fire damage.
+    damageInfo\SetInflictor powerup.damageInflictor
+    damageInfo\SetAttacker powerup.owner
     damageInfo\AddDamage addedDamage
 
     return nil
 
-hook.Add "EntityTakeDamage", "CFC_Powerups_Hotshot_OnFireDamage", fireDamageWatcher
+hook.Add "EntityTakeDamage", "CFC_Powerups_Hotshot_OnFireDamage", fireDamageWatcher, HOOK_HIGH
 
 calculateBurnDamage = (damageInfo) ->
     damageInfo\GetDamage! * getConf "hotshot_ignite_multiplier"
@@ -118,6 +124,10 @@ class HotshotPowerup extends BasePowerup
 
         @owner\ChatPrint "You've gained #{timerDuration} seconds of the Hotshot Powerup"
 
+        with @damageInflictor = ents.Create "cfc_powerup_hotshot_inflictor"
+            \SetOwner @owner
+            \Spawn!
+
         @ApplyEffect!
 
     IgniteWatcher: =>
@@ -137,6 +147,7 @@ class HotshotPowerup extends BasePowerup
             addedFireDamage = calculateBurnDamage damageInfo
 
             ent.affectedByHotshot = true
+            ent.latestHotshotPowerup = self
             ent.hotshotBurningDamage or= 0
             ent.hotshotBurningDamage += addedFireDamage
 
@@ -145,6 +156,7 @@ class HotshotPowerup extends BasePowerup
 
             timer.Create timerName, igniteDuration + 0.5, 1, ->
                 ent.affectedByHotshot = nil
+                ent.latestHotshotPowerup = nil
                 ent.hotshotBurningDamage = nil
                 timer.Remove timerName
 
@@ -162,6 +174,11 @@ class HotshotPowerup extends BasePowerup
         super self
         timer.Remove @timerName
         hook.Remove "PostEntityTakeDamage", @timerName
+
+        @expired = true
+
+        if IsValid @damageInflictor
+            @damageInflictor\Remove!
 
         return unless IsValid @owner
 

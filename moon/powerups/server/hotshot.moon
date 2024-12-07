@@ -74,7 +74,7 @@ fireDamageWatcher = (ent, damageInfo) ->
 
     return nil
 
-hook.Add "EntityTakeDamage", "CFC_Powerups_Hotshot_OnFireDamage", fireDamageWatcher, HOOK_HIGH
+hook.Add "EntityTakeDamage", "CFC_Powerups_Hotshot_OnFireDamage", fireDamageWatcher, HOOK_HIGH -- HOOK_HIGH to change the inflictor before fire damage blockers see the hook
 
 -- Prevents hotshot users from receiving damage from hotshot death explosions
 explosionImmunityWatcher = (ent, damageInfo) ->
@@ -90,7 +90,7 @@ explosionImmunityWatcher = (ent, damageInfo) ->
 
     return true
 
-hook.Add "EntityTakeDamage", "CFC_Powerups_Hotshot_DeathExplosionImmunity", explosionImmunityWatcher, HOOK_HIGH
+hook.Add "EntityTakeDamage", "CFC_Powerups_Hotshot_DeathExplosionImmunity", explosionImmunityWatcher, HOOK_HIGH -- HOOK_HIGH to ensure we block damage before auto-rocket-jump addons see the explosion
 
 calculateBurnDamage = (damageInfo) ->
     damageInfo\GetDamage! * getConf "hotshot_ignite_multiplier"

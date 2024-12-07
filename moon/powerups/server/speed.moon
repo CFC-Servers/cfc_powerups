@@ -65,7 +65,7 @@ class SpeedPowerup extends BasePowerup
             \SetLadderClimbSpeed @baseLadderClimbSpeed
             \SetMaxSpeed @baseMaxSpeed
 
-        @owner\ChatPrint "You've lost the Speed Powerup"
+            \ChatPrint "You've lost the Speed Powerup"
 
         -- TODO: Should the PowerupManager do this?
         @owner.Powerups[@@powerupID] = nil

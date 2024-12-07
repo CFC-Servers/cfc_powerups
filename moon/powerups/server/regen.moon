@@ -22,11 +22,11 @@ class RegenPowerup extends BasePowerup
         duration = getConf "regen_duration"
         interval = getConf "regen_interval"
 
-        timerDuration = duration / interval
-        timer.Create @timerName, interval, timerDuration, @PowerupTick!
+        repetitions = duration / interval
+        timer.Create @timerName, interval, repetitions, @PowerupTick!
 
         @RegenSound = CreateSound @owner, getConf "regen_sound"
-        @owner\ChatPrint "You've gained #{timerDuration} seconds of the Regen Powerup"
+        @owner\ChatPrint "You've gained #{duration} seconds of the Regen Powerup"
 
 
     PowerupTick: =>

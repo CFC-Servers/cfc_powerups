@@ -4,4 +4,4 @@ include "shared.lua"
 
 ENT.Base = "base_cfc_powerup"
 ENT.Powerup = "powerup_flux_shield"
-ENT.Color = Color 94, 247, 199
+ENT.Color = Color 95, 250, 200

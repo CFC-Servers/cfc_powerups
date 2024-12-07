@@ -129,10 +129,6 @@
     default: 100
     helpText: "What is the maximum damage a Hotshot explosion can deal"
 
-"cfc_powerups_hotshot_explosion_max_burn_duration":
-    default: 15
-    helpText: "What is the maximum duration a victim of a Hotshot explosion can burn for"
-
 "cfc_powerups_hotshot_explosion_sound":
     default: "ambient/fire/gascan_ignite1.wav"
     helpText: "What sound to play for the on-death explosion"

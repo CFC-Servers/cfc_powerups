@@ -36,11 +36,9 @@ explodeWatcher = (ply) ->
 
     maxExplosionRadius = getConf "hotshot_explosion_max_radius"
     maxExplosionDamage = getConf "hotshot_explosion_max_damage"
-    maxExplosionBurnDuration = getConf "hotshot_explosion_max_burn_duration"
 
     scaledRadius = Clamp baseRadius * burningDamage, 1, maxExplosionRadius
     scaledDamage = Clamp baseDamage * burningDamage, 10, maxExplosionDamage
-    scaledDuration = Clamp burningDamage, 1, maxExplosionBurnDuration
 
     playExplosionEffect ply\GetPos!
     CFCPowerups.Logger\info "Exploding #{ply\Nick!} with a radius of #{scaledRadius} units. (#{scaledDamage} extra burning damage)"
@@ -68,14 +66,7 @@ explodeWatcher = (ply) ->
                 mult = 1 - dist / scaledRadius
                 damageInfo\SetDamage scaledDamage * Clamp mult, 0, 1
 
-            \Ignite scaledDuration
             \TakeDamageInfo damageInfo
-            .hotshotExplosionBurningDamage = burningDamage
-
-    timer.Simple scaledDuration, ->
-        for ent in *goodEnts
-            continue unless IsValid ent
-            ent.hotshotExplosionBurningDamage = nil
 
 hook.Add "PostPlayerDeath", "CFC_Powerups_Hotshot_OnPlayerDeath", explodeWatcher
 
@@ -92,10 +83,9 @@ fireDamageWatcher = (ent, damageInfo) ->
     return unless inflictorClass == "entityflame"
 
     burningDamage = ent.hotshotBurningDamage
-    explosionBurningDamage = ent.hotshotExplosionBurningDamage
-    return unless burningDamage or explosionBurningDamage
+    return unless burningDamage
 
-    addedDamage = (burningDamage or 0) + (explosionBurningDamage or 0)
+    addedDamage = (burningDamage or 0)
 
     --if ent\IsPlayer!
     --    ent\ChatPrint "You took an extra #{addedDamage} damage from fire damage due to Hotshot Stacks"

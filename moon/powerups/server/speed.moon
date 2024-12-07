@@ -58,7 +58,7 @@ class SpeedPowerup extends BasePowerup
             -- This is to account for other addons that might change the player's speed (weapon weight, charge weapons, etc)
             return unless powerup.owner\GetRunSpeed! == powerup.baseRunSpeed
 
-            powerup.ApplyEffect!
+            powerup\ApplyEffect!
 
     Refresh: =>
         super self

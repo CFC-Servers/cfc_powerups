@@ -19,30 +19,30 @@ class SpeedPowerup extends BasePowerup
 
         timer.Create @timerName, duration, 1, -> @Remove!
 
+        @baseDuckSpeed = @owner\GetDuckSpeed!
+        @baseUnDuckSpeed = @owner\GetUnDuckSpeed!
+        @baseCrouchedWalkSpeed = @owner\GetCrouchedWalkSpeed!
+        @baseSlowWalkSpeed = @owner\GetSlowWalkSpeed!
+        @baseWalkSpeed = @owner\GetWalkSpeed!
+        @baseRunSpeed = @owner\GetRunSpeed!
+        @baseLadderClimbSpeed = @owner\GetLadderClimbSpeed!
+        @baseMaxSpeed = @owner\GetMaxSpeed!
+
         @ApplyEffect!
 
     ApplyEffect: =>
         super self
         with @owner
-            .baseDuckSpeed = @owner\GetDuckSpeed!
-            .baseUnDuckSpeed = @owner\GetUnDuckSpeed!
-            .baseCrouchedWalkSpeed = @owner\GetCrouchedWalkSpeed!
-            .baseSlowWalkSpeed = @owner\GetSlowWalkSpeed!
-            .baseWalkSpeed = @owner\GetWalkSpeed!
-            .baseRunSpeed = @owner\GetRunSpeed!
-            .baseLadderClimbSpeed = @owner\GetLadderClimbSpeed!
-            .baseMaxSpeed = @owner\GetMaxSpeed!
-
             speedMultiplier = getConf "speed_multiplier"
 
-            \SetDuckSpeed .baseDuckSpeed * speedMultiplier
-            \SetUnDuckSpeed .baseUnDuckSpeed * speedMultiplier
-            \SetCrouchedWalkSpeed .baseCrouchedWalkSpeed * speedMultiplier
-            \SetSlowWalkSpeed .baseSlowWalkSpeed * speedMultiplier
-            \SetWalkSpeed .baseWalkSpeed * speedMultiplier
-            \SetRunSpeed .baseRunSpeed * speedMultiplier
-            \SetLadderClimbSpeed .baseLadderClimbSpeed * speedMultiplier
-            \SetMaxSpeed .baseMaxSpeed * speedMultiplier
+            \SetDuckSpeed @baseDuckSpeed * speedMultiplier
+            \SetUnDuckSpeed @baseUnDuckSpeed * speedMultiplier
+            \SetCrouchedWalkSpeed @baseCrouchedWalkSpeed * speedMultiplier
+            \SetSlowWalkSpeed @baseSlowWalkSpeed * speedMultiplier
+            \SetWalkSpeed @baseWalkSpeed * speedMultiplier
+            \SetRunSpeed @baseRunSpeed * speedMultiplier
+            \SetLadderClimbSpeed @baseLadderClimbSpeed * speedMultiplier
+            \SetMaxSpeed @baseMaxSpeed * speedMultiplier
 
             \ChatPrint "You've gained #{getConf "speed_duration"} seconds of the Speed Powerup"
 
@@ -56,14 +56,14 @@ class SpeedPowerup extends BasePowerup
         return unless IsValid @owner
 
         with @owner
-            \SetDuckSpeed .baseDuckSpeed
-            \SetUnDuckSpeed .baseUnDuckSpeed
-            \SetCrouchedWalkSpeed .baseCrouchedWalkSpeed
-            \SetSlowWalkSpeed .baseSlowWalkSpeed
-            \SetWalkSpeed .baseWalkSpeed
-            \SetRunSpeed .baseRunSpeed
-            \SetLadderClimbSpeed .baseLadderClimbSpeed
-            \SetMaxSpeed .baseMaxSpeed
+            \SetDuckSpeed @baseDuckSpeed
+            \SetUnDuckSpeed @baseUnDuckSpeed
+            \SetCrouchedWalkSpeed @baseCrouchedWalkSpeed
+            \SetSlowWalkSpeed @baseSlowWalkSpeed
+            \SetWalkSpeed @baseWalkSpeed
+            \SetRunSpeed @baseRunSpeed
+            \SetLadderClimbSpeed @baseLadderClimbSpeed
+            \SetMaxSpeed @baseMaxSpeed
 
         @owner\ChatPrint "You've lost the Speed Powerup"
 

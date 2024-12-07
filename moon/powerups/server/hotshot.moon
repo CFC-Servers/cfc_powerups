@@ -45,6 +45,10 @@ explodeWatcher = (ply) ->
     nearbyEnts = ents.FindInSphere playerPos, scaledRadius
     goodEnts = [ent for ent in *nearbyEnts when allowedToIgnite[ent\GetClass!] and ent ~= ply and ( ent.Powerups == nil or ent.Powerups.powerup_hotshot == nil )]
 
+    -- If a pvp system exists, exclude players who are not in pvp (props will be included regardless)
+    if ply.IsInPvp
+        goodEnts = [ent for ent in *goodEnts when ent.IsInPvp == nil or ent\IsInPvp!]
+
     damageInfo = DamageInfo!
     with damageInfo
         \SetDamage scaledDamage

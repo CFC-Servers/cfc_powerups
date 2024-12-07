@@ -47,22 +47,27 @@ explodeWatcher = (ply) ->
 
     nearbyEnts = ents.FindInSphere playerPos, scaledRadius
     goodEnts = [ent for ent in *nearbyEnts when allowedToIgnite[ent\GetClass!] and ent ~= ply and ( ent.Powerups == nil or ent.Powerups.powerup_hotshot == nil )]
+    explosionPos = ply\GetPos!
 
     -- If a pvp system exists, exclude players who are not in pvp (props will be included regardless)
     if ply.IsInPvp
         goodEnts = [ent for ent in *goodEnts when ent.IsInPvp == nil or ent\IsInPvp!]
 
-    damageInfo = DamageInfo!
-    with damageInfo
-        \SetDamage scaledDamage
-        \SetDamageType DMG_BLAST
-        \SetAttacker powerup.owner
-        \SetInflictor powerup.damageInflictor
-
     for ent in *goodEnts
         playExplosionSound ent\GetPos!
 
         with ent
+            damageInfo = DamageInfo! -- Needs to be a new damaginfo per ent since each receives a different damage amount
+            with damageInfo
+                \SetDamageType DMG_BLAST
+                \SetAttacker powerup.owner
+                \SetInflictor powerup.damageInflictor
+
+                -- Reduce damage based on distance from the explosion
+                dist = explosionPos\Distance ent\GetPos!
+                mult = 1 - dist / scaledRadius
+                damageInfo\SetDamage scaledDamage * Clamp mult, 0, 1
+
             \Ignite scaledDuration
             \TakeDamageInfo damageInfo
             .hotshotExplosionBurningDamage = burningDamage

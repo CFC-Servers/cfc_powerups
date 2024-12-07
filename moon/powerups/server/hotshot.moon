@@ -25,6 +25,9 @@ explodeWatcher = (ply) ->
     return unless IsValid ply
     return unless ply.affectedByHotshot
 
+    powerup = ply.latestHotshotPowerup
+    return unless powerup and not powerup.expired
+
     playerPos = ply\GetPos!
     burningDamage = ply.hotshotBurningDamage + (ply.hotshotExplosionBurningDamage or 0)
 
@@ -53,8 +56,8 @@ explodeWatcher = (ply) ->
     with damageInfo
         \SetDamage scaledDamage
         \SetDamageType DMG_BLAST
-        \SetAttacker ply
-        \SetInflictor ply
+        \SetAttacker powerup.owner
+        \SetInflictor powerup.damageInflictor
 
     for ent in *goodEnts
         playExplosionSound ent\GetPos!
@@ -133,10 +136,13 @@ class HotshotPowerup extends BasePowerup
     IgniteWatcher: =>
         (ent, damageInfo, tookDamage) ->
             return unless IsValid ent
-            return unless damageInfo\GetAttacker! == @owner and damageInfo\GetInflictor! == @owner
             return unless tookDamage
             return if ent == @owner
-            return if damageInfo\GetInflictor!\GetClass! == "entityflame"
+            return unless damageInfo\GetAttacker! == @owner
+
+            -- Only allow if it's from the owner shooting directly with a SWEP, or if it's from the hotshot death explosion
+            inflictor = damageInfo\GetInflictor!
+            return unless inflictor == @owner or (damageInfo\IsExplosionDamage! and inflictor\GetClass! == "cfc_powerup_hotshot_inflictor")            
 
             shouldIgnite = hook.Run "CFC_Powerups_Hotshot_ShouldIgnite"
             return if shouldIgnite == false

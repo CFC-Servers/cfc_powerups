@@ -56,7 +56,14 @@ class RegenPowerup extends BasePowerup
 
     Refresh: =>
         super self
-        timer.Start @timerName
+
+        duration = getConf "regen_duration"
+        interval = getConf "regen_interval"
+
+        -- timer.Start() doesn't reset the repetitions to its original value, the timer has to be re-created.
+        repetitions = duration / interval
+        timer.Create @timerName, interval, repetitions, @PowerupTick!
+
         @owner\ChatPrint "You've refreshed the duration of the Regen Powerup"
 
     Remove: =>

@@ -26,7 +26,8 @@ explodeWatcher = (ply) ->
     return unless ply.affectedByHotshot
 
     powerup = ply.latestHotshotPowerup
-    return unless powerup and not powerup.expired
+    return unless powerup
+    return if powerup.expired
 
     playerPos = ply\GetPos!
     burningDamage = ply.hotshotBurningDamage + (ply.hotshotExplosionBurningDamage or 0)
@@ -51,7 +52,8 @@ fireDamageWatcher = (ent, damageInfo) ->
     return unless IsValid ent
 
     powerup = ent.latestHotshotPowerup
-    return unless powerup and not powerup.expired
+    return unless powerup
+    return if powerup.expired
 
     inflictor = damageInfo\GetInflictor!
     return unless IsValid inflictor

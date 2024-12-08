@@ -7,6 +7,7 @@ ENT.PrintName     = "Base CFC Powerup"
 ENT.Purpose       = "Base Powerup for CFC Powerups"
 ENT.Author        = "CFC"
 ENT.Contact       = "cfcservers.org/discord"
+ENT.Category      = "Powerups"
 ENT.RenderGroup	  = RENDERGROUP_OPAQUE
 
 ENT.Spawnable     = false

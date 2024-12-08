@@ -78,6 +78,17 @@ fireDamageWatcher = (ent, damageInfo) ->
 
 hook.Add "EntityTakeDamage", "CFC_Powerups_Hotshot_OnFireDamage", fireDamageWatcher, HOOK_HIGH -- HOOK_HIGH to change the inflictor before fire damage blockers see the hook
 
+fireDamagePVPWatcher = (ent, damageInfo) ->
+    return unless IsValid ent
+
+    powerup = ent.latestHotshotPowerup
+    return unless powerup
+    return if powerup.expired
+
+    return true
+
+hook.Add "CFC_PvP_DontBlockFireDamage", "CFC_Powerups_Hotshot_OnFireDamage", fireDamagePVPWatcher
+
 -- Prevents hotshot users from receiving damage from hotshot death explosions
 explosionImmunityWatcher = (ent, damageInfo) ->
     return unless IsValid ent

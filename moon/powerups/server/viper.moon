@@ -14,6 +14,22 @@ MELEE_WEAPONS =
     "weapon_crowbar": true
     "weapon_stunstick": true
     "cw_extrema_ratio_official": true
+    "tfa_l4d2mw_bat": true
+    "tfa_l4d2mw_baton": true
+    "tfa_l4d2mw_crowbar": true
+    "tfa_l4d2mw_etool": true
+    "tfa_l4d2mw_fireaxe": true
+    "tfa_l4d2mw_golfclub": true
+    "tfa_l4d2mw_katana": true
+    "tfa_l4d2mw_knife": true
+    "tfa_l4d2mw_machete": true
+    "tfa_l4d2mw_metalbat": true
+    "tfa_l4d2mw_pitchfork": true
+    "tfa_l4d2mw_shovel": true
+    --"tfa_l4d2mw_riotshield": true -- riot shield is stinky and lame
+    "tfa_l4d2mw_sledgehammer": true
+    "cfc_slappers": true
+    "cfc_super_slappers": true
 
 export ViperPowerup
 class ViperPowerup extends BasePowerup

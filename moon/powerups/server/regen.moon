@@ -13,7 +13,9 @@ class RegenPowerup extends BasePowerup
     new: (ply) =>
         super ply
 
-        @timerName = "CFC_Powerups-Regen-#{ply\SteamID64!}"
+        @timerNameTick = "CFC_Powerups-Regen-Tick-#{ply\SteamID64!}"
+        @timerNameRemove = "CFC_Powerups-Regen-Remove-#{ply\SteamID64!}"
+
         @ApplyEffect!
 
     ApplyEffect: =>
@@ -22,11 +24,12 @@ class RegenPowerup extends BasePowerup
         duration = getConf "regen_duration"
         interval = getConf "regen_interval"
 
-        timerDuration = duration / interval
-        timer.Create @timerName, interval, timerDuration, @PowerupTick!
+        repetitions = duration / interval
+        timer.Create @timerNameTick, interval, repetitions, @PowerupTick!
+        timer.Create @timerNameRemove, duration, 1, -> @Remove!
 
         @RegenSound = CreateSound @owner, getConf "regen_sound"
-        @owner\ChatPrint "You've gained #{timerDuration} seconds of the Regen Powerup"
+        @owner\ChatPrint "You've gained #{duration} seconds of the Regen Powerup"
 
 
     PowerupTick: =>
@@ -56,13 +59,22 @@ class RegenPowerup extends BasePowerup
 
     Refresh: =>
         super self
-        timer.Start @timerName
+
+        duration = getConf "regen_duration"
+        interval = getConf "regen_interval"
+
+        -- timer.Start() doesn't reset the repetitions to its original value, the tick timer has to be re-created.
+        repetitions = duration / interval
+        timer.Create @timerNameTick, interval, repetitions, @PowerupTick!
+        timer.Start @timerNameRemove
+
         @owner\ChatPrint "You've refreshed the duration of the Regen Powerup"
 
     Remove: =>
         super self
         @RegenSound\Stop!
-        timer.Remove @timerName
+        timer.Remove @timerNameTick
+        timer.Remove @timerNameRemove
 
         return unless IsValid @owner
 

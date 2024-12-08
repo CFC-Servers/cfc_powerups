@@ -25,6 +25,10 @@ explodeWatcher = (ply) ->
     return unless IsValid ply
     return unless ply.affectedByHotshot
 
+    powerup = ply.latestHotshotPowerup
+    return unless powerup
+    return if powerup.expired
+
     playerPos = ply\GetPos!
     burningDamage = ply.hotshotBurningDamage + (ply.hotshotExplosionBurningDamage or 0)
 
@@ -33,42 +37,23 @@ explodeWatcher = (ply) ->
 
     maxExplosionRadius = getConf "hotshot_explosion_max_radius"
     maxExplosionDamage = getConf "hotshot_explosion_max_damage"
-    maxExplosionBurnDuration = getConf "hotshot_explosion_max_burn_duration"
 
     scaledRadius = Clamp baseRadius * burningDamage, 1, maxExplosionRadius
     scaledDamage = Clamp baseDamage * burningDamage, 10, maxExplosionDamage
-    scaledDuration = Clamp burningDamage, 1, maxExplosionBurnDuration
 
     playExplosionEffect ply\GetPos!
     CFCPowerups.Logger\info "Exploding #{ply\Nick!} with a radius of #{scaledRadius} units. (#{scaledDamage} extra burning damage)"
 
-    nearbyEnts = ents.FindInSphere playerPos, scaledRadius
-    goodEnts = [ent for ent in *nearbyEnts when allowedToIgnite[ent\GetClass!] and ent ~= ply]
-
-    damageInfo = DamageInfo!
-    with damageInfo
-        \SetDamage scaledDamage
-        \SetDamageType DMG_BLAST
-        \SetAttacker ply
-        \SetInflictor ply
-
-    for ent in *goodEnts
-        playExplosionSound ent\GetPos!
-
-        with ent
-            \Ignite scaledDuration
-            \TakeDamageInfo damageInfo
-            .hotshotExplosionBurningDamage = burningDamage
-
-    timer.Simple scaledDuration, ->
-        for ent in *goodEnts
-            continue unless IsValid ent
-            ent.hotshotExplosionBurningDamage = nil
+    util.BlastDamage powerup.damageInflictor, powerup.owner, ply\WorldSpaceCenter!, scaledRadius, scaledDamage
 
 hook.Add "PostPlayerDeath", "CFC_Powerups_Hotshot_OnPlayerDeath", explodeWatcher
 
 fireDamageWatcher = (ent, damageInfo) ->
     return unless IsValid ent
+
+    powerup = ent.latestHotshotPowerup
+    return unless powerup
+    return if powerup.expired
 
     inflictor = damageInfo\GetInflictor!
     return unless IsValid inflictor
@@ -77,19 +62,37 @@ fireDamageWatcher = (ent, damageInfo) ->
     return unless inflictorClass == "entityflame"
 
     burningDamage = ent.hotshotBurningDamage
-    explosionBurningDamage = ent.hotshotExplosionBurningDamage
-    return unless burningDamage or explosionBurningDamage
+    return unless burningDamage
 
-    addedDamage = (burningDamage or 0) + (explosionBurningDamage or 0)
+    addedDamage = (burningDamage or 0)
 
     --if ent\IsPlayer!
     --    ent\ChatPrint "You took an extra #{addedDamage} damage from fire damage due to Hotshot Stacks"
 
+    -- Use our own inflictor for its custom killfeed icon, tracking the kill correctly, and bypassing anything that normally blocks fire damage.
+    damageInfo\SetInflictor powerup.damageInflictor
+    damageInfo\SetAttacker powerup.owner
     damageInfo\AddDamage addedDamage
 
     return nil
 
-hook.Add "EntityTakeDamage", "CFC_Powerups_Hotshot_OnFireDamage", fireDamageWatcher
+hook.Add "EntityTakeDamage", "CFC_Powerups_Hotshot_OnFireDamage", fireDamageWatcher, HOOK_HIGH -- HOOK_HIGH to change the inflictor before fire damage blockers see the hook
+
+-- Prevents hotshot users from receiving damage from hotshot death explosions
+explosionImmunityWatcher = (ent, damageInfo) ->
+    return unless IsValid ent
+    return unless damageInfo\IsExplosionDamage!
+
+    inflictor = damageInfo\GetInflictor!
+    return unless IsValid inflictor
+
+    inflictorClass = inflictor\GetClass!
+    return unless inflictorClass == "cfc_powerup_hotshot_inflictor"
+    return unless ent.Powerups and ent.Powerups.powerup_hotshot
+
+    return true
+
+hook.Add "EntityTakeDamage", "CFC_Powerups_Hotshot_DeathExplosionImmunity", explosionImmunityWatcher, HOOK_HIGH -- HOOK_HIGH to ensure we block damage before auto-rocket-jump addons see the explosion
 
 calculateBurnDamage = (damageInfo) ->
     damageInfo\GetDamage! * getConf "hotshot_ignite_multiplier"
@@ -114,15 +117,23 @@ class HotshotPowerup extends BasePowerup
 
         @owner\ChatPrint "You've gained #{timerDuration} seconds of the Hotshot Powerup"
 
+        with @damageInflictor = ents.Create "cfc_powerup_hotshot_inflictor"
+            \SetOwner @owner
+            \Spawn!
+
         @ApplyEffect!
 
     IgniteWatcher: =>
         (ent, damageInfo, tookDamage) ->
             return unless IsValid ent
-            return unless damageInfo\GetAttacker! == @owner and damageInfo\GetInflictor! == @owner
             return unless tookDamage
             return if ent == @owner
-            return if damageInfo\GetInflictor!\GetClass! == "entityflame"
+            return unless damageInfo\GetAttacker! == @owner
+            return unless allowedToIgnite[ent\GetClass!]
+
+            -- Only allow if it's from the owner shooting directly with a SWEP, or if it's from the hotshot death explosion
+            inflictor = damageInfo\GetInflictor!
+            return unless inflictor == @owner or (damageInfo\IsExplosionDamage! and inflictor\GetClass! == "cfc_powerup_hotshot_inflictor")            
 
             shouldIgnite = hook.Run "CFC_Powerups_Hotshot_ShouldIgnite"
             return if shouldIgnite == false
@@ -133,6 +144,7 @@ class HotshotPowerup extends BasePowerup
             addedFireDamage = calculateBurnDamage damageInfo
 
             ent.affectedByHotshot = true
+            ent.latestHotshotPowerup = self
             ent.hotshotBurningDamage or= 0
             ent.hotshotBurningDamage += addedFireDamage
 
@@ -141,6 +153,7 @@ class HotshotPowerup extends BasePowerup
 
             timer.Create timerName, igniteDuration + 0.5, 1, ->
                 ent.affectedByHotshot = nil
+                ent.latestHotshotPowerup = nil
                 ent.hotshotBurningDamage = nil
                 timer.Remove timerName
 
@@ -158,6 +171,11 @@ class HotshotPowerup extends BasePowerup
         super self
         timer.Remove @timerName
         hook.Remove "PostEntityTakeDamage", @timerName
+
+        @expired = true
+
+        if IsValid @damageInflictor
+            @damageInflictor\Remove!
 
         return unless IsValid @owner
 

@@ -85,9 +85,9 @@ fireDamagePVPWatcher = (ent, damageInfo) ->
     return unless powerup
     return if powerup.expired
 
-    return true
+    return false
 
-hook.Add "CFC_PvP_DontBlockFireDamage", "CFC_Powerups_Hotshot_OnFireDamage", fireDamagePVPWatcher
+hook.Add "CFC_PvP_ShouldBlockFireDamage", "CFC_Powerups_Hotshot_OnFireDamage", fireDamagePVPWatcher
 
 -- Prevents hotshot users from receiving damage from hotshot death explosions
 explosionImmunityWatcher = (ent, damageInfo) ->

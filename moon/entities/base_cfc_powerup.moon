@@ -44,14 +44,15 @@ ENT.GivePowerup = (ply) =>
     alertThreshold = 1
     lastFailedPickup = @FailedPickups[ply]
 
-    canGivePowerup = PowerupManager.plyCanGetPowerup ply, @Powerup
+    canGivePowerup, denyReason = PowerupManager.plyCanGetPowerup ply, @Powerup
     shouldThrottleMessage = lastFailedPickup and (CurTime! - lastFailedPickup) < alertThreshold
 
     unless canGivePowerup
         return if shouldThrottleMessage
 
         @EmitSound @Sounds.PickupFailed
-        ply\ChatPrint "You can't use this powerup right now! (Maybe it requires PvP mode or maybe you already have it)"
+        denyReason = denyReason or "Maybe it requires PvP mode or maybe you already have it"
+        ply\ChatPrint "You can't use this powerup right now! (#{denyReason})"
 
         @FailedPickups[ply] = CurTime!
 

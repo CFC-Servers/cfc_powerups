@@ -247,4 +247,46 @@
     default: "ambient/machines/fluorescent_hum_1.wav"
     helpText: "What sound should play when the bolt acquires a target?"
 -- =======================================================================
+
+-- Groundpound ===============================================================
+"cfc_powerups_groundpound_uses":
+    default: 10
+    helpText: "How many uses of the Groundpound powerup is given"
+
+"cfc_powerups_groundpound_acceleration":
+    default: 600
+    helpText: "Added hmu/s^2 Groundpound acceleration to the player"
+
+"cfc_powerups_groundpound_min_speed":
+    default: 800
+    helpText: "The minimum falling speed needed for Groundpound shockwaves"
+
+"cfc_powerups_groundpound_speed_divide":
+    default: 1200
+    helpText: "Groundpound shockwaves divide the speed by this much before calculating damage and range"
+
+"cfc_powerups_groundpound_damage_multiplier":
+    default: 70
+    helpText: "Damage multiplier for Groundpound shockwaves"
+
+"cfc_powerups_groundpound_damage_max":
+    default: 1000
+    helpText: "Damage maximum for Groundpound shockwaves"
+
+"cfc_powerups_groundpound_radius_multiplier":
+    default: 200
+    helpText: "Radius multiplier for Groundpound shockwaves"
+
+"cfc_powerups_groundpound_radius_max":
+    default: 2500
+    helpText: "Radius maximum for Groundpound shockwaves"
+
+"cfc_powerups_groundpound_knockback_multiplier":
+    default: 10
+    helpText: "Knockback multiplier for Groundpound shockwaves, scales based on final damage"
+
+"cfc_powerups_groundpound_knockback_max":
+    default: 1500
+    helpText: "Knockback maximum for Groundpound shockwaves"
+-- =======================================================================
 }

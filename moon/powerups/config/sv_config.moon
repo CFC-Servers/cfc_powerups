@@ -247,4 +247,31 @@
     default: "ambient/machines/fluorescent_hum_1.wav"
     helpText: "What sound should play when the bolt acquires a target?"
 -- =======================================================================
+
+-- Phoenix =============================================================
+"cfc_powerups_phoenix_uses":
+    default: 1
+    helpText: "How many uses of the Phoenix powerup is given"
+
+"cfc_powerups_phoenix_max_uses":
+    default: 5
+    helpText: "The maximum uses of the Phoenix powerup a player can hold"
+
+"cfc_powerups_phoenix_revive_health":
+    default: 100
+    helpText: "What to set a Phoenix player's health to when they revive"
+
+"cfc_powerups_phoenix_revive_armor":
+    default: 0
+    helpText: "What to set a Phoenix player's armor to when they revive"
+
+"cfc_powerups_phoenix_immunity_duration":
+    default: 5
+    helpText: "How long a Phoenix player is immune for after being revived"
+
+"cfc_powerups_phoenix_immunity_damage_multiplier":
+    default: 1
+    helpText: "While a Phoenix player is immune, multiply damage they deal by this much"
+    min: 0
+-- =======================================================================
 }

@@ -274,7 +274,7 @@
     helpText: "Damage maximum for Groundpound shockwaves"
 
 "cfc_powerups_groundpound_radius_multiplier":
-    default: 200
+    default: 250
     helpText: "Radius multiplier for Groundpound shockwaves"
 
 "cfc_powerups_groundpound_radius_max":

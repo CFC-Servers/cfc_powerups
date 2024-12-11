@@ -1,6 +1,5 @@
 if SERVER then
     require( "moonloader" )
-    resource.AddWorkshop( "3114943116" )
 end
 
 require( "logger" )

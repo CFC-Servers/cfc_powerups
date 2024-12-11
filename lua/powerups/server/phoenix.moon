@@ -80,16 +80,18 @@ class PhoenixPowerup extends BasePowerup
 
             with @owner
                 health = \Health!
-                addHealth = math.random 1, 5
-                newHealth = math.Clamp health + addHealth, 0, @maxRegenHealth
+                if health < @maxRegenHealth then
+                    addHealth = math.random 1, 5
+                    newHealth = math.Clamp health + addHealth, 0, @maxRegenHealth
 
-                \SetHealth newHealth
+                    \SetHealth newHealth
 
                 armor = \Armor!
-                addArmor = math.random 1, 5
-                newArmor = math.Clamp armor + addArmor, 0, @maxRegenArmor
+                if armor < @maxRegenArmor
+                    addArmor = math.random 1, 5
+                    newArmor = math.Clamp armor + addArmor, 0, @maxRegenArmor
 
-                \SetArmor newArmor
+                    \SetArmor newArmor
 
         timer.Create @timerName, @immunityDuration, 1, ->
             @immune = false

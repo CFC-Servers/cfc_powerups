@@ -13,4 +13,4 @@ else
     include "powerups/loaders/cfc_powerups_killicions.lua"
     include "powerups/loaders/cl_powerups_init.lua"
 
-CFCPvp.Logger\info "Loaded!"
+CFCPowerups.Logger\info "Loaded!"

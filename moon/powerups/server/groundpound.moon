@@ -142,6 +142,8 @@ class GroundpoundPowerup extends BasePowerup
             sound.Play "physics/concrete/concrete_break2.wav", ownerPos, 85, 100, 1
             sound.Play "physics/concrete/concrete_break3.wav", ownerPos, 85, 100, 1
 
+            util.ScreenShake ownerPos, 500 * speed / TERMINAL_VELOCITY, 40, 2 * speed / TERMINAL_VELOCITY, radius * 1.5, true
+
             if speed > TERMINAL_VELOCITY * 0.65
                 sound.Play "ambient/explosions/explode_3.wav", ownerPos, 90, 95, 1
 

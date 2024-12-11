@@ -3,6 +3,8 @@ include "utils/server/sv_config_manager.lua"
 include "utils/server/sv_powerups_manager.lua"
 include "utils/server/sv_powerups_spawner.lua"
 
+include "powerups/shared/shotgun.lua"
+
 include "powerups/server/base.lua"
 include "powerups/server/cluster_combine_ball.lua"
 include "powerups/server/regen.lua"
@@ -15,6 +17,9 @@ include "powerups/server/grenadier.lua"
 include "powerups/server/flux_shield.lua"
 include "powerups/server/thorns.lua"
 include "powerups/server/magnetic_crossbow.lua"
+include "powerups/server/shotgun.lua"
+
+AddCSLuaFile "powerups/shared/shotgun.lua"
 
 AddCSLuaFile "powerups/client/halos.lua"
 AddCSLuaFile "powerups/client/flux_shield.lua"

@@ -247,4 +247,38 @@
     default: "ambient/machines/fluorescent_hum_1.wav"
     helpText: "What sound should play when the bolt acquires a target?"
 -- =======================================================================
+
+-- Shotgun ================================================================
+"cfc_powerups_shotgun_duration":
+    default: 300
+    helpText: "How long does the Shotgun powerup last, in seconds"
+
+"cfc_powerups_shotgun_single_bullets_min":
+    default: 6
+    helpText: "Minimum number of bullets for single-bullet weapons"
+
+"cfc_powerups_shotgun_single_bullets_max":
+    default: 8
+    helpText: "Maximum number of bullets for single-bullet weapons"
+
+"cfc_powerups_shotgun_single_damage_multiplier":
+    default: 0.5
+    helpText: "Damage multiplier for single-bullet weapons"
+
+"cfc_powerups_shotgun_single_spread_multiplier":
+    default: 1.25
+    helpText: "Spread multiplier for single-bullet weapons"
+
+"cfc_powerups_shotgun_single_spread_add":
+    default: 0.04
+    helpText: "Spread additive for single-bullet weapons"
+
+"cfc_powerups_shotgun_multi_bullets_multiplier":
+    default: 1.5
+    helpText: "Multiplier against the number of bullets for multi-bullet weapons"
+
+"cfc_powerups_shotgun_multi_damage_multiplier":
+    default: 1.5
+    helpText: "Damage multiplier for multi-bullet weapons"
+-- =======================================================================
 }

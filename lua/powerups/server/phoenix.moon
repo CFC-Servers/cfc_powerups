@@ -39,7 +39,6 @@ class PhoenixPowerup extends BasePowerup
 
             splodePitch = math.random 80, 90
             \EmitSound "ambient/levels/labs/electric_explosion4.wav", 75, splodePitch, 1
-            \EmitSound "player/heartbeat1.wav", 75, 80
             \ScreenFade SCREENFADE.IN, (Color 255, 240, 230, 150), 2, 0.1
 
             util.ScreenShake \GetPos!, 10, 20, 2.5, 1500
@@ -59,10 +58,13 @@ class PhoenixPowerup extends BasePowerup
 
         @owner\CreateRagdoll
 
-        songPitch = math.random 140, 160
-        holyMusic = CreateSound @owner, "music/hl2_song10.mp3"
-        holyMusic\PlayEx 1, songPitch
-        holyMusic\FadeOut @immunityDuration
+        with @holyMusic = CreateSound @owner, "music/hl2_song10.mp3"
+            songPitch = math.random 140, 160
+            \PlayEx 1, songPitch
+            \FadeOut @immunityDuration
+
+        with @heartbeatSound = CreateSound @owner, "player/heartbeat1.wav"
+            \Play 75, 80
 
         -- slowly regen health + armor from 0
         timer.Create @regenTimerName, 0.1, 0, ->
@@ -92,11 +94,12 @@ class PhoenixPowerup extends BasePowerup
             timer.Remove @regenTimerName
 
             if IsValid @owner
-                holyMusic\Stop!
+                @holyMusic\Stop!
+                @holyMusic = nil
+                @heartbeatSound\Stop!
+                @heartbeatSound = nil
 
-                with @owner
-                    \EmitSound "ambient/energy/newspark09.wav", 75, 90, 1
-                    \StopSound "player/heartbeat1.wav"
+                @owner\EmitSound "ambient/energy/newspark09.wav", 75, 90, 1
 
             if @UsesRemaining <= 0
                 @Remove!
@@ -174,6 +177,7 @@ class PhoenixPowerup extends BasePowerup
         super self
 
         timer.Remove @timerName
+        timer.Remove @regenTimerName
         hook.Remove "EntityTakeDamage", @damageWatcherName
 
         return unless IsValid @owner
@@ -182,6 +186,12 @@ class PhoenixPowerup extends BasePowerup
 
         if not @hadNoDissolve
             @owner\RemoveEFlags EFL_NO_DISSOLVE
+
+        if @holyMusic
+            @holyMusic\Stop!
+
+        if @heartbeatSound
+            @heartbeatSound\Stop!
 
         if @UsesRemaining == 0
             @owner\ChatPrint "You've lost the Phoenix Powerup"

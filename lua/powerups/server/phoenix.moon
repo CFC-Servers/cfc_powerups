@@ -60,12 +60,9 @@ class PhoenixPowerup extends BasePowerup
         @owner\CreateRagdoll
 
         songPitch = math.random 140, 160
-        @owner.powerups_holyMusic = CreateSound @owner, "music/hl2_song10.mp3"
-        @owner.powerups_holyMusic\PlayEx 1, songPitch
-
-        timer.Simple 0, ->
-            return unless IsValid @owner
-            @owner.powerups_holyMusic\FadeOut 5
+        holyMusic = CreateSound @owner, "music/hl2_song10.mp3"
+        holyMusic\PlayEx 1, songPitch
+        holyMusic\FadeOut @immunityDuration
 
         -- slowly regen health + armor from 0
         timer.Create @regenTimerName, 0.1, 0, ->
@@ -92,8 +89,11 @@ class PhoenixPowerup extends BasePowerup
 
         timer.Create @timerName, @immunityDuration, 1, ->
             @immune = false
+            timer.Remove @regenTimerName
 
             if IsValid @owner
+                holyMusic\Stop!
+
                 with @owner
                     \EmitSound "ambient/energy/newspark09.wav", 75, 90, 1
                     \StopSound "player/heartbeat1.wav"

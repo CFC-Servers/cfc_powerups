@@ -40,7 +40,7 @@ class PhoenixPowerup extends BasePowerup
             splodePitch = math.random 80, 90
             \EmitSound "ambient/levels/labs/electric_explosion4.wav", 75, splodePitch, 1
             \EmitSound "player/heartbeat1.wav", 75, 80
-            \ScreenFade SCREENFADE.IN, color_white, 2, 0.1
+            \ScreenFade SCREENFADE.IN, (Color 255, 240, 230, 150), 2, 0.1
 
             util.ScreenShake \GetPos!, 10, 20, 2.5, 1500
             util.ScreenShake \GetPos!, 40, 40, 0.5, 500

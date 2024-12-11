@@ -16,7 +16,6 @@ include "powerups/server/flux_shield.lua"
 include "powerups/server/thorns.lua"
 include "powerups/server/magnetic_crossbow.lua"
 
-AddCSLuaFile "autorun/client/cl_powerups_init.lua"
 AddCSLuaFile "powerups/client/halos.lua"
 AddCSLuaFile "powerups/client/flux_shield.lua"
 AddCSLuaFile "powerups/client/thorns.lua"

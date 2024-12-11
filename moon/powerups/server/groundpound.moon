@@ -245,7 +245,7 @@ class GroundpoundPowerup extends BasePowerup
         hook.Add "GetFallDamage", @hookName, @CreateFallDamageWatcher!, HOOK_HIGH -- Handle shockwave before any addons mess with fall damage values and end the hook chain
         hook.Add "Think", @hookName, @CreateThinkWatcher!
 
-        @owner\ChatPrint "You've gained #{@UsesRemaining} Groundpound uses"
+        @owner\ChatPrint "You've gained #{@UsesRemaining} Groundpound uses, crouch in the air to activate"
 
     Refresh: =>
         super self

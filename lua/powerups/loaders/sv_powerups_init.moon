@@ -1,9 +1,3 @@
-require "logger"
-
-export CFCPowerups
-CFCPowerups = {}
-
-CFCPowerups.Logger = Logger "CFC Powerups"
 
 include "utils/server/sv_config_manager.lua"
 include "utils/server/sv_powerups_manager.lua"
@@ -23,7 +17,6 @@ include "powerups/server/thorns.lua"
 include "powerups/server/magnetic_crossbow.lua"
 include "powerups/server/groundpound.lua"
 
-AddCSLuaFile "autorun/client/cl_powerups_init.lua"
 AddCSLuaFile "powerups/client/halos.lua"
 AddCSLuaFile "powerups/client/flux_shield.lua"
 AddCSLuaFile "powerups/client/thorns.lua"

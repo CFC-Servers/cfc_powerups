@@ -54,9 +54,6 @@ class PhoenixPowerup extends BasePowerup
 
             util.Effect "cball_explode", eff, true, true
 
-        for i = 0, 5
-            pitch = Lerp i / 5, 80, 140
-
         @owner\CreateRagdoll
 
         songPitch = math.random 140, 160

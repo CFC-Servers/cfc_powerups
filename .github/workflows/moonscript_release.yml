@@ -25,13 +25,15 @@ jobs:
         run: sudo luarocks install moonscript
 
       - name: Build Lua
-        run: moonc -t lua moon/*
+        run: |
+          moonc lua
+          find lua -type f -name "*.moon" -print -delete
 
       - name: Remove moon
         run: rm -rf moon
 
       - name: Remove github dir
-        run: rm -rf .github
+        run: rm -rf .github .gitignore
 
       - name: Remove .gitignore
         run: rm -rf .gitignore

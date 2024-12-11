@@ -177,7 +177,7 @@ class PhoenixPowerup extends BasePowerup
         @hadNoDissolve = @owner\IsEFlagSet EFL_NO_DISSOLVE
 
         @owner\AddEFlags EFL_NO_DISSOLVE -- Prevent combine balls from bypassing the revive
-        @owner\ChatPrint "You've gained #{@UsesRemaining} Phoenix rounds"
+        @owner\ChatPrint "You've gained #{@UsesRemaining} Phoenix round(s)"
 
     Refresh: =>
         super self
@@ -188,7 +188,7 @@ class PhoenixPowerup extends BasePowerup
         newUses = math.min oldUses + usesGained, maxUses
 
         @UsesRemaining = newUses
-        @owner\ChatPrint "You've gained #{newUses - oldUses} extra Phoenix rounds (total: #{@UsesRemaining})"
+        @owner\ChatPrint "You've gained #{newUses - oldUses} extra Phoenix round(s) (total: #{@UsesRemaining})"
 
     Remove: =>
         super self

@@ -266,7 +266,7 @@
     helpText: "Groundpound shockwaves divide the speed by this much before calculating damage and range"
 
 "cfc_powerups_groundpound_damage_multiplier":
-    default: 70
+    default: 90
     helpText: "Damage multiplier for Groundpound shockwaves"
 
 "cfc_powerups_groundpound_damage_max":

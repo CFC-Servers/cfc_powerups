@@ -98,8 +98,6 @@ class PhoenixPowerup extends BasePowerup
 
             if IsValid @owner
                 with @owner
-                    \SetHealth @maxRegenHealth
-                    \SetArmor @maxRegenArmor
                     \EmitSound "ambient/energy/newspark09.wav", 75, 90, 1
                     \StopSound "player/heartbeat1.wav"
 

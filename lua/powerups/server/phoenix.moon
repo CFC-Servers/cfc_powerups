@@ -108,7 +108,9 @@ class PhoenixPowerup extends BasePowerup
                 @heartbeatSound\Stop!
                 @heartbeatSound = nil
 
-                @owner\EmitSound "ambient/energy/newspark09.wav", 75, 90, 1
+                for i = 1, 5
+                    pitch = Lerp i / 5, 80, 140
+                    @owner\EmitSound "ambient/machines/thumper_hit.wav", 75, pitch, 0.5
 
             if @UsesRemaining <= 0
                 @Remove!

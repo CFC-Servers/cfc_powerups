@@ -30,9 +30,17 @@ class PhoenixPowerup extends BasePowerup
         @immune = true
 
         with @owner
-            \SetHealth @reviveHealth
-            \SetArmor @reviveArmor
-            \ChatPrint "You've been revived by the Phoenix spirit! (#{@UsesRemaining} uses remaining)"
+            \SetHealth 1
+            \SetArmor 1
+            \ChatPrint "Like a phoenix, you rise from the ashes! (#{@UsesRemaining} uses remaining)"
+
+            splodePitch = math.random 80, 90
+            \EmitSound "ambient/levels/labs/electric_explosion4.wav", 75, splodePitch, 1
+            \EmitSound "player/heartbeat1.wav", 75, 80
+            \ScreenFade SCREENFADE.IN, color_white, 2, 0.1
+
+            util.ScreenShake \GetPos!, 10, 20, 2.5, 1500
+            util.ScreenShake \GetPos!, 40, 40, 0.5, 500
 
         with eff = EffectData!
             eff\SetOrigin @owner\GetPos!
@@ -43,22 +51,55 @@ class PhoenixPowerup extends BasePowerup
             eff\SetOrigin @owner\GetPos!
             eff\SetMagnitude 1
             eff\SetScale 1
-            eff\SetFlags 0x4 + 0x8 + 0x80
 
-            util.Effect "Explosion", eff, true, true
+            util.Effect "cball_explode", eff, true, true
 
         for i = 0, 5
             pitch = Lerp i / 5, 80, 140
-            @owner\EmitSound "ambient/fire/gascan_ignite1.wav", 75, pitch, 0.5
 
-        @owner\EmitSound "ambient/levels/labs/teleport_rings_loop2.wav", 75, 230, 0.75
+        @owner\CreateRagdoll
+
+        songPitch = math.random 140, 160
+        @owner.powerups_holyMusic = CreateSound @owner, "music/hl2_song10.mp3"
+        @owner.powerups_holyMusic\PlayEx 1, songPitch
+
+        timer.Simple 0, ->
+            return unless IsValid @owner
+            @owner.powerups_holyMusic\FadeOut 5
+
+        @maxRegenHealth = math.min @reviveHealth, @owner\GetMaxHealth!
+        @maxRegenArmor = math.min @reviveArmor, @owner\GetMaxArmor!
+
+        -- slowly regen health + armor from 0
+        timer.Create @regenTimerName, 0.1, 0, ->
+            bad = not @immune or not IsValid @owner
+
+            if bad then
+                timer.Remove @regenTimerName
+                return
+
+            with @owner
+                health = \Health!
+                addHealth = math.random 1, 5
+                newHealth = math.Clamp health + addHealth, 0, @maxRegenHealth
+
+                \SetHealth newHealth
+
+                armor = \Armor!
+                addArmor = math.random 1, 5
+                newArmor = math.Clamp armor + addArmor, 0, @maxRegenArmor
+
+                \SetArmor newArmor
 
         timer.Create @timerName, @immunityDuration, 1, ->
             @immune = false
 
             if IsValid @owner
-                @owner\StopSound "ambient/levels/labs/teleport_rings_loop2.wav"
-                @owner\EmitSound "ambient/energy/newspark09.wav", 75, 90, 1
+                with @owner
+                    \SetHealth @maxRegenHealth
+                    \SetArmor @maxRegenArmor
+                    \EmitSound "ambient/energy/newspark09.wav", 75, 90, 1
+                    \StopSound "player/heartbeat1.wav"
 
             if @UsesRemaining <= 0
                 @Remove!
@@ -111,6 +152,7 @@ class PhoenixPowerup extends BasePowerup
 
         @damageWatcherName = "CFC_Powerups-Phoenix-DamageWatcher-#{steamID}"
         @timerName = "CFC_Powerups-Phoenix-Timer-#{steamID}"
+        @regenTimerName = "CFC_Powerups-Phoenix-Regen-Timer-#{steamID}"
         @collisionListenerID = @owner\AddCallback "PhysicsCollide", @CollisionListener!
 
         hook.Add "EntityTakeDamage", @damageWatcherName, @DamageWatcher!, HOOK_LOW -- Low so we go after any other damage modifiers or blockers

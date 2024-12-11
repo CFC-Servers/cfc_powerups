@@ -68,7 +68,6 @@ class PhoenixPowerup extends BasePowerup
 
             util.Effect "cball_explode", eff, true, true
 
-        @owner\CreateRagdoll
         self.setModel @owner, "models/player/charple.mdl"
 
         with @holyMusic = CreateSound @owner, "music/hl2_song10.mp3"

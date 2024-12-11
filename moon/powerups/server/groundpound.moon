@@ -1,5 +1,6 @@
 get: getConf = CFCPowerups.Config
 
+TERMINAL_VELOCITY = 3500
 EASE_FUNC = math.ease.InQuad
 BAD_MOVETYPES = {
     MOVETYPE_NONE: true
@@ -7,6 +8,9 @@ BAD_MOVETYPES = {
     MOVETYPE_LADDER: true
     MOVETYPE_OBSERVER: true
 }
+
+FALL_SOUND_FADE_IN = 0.5
+FALL_SOUND_FADE_OUT = 0.5
 
 TRAIL_ENABLED = true
 TRAIL_INTERVAL = 0.1
@@ -31,6 +35,7 @@ class GroundpoundPowerup extends BasePowerup
         @hookName = "CFC_Powerups-Groundpound-#{ply\SteamID64!}"
         @hookNameVictim = "CFC_Powerups-Groundpound-Victim-#{ply\SteamID64!}"
         @nextTrailTime = 0
+        @fastFalling = false
 
         @UsesRemaining = getConf "groundpound_uses"
         @accel = getConf "groundpound_acceleration"
@@ -43,9 +48,15 @@ class GroundpoundPowerup extends BasePowerup
         @knockbackMult = getConf "groundpound_knockback_multiplier"
         @knockbackMax = getConf "groundpound_knockback_max"
 
+        rf = RecipientFilter!
+        rf\AddAllPlayers!
+
         with @damageInflictor = ents.Create "cfc_powerup_groundpound_inflictor"
-            \SetOwner @owner
+            \SetOwner ply
             \Spawn!
+
+        with @fallSound = CreateSound ply, "ambient/machines/machine6.wav", rf
+            \PlayEx 0, 100
 
         @ApplyEffect!
 
@@ -116,6 +127,43 @@ class GroundpoundPowerup extends BasePowerup
             @UsesRemaining -= 1
             @owner\ChatPrint "You have #{math.max @UsesRemaining, 0} Groundpound uses remaining"
 
+            ownerPos = @owner\GetPos!
+
+            -- The player's feet are just above the ground, so we need to do a trace downwards
+            tr = util.TraceLine {
+                start: ownerPos + Vector 0, 0, 10
+                endpos: ownerPos - Vector 0, 0, 100
+                mask: MASK_PLAYERSOLID,
+                filter: @owner,
+            }
+
+            sound.Play "physics/metal/metal_canister_impact_soft2.wav", ownerPos, 85, 60, 1
+            sound.Play "physics/metal/metal_computer_impact_bullet2.wav", ownerPos, 85, 30, 1
+            sound.Play "physics/concrete/concrete_break2.wav", ownerPos, 85, 100, 1
+            sound.Play "physics/concrete/concrete_break3.wav", ownerPos, 85, 100, 1
+
+            if speed > TERMINAL_VELOCITY * 0.65
+                sound.Play "ambient/explosions/explode_3.wav", ownerPos, 90, 95, 1
+
+            if speed >= TERMINAL_VELOCITY
+                sound.Play "npc/env_headcrabcanister/explosion.wav", ownerPos, 90, 100, 1
+                sound.Play "npc/dog/car_impact1.wav", ownerPos, 90, 90, 1
+
+            with eff = EffectData!
+                scaledSpeedClamped = math.min scaledSpeed, 1
+                \SetOrigin tr.HitPos + tr.HitNormal
+                \SetMagnitude 2.5 * scaledSpeedClamped
+                \SetScale 1.75 * scaledSpeedClamped
+                \SetRadius radius * 0.5
+                \SetNormal tr.HitNormal
+                util.Effect "Sparks", eff, true, true
+
+                \SetScale Lerp scaledSpeed / 8, 100, 200
+                util.Effect "ThumperDust", eff, true, true
+
+                \SetFlags 0x4
+                util.Effect "WaterSurfaceExplosion", eff, true, true
+
             if @UsesRemaining < 1
                 @Remove!
 
@@ -125,11 +173,27 @@ class GroundpoundPowerup extends BasePowerup
         () ->
             owner = @owner
 
-            return unless owner\Alive!
-            return if owner\InVehicle!
-            return if owner\IsOnGround!
-            return if BAD_MOVETYPES[owner\GetMoveType!]
-            return unless owner\KeyDown IN_DUCK
+            checkCantFastFall = () ->
+                return true unless owner\Alive!
+                return true if owner\InVehicle!
+                return true if owner\IsOnGround!
+                return true if BAD_MOVETYPES[owner\GetMoveType!]
+                return true unless owner\KeyDown IN_DUCK
+
+                return false
+            
+            cantFastFall = checkCantFastFall!
+
+            if cantFastFall
+                if @fastFalling
+                    @fastFalling = false
+                    @fallSound\ChangeVolume 0, FALL_SOUND_FADE_OUT
+
+                return
+
+            if not @fastFalling
+                @fastFalling = true
+                @fallSound\ChangeVolume 1, FALL_SOUND_FADE_IN
 
             dt = FrameTime!
             vel = owner\GetVelocity!
@@ -139,7 +203,13 @@ class GroundpoundPowerup extends BasePowerup
             vel.z = vel.z + change
             velToAdd = Vector 0, 0, change
 
+            speedFrac = math.max -vel.z / TERMINAL_VELOCITY, 0 -- 0 to 1 based on how close to terminal velocity we are
+            fallSoundPitch = Lerp speedFrac, 100, 255
+            fallSoundLevel = Lerp speedFrac, 75, 100
+
             @owner\SetVelocity velToAdd
+            @fallSound\ChangePitch fallSoundPitch, dt
+            @fallSound\SetSoundLevel fallSoundLevel
 
             -- Rushing wind trail
             return unless TRAIL_ENABLED
@@ -199,6 +269,7 @@ class GroundpoundPowerup extends BasePowerup
         return unless IsValid @owner
 
         @owner\ChatPrint "You've lost the Groundpound Powerup"
+        @fallSound\Stop!
 
         -- TODO: Should the PowerupManager do this?
         @owner.Powerups[@@powerupID] = nil

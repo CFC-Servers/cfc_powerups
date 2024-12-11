@@ -10,6 +10,7 @@ You can download the latest release from our [Releases](https://github.com/CFC-S
 
 
 ## Adding a new powerup
+ - Install [moonloader](https://github.com/Pika-Software/gm_moonloader) to auto-compile while developing. It even works with lua autorefresh!
  - Copy `moon/powerups/server/_template_powerup.moon` to `moon/powerups/server/your_powerup.moon`
  - Modify your new powerup file to your liking
  - Copy the `moon/entities/_powerup_template` directory to `moon/entities/powerup_your_name`

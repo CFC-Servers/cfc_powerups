@@ -1,9 +1,3 @@
-require "logger"
-
-export CFCPowerups
-CFCPowerups = {}
-
-CFCPowerups.Logger = Logger "CFC Powerups"
 
 include "utils/server/sv_config_manager.lua"
 include "utils/server/sv_powerups_manager.lua"

@@ -23,11 +23,14 @@ class PhoenixPowerup extends BasePowerup
         @immunityDamageMult = getConf "phoenix_immunity_damage_multiplier"
         @immunityDuration = getConf "phoenix_immunity_duration"
 
+        @setModel = (FindMetaTable "Entity").SetModel -- CFC blocks skeleton and charple by wrapping Player:SetModel()
+
         @ApplyEffect!
 
     Revive: =>
         @UsesRemaining = @UsesRemaining - 1
         @immune = true
+        @ownerModel = @owner\GetModel!
 
         maxRegenHealth = math.min @reviveHealth, @owner\GetMaxHealth!
         maxRegenArmor = math.min @reviveArmor, @owner\GetMaxArmor!
@@ -66,6 +69,7 @@ class PhoenixPowerup extends BasePowerup
             util.Effect "cball_explode", eff, true, true
 
         @owner\CreateRagdoll
+        self.setModel @owner, "models/player/charple.mdl"
 
         with @holyMusic = CreateSound @owner, "music/hl2_song10.mp3"
             songPitch = math.random 140, 160
@@ -107,6 +111,9 @@ class PhoenixPowerup extends BasePowerup
                 @holyMusic = nil
                 @heartbeatSound\Stop!
                 @heartbeatSound = nil
+
+                self.setModel @owner, @ownerModel
+                @ownerModel = nil
 
                 for i = 1, 5
                     pitch = Lerp i / 5, 80, 140
@@ -203,6 +210,9 @@ class PhoenixPowerup extends BasePowerup
 
         if @heartbeatSound
             @heartbeatSound\Stop!
+
+        if @ownerModel
+            self.setModel @owner, @ownerModel
 
         if @UsesRemaining == 0
             @owner\ChatPrint "You've lost the Phoenix Powerup"

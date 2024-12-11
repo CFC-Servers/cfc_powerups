@@ -46,8 +46,17 @@ class PhoenixPowerup extends BasePowerup
 
         with eff = EffectData!
             eff\SetOrigin @owner\GetPos!
+            eff\SetNormal Vector 0, 0, 1
 
             util.Effect "VortDispel", eff, true, true
+            util.Effect "HL1GaussWallImpact2", eff, true, true
+
+        with eff = EffectData!
+            eff\SetOrigin @owner\WorldSpaceCenter!
+            eff\SetNormal Vector 0, 0, -1
+            eff\SetMagnitude 50
+
+            util.Effect "HL1GaussWallPunchExit", eff, true, true
 
         with eff = EffectData!
             eff\SetOrigin @owner\GetPos!

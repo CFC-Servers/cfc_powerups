@@ -29,9 +29,12 @@ class PhoenixPowerup extends BasePowerup
         @UsesRemaining = @UsesRemaining - 1
         @immune = true
 
+        maxRegenHealth = math.min @reviveHealth, @owner\GetMaxHealth!
+        maxRegenArmor = math.min @reviveArmor, @owner\GetMaxArmor!
+
         with @owner
             \SetHealth 1
-            \SetArmor 1
+            \SetArmor maxRegenArmor == 0 and 0 or 1
             \ChatPrint "Like a phoenix, you rise from the ashes! (#{@UsesRemaining} uses remaining)"
 
             splodePitch = math.random 80, 90
@@ -64,9 +67,6 @@ class PhoenixPowerup extends BasePowerup
             return unless IsValid @owner
             @owner.powerups_holyMusic\FadeOut 5
 
-        @maxRegenHealth = math.min @reviveHealth, @owner\GetMaxHealth!
-        @maxRegenArmor = math.min @reviveArmor, @owner\GetMaxArmor!
-
         -- slowly regen health + armor from 0
         timer.Create @regenTimerName, 0.1, 0, ->
             bad = not @immune or not IsValid @owner
@@ -77,16 +77,16 @@ class PhoenixPowerup extends BasePowerup
 
             with @owner
                 health = \Health!
-                if health < @maxRegenHealth then
+                if health < maxRegenHealth then
                     addHealth = math.random 1, 5
-                    newHealth = math.Clamp health + addHealth, 0, @maxRegenHealth
+                    newHealth = math.Clamp health + addHealth, 0, maxRegenHealth
 
                     \SetHealth newHealth
 
                 armor = \Armor!
-                if armor < @maxRegenArmor
+                if armor < maxRegenArmor
                     addArmor = math.random 1, 5
-                    newArmor = math.Clamp armor + addArmor, 0, @maxRegenArmor
+                    newArmor = math.Clamp armor + addArmor, 0, maxRegenArmor
 
                     \SetArmor newArmor
 

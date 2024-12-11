@@ -21,6 +21,7 @@ include "powerups/server/grenadier.lua"
 include "powerups/server/flux_shield.lua"
 include "powerups/server/thorns.lua"
 include "powerups/server/magnetic_crossbow.lua"
+include "powerups/server/groundpound.lua"
 
 AddCSLuaFile "autorun/client/cl_powerups_init.lua"
 AddCSLuaFile "powerups/client/halos.lua"

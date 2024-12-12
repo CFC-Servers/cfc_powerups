@@ -51,91 +51,28 @@ class CursePowerup extends BasePowerup
     new: (ply) =>
         super ply
 
-        @UsesRemaining = getConf "curse_uses"
+        @duration = getConf "curse_duration"
         @durationMin = getConf "curse_duration_min"
         @durationMax = getConf "curse_duration_max"
-        @amountMin = getConf "curse_amount_min"
-        @amountMax = getConf "curse_amount_max"
-        @cooldown = getConf "curse_cooldown"
-        @range = getConf "curse_range"
-        @dotLimit = math.cos(math.rad getConf("curse_cone") / 2)
-
-        @onCooldown = false
-        @leftState = false
-        @rightState = false
-        @leftExpireTime = 0
-        @rightExpireTime = 0
+        @chance = getConf "curse_chance"
 
         @ApplyEffect!
 
-    KeyPressWatcher: =>
-        (ply, key) ->
-            return unless ply == @owner
-            return if @onCooldown
+    DamageWatcher: =>
+        (victim, damageInfo) ->
+            return unless victim == @owner
 
-            now = CurTime!
+            attacker = damageInfo\GetAttacker!
+            return if attacker == victim
+            return unless IsValid attacker
+            return unless attacker\IsPlayer!
 
-            if key == IN_ATTACK
-                @leftState = true
-                @leftExpireTime = now + CLICK_WINDOW
-            
-            if key == IN_ATTACK2
-                @rightState = true
-                @rightExpireTime = now + CLICK_WINDOW
-            
-            return unless @leftState and @rightState
-            return unless @leftExpireTime > now and @rightExpireTime > now
+            curEffects = CFCUlxCurse.GetCurrentEffects attacker
 
-            @CurseBlast!
+            if #curEffects == 0 or math.random! <= @chance
+                @Curse attacker
 
-    KeyReleaseWatcher: =>
-        (ply, key) ->
-            return unless ply == @owner
-
-            if key == IN_ATTACK
-                @leftState = false
-
-            if key == IN_ATTACK2
-                @rightState = false
-
-    CurseBlast: =>
-        @onCooldown = true
-        @UsesRemaining -= 1
-
-        timer.Create @hookName, @cooldown, 1, ->
-            @onCooldown = false
-
-        @Remove! if @UsesRemaining <= 0
-
-        -- TODO: Sounds and effects
-
-        shootPos = @owner\GetShootPos!
-        shootDir = @owner\GetAimVector!
-
-        for ply in *player.GetAll!
-            continue unless ply ~= @owner
-            continue unless ply\IsInPvp!
-            continue unless ply\Alive!
-            continue if ply\HasGodMode!
-
-            plyPos = ply\NearestPoint shootPos
-            toPly = plyPos - shootPos
-            dist = toPly\Length!
-            continue unless dist <= @range
-
-            toPlyDir = toPly / dist
-            continue unless toPlyDir\Dot(shootDir) >= @dotLimit
-
-            tr = util.TraceLine {
-                start: shootPos
-                endpos: plyPos
-                filter: @owner
-                mask: MASK_SHOT
-            }
-
-            continue if tr.Hit and tr.Entity ~= ply
-
-            @Curse ply
+            return nil
 
     Curse: (ply) =>
         effectData = CFCUlxCurse.GetRandomEffect ply, BLACKLISTED_EFFECTS
@@ -149,25 +86,21 @@ class CursePowerup extends BasePowerup
         super self
 
         @hookName = "CFC_Powerups-Curse-#{@owner\SteamID64!}"
-        hook.Add "KeyPress", @hookName, @KeyPressWatcher!
-        hook.Add "KeyRelease", @hookName, @KeyReleaseWatcher!
+        hook.Add "EntityTakeDamage", @hookName, @DamageWatcher!
+        timer.Create @hookName, @duration, 1, -> @Remove!
 
-        @owner\ChatPrint "You've gained #{@UsesRemaining} Curse rounds, left and right click at the same time to use it"
+        @owner\ChatPrint "You've gained #{@duration} seconds of the Curse Powerup"
 
     Refresh: =>
         super self
-
-        usesGained = getConf "curse_uses"
-
-        @UsesRemaining += usesGained
-        @owner\ChatPrint "You've gained #{usesGained} extra Curse rounds (total: #{@UsesRemaining})"
+        timer.Start @hookName
+        @owner\ChatPrint "You've refreshed the duration of the Curse Powerup"
 
     Remove: =>
         super self
 
         timer.Remove @hookName
-        hook.Remove "KeyPress", @hookName
-        hook.Remove "KeyRelease", @hookName
+        hook.Remove "EntityTakeDamage", @hookName
 
         return unless IsValid @owner
 

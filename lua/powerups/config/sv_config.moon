@@ -276,9 +276,9 @@
 -- =======================================================================
 
 -- Curse =============================================================
-"cfc_powerups_curse_uses":
-    default: 5
-    helpText: "How many uses of the Curse powerup is given"
+"cfc_powerups_curse_duration":
+    default: 300
+    helpText: "How long does the Curse powerup last, in seconds"
 
 "cfc_powerups_curse_duration_min":
     default: 10
@@ -288,24 +288,8 @@
     default: 20
     helpText: "Maximum curse effect duration from the Curse powerup"
 
-"cfc_powerups_curse_amount_min":
-    default: 1
-    helpText: "Minimum amount of curses to apply per use of the Curse powerup"
-
-"cfc_powerups_curse_amount_max":
-    default: 3
-    helpText: "Maximum amount of curses to apply per use of the Curse powerup"
-
-"cfc_powerups_curse_cooldown":
-    default: 1
-    helpText: "Cooldown for using the Curse powerup"
-
-"cfc_powerups_curse_range":
-    default: 300
-    helpText: "Range for the Curse powerup"
-
-"cfc_powerups_curse_cone":
-    default: 45
-    helpText: "Total degrees of the cone for the Curse powerup"
+"cfc_powerups_curse_chance":
+    default: 0.25
+    helpText: "The chance to apply a curse, when a player shoots a Curse powerup user and has no curses"
 -- =======================================================================
 }

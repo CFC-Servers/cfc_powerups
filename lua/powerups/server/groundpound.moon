@@ -9,8 +9,10 @@ BAD_MOVETYPES = {
     MOVETYPE_OBSERVER: true
 }
 
-FALL_SOUND_FADE_IN = 0.5
-FALL_SOUND_FADE_OUT = 0.5
+FALL_SOUND_FADE_IN = 0.75
+FALL_SOUND_FADE_OUT = 0.01
+
+RADIUS_PER_DAMAGE = 2.5
 
 TRAIL_ENABLED = true
 TRAIL_INTERVAL = 0.1
@@ -18,6 +20,8 @@ TRAIL_LENGTH = 2
 TRAIL_SPEED = 2
 TRAIL_OFFSET_SPREAD = 30
 TRAIL_AMOUNT = 5
+
+UP_VECTOR = Vector 0, 0, 1 
 
 export GroundpoundPowerup
 class GroundpoundPowerup extends BasePowerup
@@ -35,16 +39,18 @@ class GroundpoundPowerup extends BasePowerup
         @hookName = "CFC_Powerups-Groundpound-#{ply\SteamID64!}"
         @hookNameVictim = "CFC_Powerups-Groundpound-Victim-#{ply\SteamID64!}"
         @nextTrailTime = 0
+        @nextUpToSpeedSound = 0
+        @nextUpToTerminalSpeedSound = 0
         @fastFalling = false
+        @crouchSound = false
+        @upToSpeedSound = false
+        @upToTerminalSpeedSound
 
         @UsesRemaining = getConf "groundpound_uses"
         @accel = getConf "groundpound_acceleration"
         @minSpeed = getConf "groundpound_min_speed"
-        @speedDivide = getConf "groundpound_speed_divide"
-        @damageMult = getConf "groundpound_damage_multiplier"
-        @damageMax = getConf "groundpound_damage_max"
-        @radiusMult = getConf "groundpound_radius_multiplier"
-        @radiusMax = getConf "groundpound_radius_max"
+        @baseDamage = getConf "groundpound_base_damage"
+        @addedDamage = getConf "groundpound_added_damage"
         @knockbackMult = getConf "groundpound_knockback_multiplier"
         @knockbackMax = getConf "groundpound_knockback_max"
 
@@ -55,7 +61,7 @@ class GroundpoundPowerup extends BasePowerup
             \SetOwner ply
             \Spawn!
 
-        with @fallSound = CreateSound ply, "ambient/machines/machine6.wav", rf
+        with @fallSound = CreateSound ply, "weapons/physcannon/superphys_hold_loop.wav", rf
             \PlayEx 0, 100
 
         @ApplyEffect!
@@ -87,7 +93,7 @@ class GroundpoundPowerup extends BasePowerup
             return unless victim\IsPlayer! or ( ( IsValid physObj ) and physObj\IsMotionEnabled! )
 
             -- Apply knockback to victims
-            knockback = math.min @knockbackMult * damageInfo\GetDamage!, @knockbackMax
+            knockback = @knockbackMult * damageInfo\GetDamage!
             dir = victim\WorldSpaceCenter! - @owner\GetPos!
 
             -- Force the direction to have a significant upwards angle
@@ -97,13 +103,14 @@ class GroundpoundPowerup extends BasePowerup
             dir = ( Angle pitch, ang.yaw, 0 )\Forward!
 
             if victim\IsPlayer!
+                clampedKnockback = math.min knockback, @knockbackMax
                 velToAdd = dir * knockback + Vector 0, 0, 250 -- Still need to add some minumum upwards velocity to counteract ground stickiness
 
                 victim\SetVelocity velToAdd
                 damageInfo\SetDamageForce velToAdd * 100 -- Apply forces to the death ragdoll, in case the player dies
             else
-                up = 300 * math.pow physObj\GetMass!, 0.95 -- Added up strength, now with partial mass scaling so heavy objects still move a bit
-                force = dir * knockback + Vector 0, 0, up
+                up = 5 * math.pow physObj\GetMass!, 0.97 -- Added up strength, now with partial mass scaling so heavy objects still move a bit
+                force = dir * knockback + UP_VECTOR * up
 
                 physObj\ApplyForceCenter force
 
@@ -118,51 +125,104 @@ class GroundpoundPowerup extends BasePowerup
             return unless speed >= @minSpeed
             return unless @owner\KeyDown IN_DUCK -- Only trigger when crouched
 
-            scaledSpeed = EASE_FUNC speed / @speedDivide
-            damage = math.min scaledSpeed * @damageMult, @damageMax
-            radius = math.min scaledSpeed * @radiusMult, @radiusMax
+            @nextUpToSpeedSound = 0
+            @nextUpToTerminalSpeedSound = 0
 
-            util.BlastDamage @damageInflictor, @owner, @owner\WorldSpaceCenter!, radius, damage
+            speedClamped = math.min speed, TERMINAL_VELOCITY
+            speedZeroToOne = speedClamped / TERMINAL_VELOCITY
+            speedOneToZero = 1 - speedZeroToOne
+
+            speedOneToZero = EASE_FUNC speedOneToZero
+            speedZeroToOne = EASE_FUNC speedZeroToOne
+
+            speedAbove = speedClamped - @minSpeed
+            damage = @baseDamage
+            damageAdd = speedAbove * @addedDamage
+            damage = damage + damageAdd
+
+            radius = damage * RADIUS_PER_DAMAGE 
+
+            ownersPos = @owner\WorldSpaceCenter!
+
+            util.BlastDamage @damageInflictor, @owner, ownersPos, radius, damage
 
             @UsesRemaining -= 1
             @owner\ChatPrint "You have #{math.max @UsesRemaining, 0} Groundpound uses remaining"
 
-            ownerPos = @owner\GetPos!
+            util.ScreenShake ownersPos, speedZeroToOne * 40, 4, 2, 1000 -- big shake close
+            util.ScreenShake ownersPos, 1, 5, 5, damage * 2 -- small shake far away
 
-            -- The player's feet are just above the ground, so we need to do a trace downwards
-            tr = util.TraceLine {
-                start: ownerPos + Vector 0, 0, 10
-                endpos: ownerPos - Vector 0, 0, 100
-                mask: MASK_PLAYERSOLID,
-                filter: @owner,
-            }
+            print damage
 
-            sound.Play "physics/metal/metal_canister_impact_soft2.wav", ownerPos, 85, 60, 1
-            sound.Play "physics/metal/metal_computer_impact_bullet2.wav", ownerPos, 85, 30, 1
-            sound.Play "physics/concrete/concrete_break2.wav", ownerPos, 85, 100, 1
-            sound.Play "physics/concrete/concrete_break3.wav", ownerPos, 85, 100, 1
+            with @owner
+                -- double damage for whatever we directly land on
+                groundEntity = @owner\GetGroundEntity!
+                if IsValid groundEntity
+                    damageInfo = DamageInfo!
+                    with damageInfo
+                        \SetAttacker @owner
+                        \SetInflictor @damageInflictor
+                        \SetDamage damage
+                        \SetDamageType DMG_BLAST
+                        \SetDamageForce Vector 0, 0, -damage * 10
+                        \SetDamagePosition ownersPos
 
-            util.ScreenShake ownerPos, 500 * speed / TERMINAL_VELOCITY, 40, 2 * speed / TERMINAL_VELOCITY, radius * 1.5, true
+                    groundEntity\TakeDamageInfo damageInfo
 
-            if speed > TERMINAL_VELOCITY * 0.65
-                sound.Play "ambient/explosions/explode_3.wav", ownerPos, 90, 95, 1
+                thumpPitch = 110 + -( speedZeroToOne * 20 )
+                thumpLvl = 75 + ( speedZeroToOne * 60 )
+                \EmitSound "ambient/machines/thumper_hit.wav", thumpLvl, thumpPitch, 0.5, CHAN_STATIC
 
-            if speed >= TERMINAL_VELOCITY
-                sound.Play "npc/env_headcrabcanister/explosion.wav", ownerPos, 90, 100, 1
-                sound.Play "npc/dog/car_impact1.wav", ownerPos, 90, 90, 1
+                if speedClamped < TERMINAL_VELOCITY * 0.35 -- low speed hit
+                    \EmitSound "ambient/machines/thumper_dust.wav", 90, 62, 1, CHAN_STATIC 
 
-            with eff = EffectData!
-                scaledSpeedClamped = math.min scaledSpeed, 1
-                \SetOrigin tr.HitPos + tr.HitNormal
-                \SetMagnitude 2.5 * scaledSpeedClamped
-                \SetScale 1.75 * scaledSpeedClamped
-                \SetRadius radius * 0.5
-                \SetNormal tr.HitNormal
-                util.Effect "Sparks", eff, true, true
+                if speedClamped > TERMINAL_VELOCITY * 0.35 -- medium speed hit
+                    hitPitch = 175 + -( speedZeroToOne * 125 )
+                    hitLvl = 90 + ( speedZeroToOne * 50 )
+                    \EmitSound "weapons/mortar/mortar_explode2.wav", hitLvl, hitPitch
 
-                \SetScale Lerp scaledSpeed / 8, 100, 200
-                util.Effect "ThumperDust", eff, true, true
+                if speedClamped > TERMINAL_VELOCITY * 0.65 -- high speed hit
+                    crashPitch = 110 + -( speedZeroToOne * 40 )
+                    crashLvl = 85 + ( speedZeroToOne * 60 )
+                    \EmitSound "ambient/machines/wall_crash1.wav", crashLvl, crashPitch, 0.5
 
+                if speedClamped > TERMINAL_VELOCITY * 0.9 -- all powerful hit!
+                    \EmitSound "ambient/explosions/exp2.wav", 110, 30, 0.5 -- echo
+                    util.BlastDamage @damageInflictor, @owner, ownersPos, damage * 0.35, damage * 25 -- OP blastdamage in a tiny, tiny radius
+
+            timer.Simple 0, -> -- prediction...
+                return unless IsValid @owner
+
+                if speedClamped > TERMINAL_VELOCITY * 0.9
+                    effDat = EffectData!
+                    with effDat
+                        \SetOrigin ownersPos
+                        \SetEntity @owner
+
+                        \SetScale 1
+                        util.Effect "groundpound_shockwave", effDat -- depends on m9k
+
+                        \SetScale 4
+                        \SetRadius 67
+                        \SetRadius 6
+                        \SetNormal UP_VECTOR
+                        util.Effect "m9k_gdcw_cinematicboom", effDat -- ditto
+
+                else
+                    effDat = EffectData!
+                    effScale = speedZeroToOne * 0.5
+                    effScale = effScale + 0.2
+                    with effDat
+                        \SetOrigin ownersPos
+                        \SetNormal UP_VECTOR
+                        \SetScale effScale
+                        util.Effect "groundpound_shockwave", effDat
+
+
+
+                \SetFlags 0x4
+                util.Effect "WaterSurfaceExplosion", eff, true, true
+                    
                 \SetFlags 0x4
                 util.Effect "WaterSurfaceExplosion", eff, true, true
 
@@ -189,6 +249,9 @@ class GroundpoundPowerup extends BasePowerup
             if cantFastFall
                 if @fastFalling
                     @fastFalling = false
+                    @crouchSound = false
+                    @upToSpeedSound = false
+                    @upToTerminalSpeedSound = false
                     @fallSound\ChangeVolume 0, FALL_SOUND_FADE_OUT
 
                 return
@@ -206,16 +269,37 @@ class GroundpoundPowerup extends BasePowerup
             velToAdd = Vector 0, 0, change
 
             speedFrac = math.max -vel.z / TERMINAL_VELOCITY, 0 -- 0 to 1 based on how close to terminal velocity we are
-            fallSoundPitch = Lerp speedFrac, 100, 255
-            fallSoundLevel = Lerp speedFrac, 75, 100
+            fallSoundPitch = Lerp speedFrac, 100, 200
+            fallSoundLevel = Lerp speedFrac, 75, 150
 
             @owner\SetVelocity velToAdd
             @fallSound\ChangePitch fallSoundPitch, dt
             @fallSound\SetSoundLevel fallSoundLevel
 
+            if not @crouchSound -- sound when starting the groundpound
+                @crouchSound = true
+                @owner\EmitSound "ambient/machines/thumper_top.wav", 78, 110, 1
+
+
+            return if vel.z > -@minSpeed
+
+            if not @upToSpeedSound -- sound when starting to deal damage
+                @upToSpeedSound = true
+                if @nextUpToSpeedSound < CurTime! -- block spamming this sound
+                    @owner\EmitSound "weapons/mortar/mortar_shell_incomming1.wav", 120, 100, 0.5
+                
+                @nextUpToSpeedSound = CurTime! + 15
+            if vel.z <= -TERMINAL_VELOCITY and not @upToTerminalSpeedSound -- sound when hitting terminal velocity
+                @upToTerminalSpeedSound = true
+                if @nextUpToTerminalSpeedSound < CurTime!
+                    filter = RecipientFilter!
+                    filter\AddAllPlayers!
+                    @owner\EmitSound "weapons/mortar/mortar_shell_incomming1.wav", 150, 60, 0.5, CHAN_AUTO, 0, 0, filter
+                
+                @nextUpToSpeedSound = CurTime! + 15
+
             -- Rushing wind trail
             return unless TRAIL_ENABLED
-            return if vel.z > -@minSpeed
 
             now = CurTime!
             return if now < @nextTrailTime

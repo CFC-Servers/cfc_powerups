@@ -258,28 +258,16 @@
     helpText: "Added hmu/s^2 Groundpound acceleration to the player"
 
 "cfc_powerups_groundpound_min_speed":
-    default: 800
+    default: 600
     helpText: "The minimum falling speed needed for Groundpound shockwaves"
 
-"cfc_powerups_groundpound_speed_divide":
-    default: 1200
-    helpText: "Groundpound shockwaves divide the speed by this much before calculating damage and range"
+"cfc_powerups_groundpound_base_damage":
+    default: 100
+    helpText: "Base groundpound damage/radius"
 
-"cfc_powerups_groundpound_damage_multiplier":
-    default: 90
-    helpText: "Damage multiplier for Groundpound shockwaves"
-
-"cfc_powerups_groundpound_damage_max":
-    default: 1000
-    helpText: "Damage maximum for Groundpound shockwaves"
-
-"cfc_powerups_groundpound_radius_multiplier":
-    default: 250
-    helpText: "Radius multiplier for Groundpound shockwaves"
-
-"cfc_powerups_groundpound_radius_max":
-    default: 2500
-    helpText: "Radius maximum for Groundpound shockwaves"
+"cfc_powerups_groundpound_added_damage":
+    default: 0.25
+    helpText: "Damage/radius added per speed player is above the min speed"
 
 "cfc_powerups_groundpound_knockback_multiplier":
     default: 10

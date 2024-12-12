@@ -100,7 +100,7 @@ class SuperSpeedPowerup extends BasePowerup
         -- TODO: Should the PowerupManager do this?
         @owner.Powerups[@@powerupID] = nil
 
-hook.Add "CFC_Powerups_DisallowGetPowerup", "CFC_Powerups-SuperSpeed-BlockSpeed", (_, powerupId) ->
+hook.Add "CFC_Powerups_DisallowGetPowerup", "CFC_Powerups-SuperSpeed-BlockSpeed", (ply, powerupId) ->
     return unless powerupId == "powerup_speed"
     superSpeedPowerup = ply.Powerups.powerup_super_speed
     return unless superSpeedPowerup

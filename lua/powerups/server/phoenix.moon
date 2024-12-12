@@ -23,12 +23,12 @@ class PhoenixPowerup extends BasePowerup
         @immunityDamageMult = getConf "phoenix_immunity_damage_multiplier"
         @immunityDuration = getConf "phoenix_immunity_duration"
 
-        @setModel = (FindMetaTable "Entity").SetModel -- CFC blocks skeleton and charple by wrapping Player:SetModel()
+        @setModel = FindMetaTable("Entity").SetModel -- CFC blocks skeleton and charple by wrapping Player:SetModel()
 
         @ApplyEffect!
 
     Revive: =>
-        @UsesRemaining = @UsesRemaining - 1
+        @UsesRemaining -= 1
         @immune = true
         @ownerModel = @owner\GetModel!
 
@@ -42,14 +42,14 @@ class PhoenixPowerup extends BasePowerup
 
             splodePitch = math.random 80, 90
             \EmitSound "ambient/levels/labs/electric_explosion4.wav", 75, splodePitch, 1
-            \ScreenFade SCREENFADE.IN, (Color 255, 240, 230, 150), 2, 0.1
+            \ScreenFade SCREENFADE.IN, Color(255, 240, 230, 150), 2, 0.1
 
             util.ScreenShake \GetPos!, 10, 20, 2.5, 1500
             util.ScreenShake \GetPos!, 40, 40, 0.5, 500
 
         with eff = EffectData!
             eff\SetOrigin @owner\GetPos!
-            eff\SetNormal Vector 0, 0, 1
+            eff\SetNormal Vector(0, 0, 1)
 
             util.Effect "VortDispel", eff, true, true
             util.Effect "HL1GaussWallImpact2", eff, true, true
@@ -80,11 +80,8 @@ class PhoenixPowerup extends BasePowerup
 
         -- slowly regen health + armor from 0
         timer.Create @regenTimerName, 0.1, 0, ->
-            bad = not @immune or not IsValid @owner
-
-            if bad then
-                timer.Remove @regenTimerName
-                return
+            good = @immune and IsValid @owner
+            return timer.Remove @regenTimerName unless good
 
             with @owner
                 health = \Health!
@@ -118,8 +115,7 @@ class PhoenixPowerup extends BasePowerup
                     pitch = Lerp i / 5, 80, 140
                     @owner\EmitSound "ambient/machines/thumper_hit.wav", 75, pitch, 0.5
 
-            if @UsesRemaining <= 0
-                @Remove!
+            @Remove! unless @UsesRemaining > 0
 
     DamageWatcher: =>
         (victim, damageInfo) ->
@@ -163,8 +159,7 @@ class PhoenixPowerup extends BasePowerup
             otherEnt._cfcPowerups_phoenix_alreadyHit = true
             otherEnt\Remove!
 
-            if not @immune
-                @Revive!
+            @Revive! unless @immune
                     
 
     ApplyEffect: =>
@@ -206,16 +201,12 @@ class PhoenixPowerup extends BasePowerup
 
         return unless IsValid @owner
 
+        @holyMusic\Stop! if @holyMusic
+        @heartbeatSound\Stop! if @heartbeatSound
         @owner\RemoveCallback "PhysicsCollide", @collisionListenerID
 
         if not @hadNoDissolve
             @owner\RemoveEFlags EFL_NO_DISSOLVE
-
-        if @holyMusic
-            @holyMusic\Stop!
-
-        if @heartbeatSound
-            @heartbeatSound\Stop!
 
         if @ownerModel
             self.setModel @owner, @ownerModel

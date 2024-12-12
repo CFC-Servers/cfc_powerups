@@ -14,6 +14,11 @@ FALL_SOUND_FADE_OUT = 0.01
 
 RADIUS_PER_DAMAGE = 2.5
 
+DIRECTHIT_DMG_MUL = 1
+
+TERMINAL_EXTRABLAST_DMGMUL = 75
+TERMINAL_EXTRABLAST_RADIUS_MUL = 0.25
+
 TRAIL_ENABLED = true
 TRAIL_INTERVAL = 0.1
 TRAIL_LENGTH = 2
@@ -162,7 +167,7 @@ class GroundpoundPowerup extends BasePowerup
                     with damageInfo
                         \SetAttacker @owner
                         \SetInflictor @damageInflictor
-                        \SetDamage damage
+                        \SetDamage damage * DIRECTHIT_DMG_MUL
                         \SetDamageType DMG_BLAST
                         \SetDamageForce Vector 0, 0, -damage * 10
                         \SetDamagePosition ownersPos
@@ -188,7 +193,7 @@ class GroundpoundPowerup extends BasePowerup
 
                 if speedClamped > TERMINAL_VELOCITY * 0.9 -- all powerful hit!
                     \EmitSound "ambient/explosions/exp2.wav", 110, 30, 0.5 -- echo
-                    util.BlastDamage @damageInflictor, @owner, ownersPos, damage * 0.35, damage * 25 -- OP blastdamage in a tiny, tiny radius
+                    util.BlastDamage @damageInflictor, @owner, ownersPos, radius * TERMINAL_EXTRABLAST_RADIUS_MUL, damage * TERMINAL_EXTRABLAST_DMGMUL -- OP blastdamage in a tiny, tiny radius
 
             timer.Simple 0, -> -- prediction...
                 return unless IsValid @owner

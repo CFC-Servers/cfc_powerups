@@ -91,11 +91,11 @@
 -- =======================================================================
 
 -- Super Speed =================================================================
-"cfc_powerups_speed_duration":
+"cfc_powerups_super_speed_duration":
     default: 600
     helpText: "How long does the Super Speed powerup last, in seconds"
 
-"cfc_powerups_speed_interval":
+"cfc_powerups_super_speed_interval":
     default: 1
     helpText: "How often to check if the Super Speed powerup needs to be re-applied"
     min: 0.01

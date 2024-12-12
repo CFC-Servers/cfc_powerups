@@ -14,7 +14,8 @@ FALL_SOUND_FADE_OUT = 0.01
 
 RADIUS_PER_DAMAGE = 2.5
 
-DIRECTHIT_DMG_MUL = 1
+-- this is applied to whatever we land on, on top of the first blastdamage
+DIRECTHIT_DMG_MUL = 1 -- so 1, 2x damage  2, 3x damage, etc
 
 TERMINAL_EXTRABLAST_DMGMUL = 75
 TERMINAL_EXTRABLAST_RADIUS_MUL = 0.25
@@ -157,8 +158,6 @@ class GroundpoundPowerup extends BasePowerup
             util.ScreenShake ownersPos, speedZeroToOne * 40, 4, 2, 1000 -- big shake close
             util.ScreenShake ownersPos, 1, 5, 5, damage * 2 -- small shake far away
 
-            print damage
-
             with @owner
                 -- double damage for whatever we directly land on
                 groundEntity = @owner\GetGroundEntity!
@@ -222,14 +221,6 @@ class GroundpoundPowerup extends BasePowerup
                         \SetNormal UP_VECTOR
                         \SetScale effScale
                         util.Effect "groundpound_shockwave", effDat
-
-
-
-                \SetFlags 0x4
-                util.Effect "WaterSurfaceExplosion", eff, true, true
-                    
-                \SetFlags 0x4
-                util.Effect "WaterSurfaceExplosion", eff, true, true
 
             if @UsesRemaining < 1
                 @Remove!

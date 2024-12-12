@@ -123,14 +123,8 @@ class PhoenixPowerup extends BasePowerup
 
     DamageWatcher: =>
         (victim, damageInfo) ->
-            if @immune
-                return true if victim == @owner -- Block all damage while immune
-
-                -- Multiplier of outgoing damage while the owner is immune
-                damageInfo\ScaleDamage @immunityDamageMult
-                return
-
             return unless victim == @owner
+            return true if @immune
             return unless victim\Alive!
 
             newHealth = math.floor victim\Health! - damageInfo\GetDamage!
@@ -144,6 +138,16 @@ class PhoenixPowerup extends BasePowerup
             @Revive!
 
             return true
+
+    DamageVictimWatcher: =>
+        (victim, damageInfo) ->
+            return if victim == @owner
+            return unless @immune
+
+            -- Multiplier of outgoing damage while the owner is immune
+            damageInfo\ScaleDamage @immunityDamageMult
+
+            return nil
 
     -- We need EF_NO_DISSOLVE to prevent combine balls from bypassing the revive,
     --  but it also makes them not create a damage event, so we need a collision listener
@@ -168,11 +172,13 @@ class PhoenixPowerup extends BasePowerup
         steamID = @owner\SteamID64!
 
         @damageWatcherName = "CFC_Powerups-Phoenix-DamageWatcher-#{steamID}"
+        @damageVictimWatcherName = "CFC_Powerups-Phoenix-DamageVictimWatcher-#{steamID}"
         @timerName = "CFC_Powerups-Phoenix-Timer-#{steamID}"
         @regenTimerName = "CFC_Powerups-Phoenix-Regen-Timer-#{steamID}"
         @collisionListenerID = @owner\AddCallback "PhysicsCollide", @CollisionListener!
 
         hook.Add "EntityTakeDamage", @damageWatcherName, @DamageWatcher!, HOOK_LOW -- Low so we go after any other damage modifiers or blockers
+        hook.Add "EntityTakeDamage", @damageVictimWatcherName, @DamageVictimWatcher! -- Normal priority
 
         @hadNoDissolve = @owner\IsEFlagSet EFL_NO_DISSOLVE
 
@@ -196,6 +202,7 @@ class PhoenixPowerup extends BasePowerup
         timer.Remove @timerName
         timer.Remove @regenTimerName
         hook.Remove "EntityTakeDamage", @damageWatcherName
+        hook.Remove "EntityTakeDamage", @damageVictimWatcherName
 
         return unless IsValid @owner
 

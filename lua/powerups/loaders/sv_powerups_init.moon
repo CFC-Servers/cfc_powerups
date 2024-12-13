@@ -24,6 +24,7 @@ AddCSLuaFile "powerups/shared/shotgun.lua"
 AddCSLuaFile "powerups/client/halos.lua"
 AddCSLuaFile "powerups/client/flux_shield.lua"
 AddCSLuaFile "powerups/client/thorns.lua"
+AddCSLuaFile "powerups/client/shotgun.lua"
 
 resource.AddWorkshop "3114946264"
 

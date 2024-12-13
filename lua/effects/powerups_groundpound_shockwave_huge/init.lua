@@ -14,15 +14,20 @@ function EFFECT:Init( data )
 end
 
 function EFFECT:Dust()
+    local emitter = self.Emitter
+    local dir = self.DirVec
+    local pos = self.Pos
+    local scale = self.Scale
+
     for _ = 1, 5 do
-        local Flash = self.Emitter:Add( "effects/muzzleflash" .. math.random( 1, 4 ), self.Pos )
+        local Flash = emitter:Add( "effects/muzzleflash" .. math.random( 1, 4 ), self.Pos )
         if Flash then
-            Flash:SetVelocity( self.DirVec * 100 )
+            Flash:SetVelocity( dir * 100 )
             Flash:SetAirResistance( 200 )
             Flash:SetDieTime( 0.15 )
             Flash:SetStartAlpha( 255 )
             Flash:SetEndAlpha( 0 )
-            Flash:SetStartSize( self.Scale * 300 )
+            Flash:SetStartSize( scale * 300 )
             Flash:SetEndSize( 0 )
             Flash:SetRoll( math.Rand( 180, 480 ) )
             Flash:SetRollDelta( math.Rand( -1, 1 ) )
@@ -31,15 +36,15 @@ function EFFECT:Dust()
         end
     end
 
-    for _ = 1, 20 * self.Scale do
-        local Dust = self.Emitter:Add( "particle/particle_composite", self.Pos )
+    for _ = 1, 20 * scale do
+        local Dust = emitter:Add( "particle/particle_composite", pos )
         if Dust then
-            Dust:SetVelocity( self.DirVec * math.random( 100, 400 ) * self.Scale + VectorRand():GetNormalized() * 300 * self.Scale )
+            Dust:SetVelocity( dir * math.random( 100, 400 ) * scale + VectorRand():GetNormalized() * 300 * scale )
             Dust:SetDieTime( math.Rand( 2, 3 ) )
             Dust:SetStartAlpha( 230 )
             Dust:SetEndAlpha( 0 )
-            Dust:SetStartSize( 50 * self.Scale )
-            Dust:SetEndSize( 100 * self.Scale )
+            Dust:SetStartSize( 50 * scale )
+            Dust:SetEndSize( 100 * scale )
             Dust:SetRoll( math.Rand( 150, 360 ) )
             Dust:SetRollDelta( math.Rand( -1, 1 ) )
             Dust:SetAirResistance( 150 )
@@ -49,15 +54,15 @@ function EFFECT:Dust()
         end
     end
 
-    for _ = 1, 15 * self.Scale do
-        local Dust = self.Emitter:Add( "particle/smokesprites_000" .. math.random( 1, 9 ), self.Pos )
+    for _ = 1, 15 * scale do
+        local Dust = emitter:Add( "particle/smokesprites_000" .. math.random( 1, 9 ), pos )
         if Dust then
-            Dust:SetVelocity( self.DirVec * math.random( 100, 400 ) * self.Scale + VectorRand():GetNormalized() * 400 * self.Scale )
-            Dust:SetDieTime( math.Rand( 1, 3 ) * self.Scale )
+            Dust:SetVelocity( dir * math.random( 100, 400 ) * scale + VectorRand():GetNormalized() * 400 * scale )
+            Dust:SetDieTime( math.Rand( 1, 3 ) * scale )
             Dust:SetStartAlpha( 50 )
             Dust:SetEndAlpha( 0 )
-            Dust:SetStartSize( 80 * self.Scale )
-            Dust:SetEndSize( 100 * self.Scale )
+            Dust:SetStartSize( 80 * scale )
+            Dust:SetEndSize( 100 * scale )
             Dust:SetRoll( math.Rand( 150, 360 ) )
             Dust:SetRollDelta( math.Rand( -1, 1 ) )
             Dust:SetAirResistance( 250 )
@@ -67,14 +72,14 @@ function EFFECT:Dust()
         end
     end
 
-    for _ = 1, 25 * self.Scale do
-        local Debris = self.Emitter:Add( "effects/fleck_cement" .. math.random( 1, 2 ), self.Pos )
+    for _ = 1, 25 * scale do
+        local Debris = emitter:Add( "effects/fleck_cement" .. math.random( 1, 2 ), pos )
         if Debris then
-            Debris:SetVelocity( self.DirVec * math.random( 0, 700 ) * self.Scale + VectorRand():GetNormalized() * math.random( 0, 700 ) * self.Scale )
-            Debris:SetDieTime( math.random( 1, 2 ) * self.Scale )
+            Debris:SetVelocity( dir * math.random( 0, 700 ) * scale + VectorRand():GetNormalized() * math.random( 0, 700 ) * scale )
+            Debris:SetDieTime( math.random( 1, 2 ) * scale )
             Debris:SetStartAlpha( 255 )
             Debris:SetEndAlpha( 0 )
-            Debris:SetStartSize( math.random( 5, 10 ) * self.Scale )
+            Debris:SetStartSize( math.random( 5, 10 ) * scale )
             Debris:SetRoll( math.Rand( 0, 360 ) )
             Debris:SetRollDelta( math.Rand( -5, 5 ) )
             Debris:SetAirResistance( 40 )

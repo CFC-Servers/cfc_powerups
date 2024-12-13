@@ -26,6 +26,7 @@ BLACKLISTED_EFFECTS = {
     Drunk: true
     NoInteract: true
     Lidar: true
+    Ball: true
 
     -- Causes a big lagspike for the first time per session, and doesn't affect pvp a huge amount
     SoundShuffle: true

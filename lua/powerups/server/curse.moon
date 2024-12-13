@@ -68,8 +68,9 @@ class CursePowerup extends BasePowerup
             return unless attacker\IsPlayer!
 
             curEffects = CFCUlxCurse.GetCurrentEffects attacker
+            hasNoEffects = next(curEffects) == nil
 
-            if #curEffects == 0 or math.random! <= @chance
+            if hasNoEffects or math.random! <= @chance
                 @Curse attacker
 
             return nil

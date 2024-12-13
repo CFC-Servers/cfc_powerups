@@ -47,8 +47,8 @@ class GroundpoundPowerup extends BasePowerup
         @nextTrailTime = 0
         @nextUpToSpeedSound = 0
         @nextUpToTerminalSpeedSound = 0
+        @nextCrouchSound = 0
         @fastFalling = false
-        @crouchSound = false
         @upToSpeedSound = false
         @upToTerminalSpeedSound
 
@@ -245,7 +245,6 @@ class GroundpoundPowerup extends BasePowerup
             if cantFastFall
                 if @fastFalling
                     @fastFalling = false
-                    @crouchSound = false
                     @upToSpeedSound = false
                     @upToTerminalSpeedSound = false
                     @fallSound\ChangeVolume 0, FALL_SOUND_FADE_OUT
@@ -255,6 +254,12 @@ class GroundpoundPowerup extends BasePowerup
             if not @fastFalling
                 @fastFalling = true
                 @fallSound\ChangeVolume 1, FALL_SOUND_FADE_IN
+
+                now = CurTime!
+
+                if @nextCrouchSound <= now -- sound when starting the groundpound
+                    @owner\EmitSound "ambient/machines/thumper_top.wav", 78, 110, 1
+                    @nextCrouchSound = now + 0.75 -- cooldown
 
             dt = FrameTime!
             vel = owner\GetVelocity!
@@ -271,11 +276,6 @@ class GroundpoundPowerup extends BasePowerup
             @owner\SetVelocity velToAdd
             @fallSound\ChangePitch fallSoundPitch, dt
             @fallSound\SetSoundLevel fallSoundLevel
-
-            if not @crouchSound -- sound when starting the groundpound
-                @crouchSound = true
-                @owner\EmitSound "ambient/machines/thumper_top.wav", 78, 110, 1
-
 
             return if vel.z > -@minSpeed
 

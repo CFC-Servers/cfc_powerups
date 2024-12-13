@@ -4,7 +4,9 @@ import Rand, cos, sin from math
 import Create from ents
 import SpriteTrail from util
 
-IGNORED_INFLICTORS = { -- Inflictors that use damage to check for hittability, rather than actually dealing damage. Don't try to revive on these.
+-- Inflictors that use damage to check for hittability, rather than actually dealing damage.
+-- Makes the Phoenix powerup not try to revive on these.
+IGNORED_INFLICTORS = {
     cfc_simple_ent_antigrav_grenade: true
     cfc_simple_ent_bubble_grenade: true
     cfc_simple_ent_curse_grenade: true

@@ -207,10 +207,8 @@ class GroundpoundPowerup extends BasePowerup
                         util.Effect "powerups_groundpound_shockwave", effDat
 
                         \SetScale 4
-                        \SetRadius 67
-                        \SetRadius 6
                         \SetNormal UP_VECTOR
-                        util.Effect "m9k_gdcw_cinematicboom", effDat -- depends on m9k
+                        util.Effect "powerups_groundpound_shockwave_huge", effDat
 
                 else
                     effDat = EffectData!

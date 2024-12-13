@@ -204,13 +204,13 @@ class GroundpoundPowerup extends BasePowerup
                         \SetEntity @owner
 
                         \SetScale 1
-                        util.Effect "groundpound_shockwave", effDat -- depends on m9k
+                        util.Effect "groundpound_shockwave", effDat
 
                         \SetScale 4
                         \SetRadius 67
                         \SetRadius 6
                         \SetNormal UP_VECTOR
-                        util.Effect "m9k_gdcw_cinematicboom", effDat -- ditto
+                        util.Effect "m9k_gdcw_cinematicboom", effDat -- depends on m9k
 
                 else
                     effDat = EffectData!

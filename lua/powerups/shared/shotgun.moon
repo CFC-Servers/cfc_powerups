@@ -21,9 +21,10 @@ isForcedMulti = (wep) ->
 
     if not getter
         for start, newGetter in *FORCE_MULTI_CLASS_STARTS
-            if string.StartsWith wepClass, start
-                getter = newGetter
-                break
+            continue unless string.StartsWith wepClass, start
+
+            getter = newGetter
+            break
 
     if not getter
         forceMultiClassCache[wepClass] = false

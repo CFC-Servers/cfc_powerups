@@ -36,6 +36,9 @@ BLACKLISTED_EFFECTS = {
 
     -- Allow FilmDevelopmentNoClear, but not the regular one.
     FilmDevelopment: true
+
+    -- Too much nausea
+    SanFransisco: true
 }
 
 export CursePowerup

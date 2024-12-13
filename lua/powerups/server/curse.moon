@@ -42,6 +42,9 @@ BLACKLISTED_EFFECTS = {
     SanFransisco: true
 }
 
+util.AddNetworkString "CFC_Powerups-Curse-Start"
+util.AddNetworkString "CFC_Powerups-Curse-Stop"
+
 export CursePowerup
 class CursePowerup extends BasePowerup
     @powerupID: "powerup_curse"
@@ -111,9 +114,14 @@ class CursePowerup extends BasePowerup
     ApplyEffect: =>
         super self
 
-        @hookName = "CFC_Powerups-Curse-#{@owner\SteamID64!}"
+        @ownerSteamID64 = @owner\SteamID64!
+        @hookName = "CFC_Powerups-Curse-#{@ownerSteamID64}"
         hook.Add "EntityTakeDamage", @hookName, @DamageWatcher!
         timer.Create @hookName, @duration, 1, -> @Remove!
+
+        net.Start "CFC_Powerups-Curse-Start"
+        net.WriteString @ownerSteamID64
+        net.Broadcast!
 
         @owner\ChatPrint "You've gained #{@duration} seconds of the Curse Powerup"
 
@@ -127,6 +135,10 @@ class CursePowerup extends BasePowerup
 
         timer.Remove @hookName
         hook.Remove "EntityTakeDamage", @hookName
+
+        net.Start "CFC_Powerups-Curse-Stop"
+        net.WriteString @ownerSteamID64
+        net.Broadcast!
 
         return unless IsValid @owner
 

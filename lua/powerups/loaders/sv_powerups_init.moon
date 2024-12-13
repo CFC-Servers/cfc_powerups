@@ -21,6 +21,7 @@ include "powerups/server/curse.lua"
 AddCSLuaFile "powerups/client/halos.lua"
 AddCSLuaFile "powerups/client/flux_shield.lua"
 AddCSLuaFile "powerups/client/thorns.lua"
+AddCSLuaFile "powerups/client/curse.lua"
 
 resource.AddWorkshop "3114946264"
 

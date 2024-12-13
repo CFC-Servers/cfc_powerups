@@ -94,3 +94,5 @@ hook.Add "PostDrawTranslucentRenderables", "CFC_Powerups-Curse-DrawEmitters", (_
         cam.Start3D WorldToLocal(EyePos!, EyeAngles!, pos, ANGLE_ZERO)
         emitter\Draw!
         cam.End3D!
+
+    return nil

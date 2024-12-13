@@ -289,4 +289,26 @@
     helpText: "While a Phoenix player is immune, multiply damage they deal by this much"
     min: 0
 -- =======================================================================
+
+-- Curse =============================================================
+"cfc_powerups_curse_duration":
+    default: 300
+    helpText: "How long does the Curse powerup last, in seconds"
+
+"cfc_powerups_curse_duration_min":
+    default: 10
+    helpText: "Minimum curse effect duration from the Curse powerup"
+
+"cfc_powerups_curse_duration_max":
+    default: 15
+    helpText: "Maximum curse effect duration from the Curse powerup"
+
+"cfc_powerups_curse_chance":
+    default: 0.25
+    helpText: "The chance to apply a curse, when a player shoots a Curse powerup user and has no curses"
+
+"cfc_powerups_curse_ratelimit":
+    default: 0.75
+    helpText: "Cooldown for applying curses to attackers when they already have one"
+-- =======================================================================
 }

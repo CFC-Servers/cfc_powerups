@@ -17,10 +17,12 @@ include "powerups/server/thorns.lua"
 include "powerups/server/magnetic_crossbow.lua"
 include "powerups/server/phoenix.lua"
 include "powerups/server/super_speed.lua"
+include "powerups/server/curse.lua"
 
 AddCSLuaFile "powerups/client/halos.lua"
 AddCSLuaFile "powerups/client/flux_shield.lua"
 AddCSLuaFile "powerups/client/thorns.lua"
+AddCSLuaFile "powerups/client/curse.lua"
 
 resource.AddWorkshop "3114946264"
 

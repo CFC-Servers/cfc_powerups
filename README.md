@@ -4,6 +4,7 @@ Randomly spawning powerups
 ## Requirements
 
  - [CFC Logger](https://github.com/CFC-Servers/cfc_logger)
+ - (optional) [CFC ULX Commands](https://github.com/CFC-Servers/cfc_ulx_commands) for the Curse powerup
 
 ## Using
 You can download the latest release from our [Releases](https://github.com/CFC-Servers/cfc_powerups/releases) tab, or you can clone our [`lua` branch](https://github.com/CFC-Servers/cfc_powerups/tree/lua) and use it to stay up-to-date.

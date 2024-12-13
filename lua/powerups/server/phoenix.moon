@@ -4,6 +4,14 @@ import Rand, cos, sin from math
 import Create from ents
 import SpriteTrail from util
 
+-- Inflictors that use damage to check for hittability, rather than actually dealing damage.
+-- Makes the Phoenix powerup not try to revive on these.
+IGNORED_INFLICTORS = {
+    cfc_simple_ent_antigrav_grenade: true
+    cfc_simple_ent_bubble_grenade: true
+    cfc_simple_ent_curse_grenade: true
+}
+
 export PhoenixPowerup
 class PhoenixPowerup extends BasePowerup
     @powerupID: "powerup_phoenix"
@@ -228,3 +236,10 @@ hook.Add "CFC_Powerups_DisallowGetPowerup", "CFC_Powerups-Phoenix-EnforceUseLimi
     return unless existingPowerup.UsesRemaining >= maxUses
 
     return true, "You're maxed out on Phoenix uses"
+
+hook.Add "CFC_Powerups-Phoenix-ShouldIgnoreDamage", "CFC_Powerups-Phoenix-IgnoredInflictors", (_, damageInfo) ->
+    inflictor = damageInfo\GetInflictor!
+    return unless IsValid inflictor
+    return unless IGNORED_INFLICTORS[inflictor\GetClass!]
+
+    return true

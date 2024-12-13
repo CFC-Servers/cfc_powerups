@@ -285,7 +285,7 @@
     helpText: "Minimum curse effect duration from the Curse powerup"
 
 "cfc_powerups_curse_duration_max":
-    default: 20
+    default: 15
     helpText: "Maximum curse effect duration from the Curse powerup"
 
 "cfc_powerups_curse_chance":
@@ -293,7 +293,7 @@
     helpText: "The chance to apply a curse, when a player shoots a Curse powerup user and has no curses"
 
 "cfc_powerups_curse_ratelimit":
-    default: 0.5
+    default: 0.75
     helpText: "Cooldown for applying curses to attackers when they already have one"
 -- =======================================================================
 }

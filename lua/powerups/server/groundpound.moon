@@ -204,7 +204,7 @@ class GroundpoundPowerup extends BasePowerup
                         \SetEntity @owner
 
                         \SetScale 1
-                        util.Effect "groundpound_shockwave", effDat
+                        util.Effect "powerups_groundpound_shockwave", effDat
 
                         \SetScale 4
                         \SetRadius 67
@@ -220,7 +220,7 @@ class GroundpoundPowerup extends BasePowerup
                         \SetOrigin ownersPos
                         \SetNormal UP_VECTOR
                         \SetScale effScale
-                        util.Effect "groundpound_shockwave", effDat
+                        util.Effect "powerups_groundpound_shockwave", effDat
 
             if @UsesRemaining < 1
                 @Remove!

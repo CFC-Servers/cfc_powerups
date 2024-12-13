@@ -82,12 +82,27 @@
 
 "cfc_powerups_speed_interval":
     default: 1
-    helpText: "How often to check if the speed powerup needs to be re-applied"
+    helpText: "How often to check if the Speed powerup needs to be re-applied"
     min: 0.01
 
 "cfc_powerups_speed_multiplier":
-    default: 2.25
+    default: 1.5
     helpText: "What value to multiply speed by for the Speed powerup"
+-- =======================================================================
+
+-- Super Speed =================================================================
+"cfc_powerups_super_speed_duration":
+    default: 600
+    helpText: "How long does the Super Speed powerup last, in seconds"
+
+"cfc_powerups_super_speed_interval":
+    default: 1
+    helpText: "How often to check if the Super Speed powerup needs to be re-applied"
+    min: 0.01
+
+"cfc_powerups_super_speed_multiplier":
+    default: 2.25
+    helpText: "What value to multiply speed by for the Super Speed powerup"
 -- =======================================================================
 
 -- Feather ===============================================================

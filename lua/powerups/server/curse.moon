@@ -78,6 +78,16 @@ class CursePowerup extends BasePowerup
         effectData = CFCUlxCurse.GetRandomEffect ply, BLACKLISTED_EFFECTS
         return unless effectData -- No compatible effects at this time
 
+        rf = RecipientFilter!
+        rf\AddPlayer ply
+
+        for i = 0, 4
+            pitch = Lerp i / 5, 80, 130
+            ply\EmitSound "buttons/button19.wav", 75, pitch, 0.65, CHAN_AUTO, 0, 0, rf
+
+        ply\EmitSound "ambient/levels/prison/radio_random9.wav", 75, 100, 0.5, CHAN_AUTO, 0, 0, rf
+        ply\EmitSound "ambient/levels/prison/radio_random14.wav", 75, 100, 0.5, CHAN_AUTO, 0, 0, rf
+
         duration = math.Rand @durationMin, @durationMax
 
         CFCUlxCurse.ApplyCurseEffect ply, effectData, duration

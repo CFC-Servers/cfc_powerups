@@ -55,6 +55,9 @@ class CursePowerup extends BasePowerup
         @durationMin = getConf "curse_duration_min"
         @durationMax = getConf "curse_duration_max"
         @chance = getConf "curse_chance"
+        @ratelimit = getConf "curse_ratelimit"
+
+        @nextCurseTimes = {}
 
         @ApplyEffect!
 
@@ -70,8 +73,15 @@ class CursePowerup extends BasePowerup
             curEffects = CFCUlxCurse.GetCurrentEffects attacker
             hasNoEffects = next(curEffects) == nil
 
-            if hasNoEffects or math.random! <= @chance
-                @Curse attacker
+            @Curse attacker if hasNoEffects -- Always curse if they don't have one
+
+            -- Chance to give additional curses, with a ratelimit
+            return unless math.random! <= @chance
+
+            nextCurseTime = @nextCurseTimes[attacker] or 0
+            return if CurTime! < nextCurseTime
+
+            @Curse attacker
 
             return nil
 
@@ -90,6 +100,7 @@ class CursePowerup extends BasePowerup
         ply\EmitSound "ambient/levels/prison/radio_random14.wav", 75, 100, 0.5, CHAN_AUTO, 0, 0, rf
 
         duration = math.Rand @durationMin, @durationMax
+        @nextCurseTimes[ply] = CurTime! + @ratelimit
 
         CFCUlxCurse.ApplyCurseEffect ply, effectData, duration
 

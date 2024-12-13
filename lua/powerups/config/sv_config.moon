@@ -291,5 +291,9 @@
 "cfc_powerups_curse_chance":
     default: 0.25
     helpText: "The chance to apply a curse, when a player shoots a Curse powerup user and has no curses"
+
+"cfc_powerups_curse_ratelimit":
+    default: 0.5
+    helpText: "Cooldown for applying curses to attackers when they already have one"
 -- =======================================================================
 }

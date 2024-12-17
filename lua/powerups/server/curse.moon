@@ -39,6 +39,7 @@ BLACKLISTED_EFFECTS = {
     StaggeredAim: true
     ViewPummel: true
     TopDown: true
+    Trainfuck: true
 
     -- Causes a big lagspike for the first time per session, and doesn't affect pvp a huge amount
     SoundShuffle: true
@@ -62,6 +63,7 @@ BLACKLISTED_EFFECTS = {
     Butterfingers: true
     HealthDrain: true
     AimSensitivity: true
+    OffsetAim: true
 }
 
 util.AddNetworkString "CFC_Powerups-Curse-Start"

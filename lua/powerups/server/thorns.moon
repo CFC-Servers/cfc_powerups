@@ -42,6 +42,10 @@ class ThornsPowerup extends BasePowerup
         @HookName = @TimerName
         @ZapperName = "#{@TimerName}-Zapper"
 
+        with @damageInflictor = ents.Create "cfc_powerup_thorns_inflictor"
+            \SetOwner @owner
+            \Spawn!
+
         @ApplyEffect!
 
     PlayAoeEffect: =>
@@ -108,29 +112,43 @@ class ThornsPowerup extends BasePowerup
             return unless ent == @owner
             return if took == false
 
-            originalAttacker = dmg\GetAttacker!
-            return unless IsValid originalAttacker
-            --return unless originalAttacker\IsPlayer!
-            return if ent == originalAttacker
+            attacker = dmg\GetAttacker!
+            return unless IsValid attacker
+            --return unless attacker\IsPlayer!
+            return if ent == attacker
+
+            inflictor = dmg\GetInflictor!
+            return if IsValid(inflictor) and inflictor\GetClass! == "cfc_powerup_thorns_inflictor"
 
             damageAmount = dmg\GetDamage!
 
             return unless damageAmount > 0
-            --return unless originalAttacker\Alive! -- TODO: Does this actually prevent reflect damage being reflected?
+            --return unless attacker\Alive! -- TODO: Does this actually prevent reflect damage being reflected?
 
             damageScale = getConf "thorns_return_percentage"
             damageScale = damageScale / 100
+            reflectedAmount = math.ceil damageAmount * damageScale
+            thornsInflictor = @damageInflictor
 
-            -- Now we modify the damage and return it to the originalAttacker
-            dmg\SetAttacker @owner
-            dmg\ScaleDamage damageScale
+            -- CTakeDamageInfo is a singleton, need to deal damage in a timer otherwise it'll break other PED hook listeners
+            timer.Simple 0, ->
+                return unless IsValid attacker
+                return unless IsValid ent
+                return unless IsValid thornsInflictor
 
-            newDamageAmount = damageAmount * damageScale
-            @QueueDamageForBroadcast originalAttacker, newDamageAmount
+                with refDmg = DamageInfo!
+                    \SetAttacker ent
+                    \SetInflictor thornsInflictor
+                    \SetDamage reflectedAmount
+                    \SetDamageType DMG_GENERIC
 
-            originalAttacker\TakeDamageInfo dmg
+                    attacker\TakeDamageInfo refDmg
 
-            --originalAttacker\ChatPrint "[CFC Powerups] You took #{Round newDamageAmount} reflected damage!"
+            @QueueDamageForBroadcast attacker, reflectedAmount
+
+            --attacker\ChatPrint "[CFC Powerups] You took #{Round newDamageAmount} reflected damage!"
+
+            return nil
 
     ApplyEffect: =>
         super self
@@ -166,9 +184,19 @@ class ThornsPowerup extends BasePowerup
         hook.Remove "DoPlayerDeath", @HookName
         timer.Remove @TimerName
         timer.Remove @ZapperName
+
         @passiveSound\Stop!
+        damageInflictor = @damageInflictor
+
         if IsValid @holo
             @holo\Remove!
+
+        -- Remove damageInflictor after a decent delay to ensure all damage reflections finish first.
+        -- There's no harm in having it exist for a little longer, and overlaps aren't a problem, so this is safe.
+        timer.Simple 0.5, ->
+            return unless IsValid damageInflictor
+
+            damageInflictor\Remove!
 
         return unless IsValid @owner
 

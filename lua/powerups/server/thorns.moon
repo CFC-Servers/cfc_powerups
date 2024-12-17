@@ -49,7 +49,6 @@ class ThornsPowerup extends BasePowerup
             \SetEntity @holo
             \SetScale 1
             \SetMagnitude 12
-            \SetRadius 20
 
             Effect "TeslaHitboxes", effect, true, true
 

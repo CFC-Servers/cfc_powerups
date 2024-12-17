@@ -14,8 +14,8 @@ class ThornManager
             @drawThorns!
 
     getSparkSound: =>
-        sparkNumber = random 1, 11
-        "ambient/energy/newspark#{string.format "%02d", sparkNumber}.wav"
+        sparkNumber = random 3, 6
+        "ambient/energy/spark#{sparkNumber}.wav"
 
     playSparkSound: (attacker) =>
         sparkSound = @getSparkSound!

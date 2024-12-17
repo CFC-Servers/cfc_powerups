@@ -13,7 +13,7 @@ EMITTER_SPREAD_FROM_TOP = false
 EMITTER_SPEED_MIN = 5
 EMITTER_SPEED_MAX = 10
 EMITTER_AIR_RESISTANCE = 3
-EMMITTER_COLOR_INTENSITY = 65
+EMITTER_COLOR_INTENSITY = 65
 
 BEAM_MAT = Material "sprites/physbeama"
 BEAM_WIDTH = 30
@@ -89,7 +89,7 @@ timer.Create "CFC_Powerups-Curse-EmitterThink", EMITTER_INTERVAL, 0, ->
         for _ = 1, EMITTER_AMOUNT
             pos = centerPos + Vector(math.Rand(-spreadX, spreadX), math.Rand(-spreadY, spreadY), math.Rand(-spreadZ, spreadZ))
             dir = AngleRand!\Forward!
-            colorIntensity = math.Rand 0, EMMITTER_COLOR_INTENSITY
+            colorIntensity = math.Rand 0, EMITTER_COLOR_INTENSITY
             with part = emitter\Add EMITTER_MATERIAL, pos
                 \SetStartSize EMITTER_START_SIZE
                 \SetEndSize EMITTER_END_SIZE

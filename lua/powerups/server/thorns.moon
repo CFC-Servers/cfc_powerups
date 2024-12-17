@@ -135,15 +135,15 @@ class ThornsPowerup extends BasePowerup
     ApplyEffect: =>
         super self
 
-        duration = getConf "thorns_duration"
+        @duration = getConf "thorns_duration"
 
         damageWatcher = @DamageWatcher!
         hook.Add "PostEntityTakeDamage", @HookName, damageWatcher
         hook.Add "DoPlayerDeath", @HookName, (ply, _, dmg ) ->
             damageWatcher ply, dmg
 
-        timer.Create @TimerName, duration, 1, -> @Remove!
-        timer.Create @ZapperName, 0.1, duration * 10, -> @PlayAoeEffect!
+        timer.Create @TimerName, @duration, 1, -> @Remove!
+        timer.Create @ZapperName, 0.1, @duration * 10, -> @PlayAoeEffect!
 
         @passiveSound\Play!
         @passiveSound\ChangeVolume 0.1
@@ -155,6 +155,7 @@ class ThornsPowerup extends BasePowerup
     Refresh: =>
         super self
         timer.Start @TimerName
+        timer.Create @ZapperName, 0.1, @duration * 10, -> @PlayAoeEffect!
 
         @owner\ChatPrint "You've refreshed the duration of your Thorns Powerup"
 

@@ -15,10 +15,16 @@ EMITTER_SPEED_MAX = 10
 EMITTER_AIR_RESISTANCE = 3
 EMMITTER_COLOR_INTENSITY = 65
 
+BEAM_MAT = Material "sprites/physbeama"
+BEAM_WIDTH = 30
+BEAM_DURATION = 1.5
+BEAM_COLOR = Color 100, 0, 255
+
 ANGLE_ZERO = Angle 0, 0, 0
 
 emitters = {}
 emitterOwners = {}
+beams = {}
 
 removeEmitter = (ownerSteamID64) ->
     emitter = emitters[ownerSteamID64]
@@ -35,6 +41,14 @@ makeEmitter = (ply, steamID64) ->
 
     emitter\SetNoDraw true
 
+makeBeam = (startPos, endPos) ->
+    table.insert beams, {
+        startPos: startPos
+        endPos: endPos
+        startTime: CurTime!
+        color: Color BEAM_COLOR.r, BEAM_COLOR.g, BEAM_COLOR.b, 255
+    }
+
 net.Receive "CFC_Powerups-Curse-Start", ->
     ownerSteamID64 = net.ReadString!
 
@@ -49,6 +63,14 @@ net.Receive "CFC_Powerups-Curse-Stop", ->
     ownerSteamID64 = net.ReadString!
 
     removeEmitter ownerSteamID64
+
+net.Receive "CFC_Powerups-Curse-CurseHit", ->
+    owner = net.ReadEntity!
+    victim = net.ReadEntity!
+    return unless IsValid owner
+    return unless IsValid victim
+
+    makeBeam owner\WorldSpaceCenter!, victim\WorldSpaceCenter!
 
 
 timer.Create "CFC_Powerups-Curse-EmitterThink", EMITTER_INTERVAL, 0, ->
@@ -96,3 +118,26 @@ hook.Add "PostDrawTranslucentRenderables", "CFC_Powerups-Curse-DrawEmitters", (_
         cam.End3D!
 
     return nil
+
+hook.Add "PostDrawTranslucentRenderables", "CFC_Powerups-Curse-DrawBeams", (_, skybox, skybox3d) ->
+    return if skybox or skybox3d
+
+    now = CurTime!
+
+    for i = #beams, 1, -1
+        beam = beams[i]
+        elapsed = now - beam.startTime
+        frac = elapsed / BEAM_DURATION
+
+        if frac >= 1
+            table.remove( beams, i )
+            continue
+
+        color = beam.color
+        alpha = 255 - 255 * frac
+        color.a = alpha
+
+        scroll = math.Rand 0, 1
+
+        render.SetMaterial BEAM_MAT
+        render.DrawBeam beam.startPos, beam.endPos, BEAM_WIDTH, scroll, scroll + 1, color

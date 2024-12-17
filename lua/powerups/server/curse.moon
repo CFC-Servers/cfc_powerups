@@ -44,6 +44,7 @@ BLACKLISTED_EFFECTS = {
 
 util.AddNetworkString "CFC_Powerups-Curse-Start"
 util.AddNetworkString "CFC_Powerups-Curse-Stop"
+util.AddNetworkString "CFC_Powerups-Curse-CurseHit"
 
 export CursePowerup
 class CursePowerup extends BasePowerup
@@ -110,6 +111,11 @@ class CursePowerup extends BasePowerup
         @nextCurseTimes[ply] = CurTime! + @ratelimit
 
         CFCUlxCurse.ApplyCurseEffect ply, effectData, duration
+
+        net.Start "CFC_Powerups-Curse-CurseHit"
+        net.WriteEntity @owner
+        net.WriteEntity ply
+        net.Broadcast!
 
     ApplyEffect: =>
         super self

@@ -148,6 +148,8 @@ class CursePowerup extends BasePowerup
 
         curses[effectData.name] = CurTime! + duration
 
+        ply\ChatPrint "A Curse Powerup has afflicted you with #{effectData.nameUpper} for damaging #{@owner\Nick!}"
+
         CFCUlxCurse.ApplyCurseEffect ply, effectData, duration
 
         net.Start "CFC_Powerups-Curse-CurseHit"

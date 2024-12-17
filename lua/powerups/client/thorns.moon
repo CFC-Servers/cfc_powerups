@@ -19,7 +19,7 @@ class ThornManager
 
     playSparkSound: (attacker) =>
         sparkSound = @getSparkSound!
-        attacker\EmitSound sparkSound, 75, 100, 0.6
+        attacker\EmitSound sparkSound, 75, 100, 1
 
     generateThornSegments: (thorn) =>
         :ply, :attacker, :amount, :createdAt = thorn

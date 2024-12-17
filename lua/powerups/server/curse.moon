@@ -89,7 +89,8 @@ class CursePowerup extends BasePowerup
         @chance = getConf "curse_chance"
         @ratelimit = getConf "curse_ratelimit"
 
-        @nextCurseTimes = {}
+        @nextCurseTimes = {} -- ply -> cooldownEndTime
+        @cursesPerVictim = {} -- ply -> {effectName -> endTime}
 
         @ApplyEffect!
 
@@ -117,6 +118,12 @@ class CursePowerup extends BasePowerup
 
             return nil
 
+    PostDeathWatcher: =>
+        (ply) ->
+            @ClearCurses ply
+
+            return nil
+
     Curse: (ply) =>
         effectData = CFCUlxCurse.GetRandomEffect ply, BLACKLISTED_EFFECTS
         return unless effectData -- No compatible effects at this time
@@ -134,6 +141,13 @@ class CursePowerup extends BasePowerup
         duration = math.Rand @durationMin, @durationMax
         @nextCurseTimes[ply] = CurTime! + @ratelimit
 
+        curses = @cursesPerVictim[ply]
+        if not curses
+            curses = {}
+            @cursesPerVictim[ply] = curses
+
+        curses[effectData.name] = CurTime! + duration
+
         CFCUlxCurse.ApplyCurseEffect ply, effectData, duration
 
         net.Start "CFC_Powerups-Curse-CurseHit"
@@ -141,12 +155,28 @@ class CursePowerup extends BasePowerup
         net.WriteEntity ply
         net.Broadcast!
 
+    ClearCurses: (ply) =>
+        return unless IsValid ply
+
+        curses = @cursesPerVictim[ply]
+        return unless curses
+
+        now = CurTime!
+
+        for effectName, endTime in pairs curses
+            continue if endTime < now -- Already expired, don't want to clear in case they got the effect from another source since then
+
+            CFCUlxCurse.StopCurseEffect ply, effectName
+
+        @cursesPerVictim[ply] = nil
+
     ApplyEffect: =>
         super self
 
         @ownerSteamID64 = @owner\SteamID64!
         @hookName = "CFC_Powerups-Curse-#{@ownerSteamID64}"
         hook.Add "EntityTakeDamage", @hookName, @DamageWatcher!
+        hook.Add "PostPlayerDeath", @hookName, @PostDeathWatcher!
         timer.Create @hookName, @duration, 1, -> @Remove!
 
         net.Start "CFC_Powerups-Curse-Start"
@@ -169,6 +199,10 @@ class CursePowerup extends BasePowerup
         net.Start "CFC_Powerups-Curse-Stop"
         net.WriteString @ownerSteamID64
         net.Broadcast!
+
+        -- Clear curses of all victims
+        for victim, curses in pairs @cursesPerVictim
+            @ClearCurses victim
 
         return unless IsValid @owner
 

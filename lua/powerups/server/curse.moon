@@ -12,10 +12,13 @@ BLACKLISTED_EFFECTS = {
     NoclipSpam: true
     DisableNoclip: true
     TextScramble: true
+    SeeingDouble: true
 
     -- Too short of a duration to matter
     ColorModifyContinuous: true
     TextureShuffleContinuous: true
+    RollAimIncremental: true
+    Schizophrenia: true
 
     -- Not fun or too unfair
     JumpExplode: true
@@ -27,6 +30,15 @@ BLACKLISTED_EFFECTS = {
     NoInteract: true
     Lidar: true
     Ball: true
+    Blindness: true
+    DoNoHarm: true
+    DoSomeHarm: true
+    RotatedAim: true
+    InvertedAim: true
+    Crouch: true
+    StaggeredAim: true
+    ViewPummel: true
+    TopDown: true
 
     -- Causes a big lagspike for the first time per session, and doesn't affect pvp a huge amount
     SoundShuffle: true
@@ -40,6 +52,16 @@ BLACKLISTED_EFFECTS = {
 
     -- Too much nausea
     SanFransisco: true
+
+    -- Too hard to notice or to realize what the source is
+    NoHud: true
+    NoJump: true
+    InputDrop: true
+    Rubberband: true
+    SpineBreak: true
+    Butterfingers: true
+    HealthDrain: true
+    AimSensitivity: true
 }
 
 util.AddNetworkString "CFC_Powerups-Curse-Start"

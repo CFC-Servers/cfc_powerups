@@ -20,7 +20,6 @@ class ThornsPowerup extends BasePowerup
         super ply
 
         @holo = @MakeHolo!
-        @aoeEffect = @MakeAoeEffect!
 
         -- We batch up damage broadcasts to lessen the network load
         -- Interval is in seconds
@@ -45,15 +44,14 @@ class ThornsPowerup extends BasePowerup
 
         @ApplyEffect!
 
-    MakeAoeEffect: =>
-        effect = EffectData!
-        with effect
+    PlayAoeEffect: =>
+        with effect = EffectData!
             \SetEntity @holo
             \SetScale 1
             \SetMagnitude 12
             \SetRadius 20
 
-        effect
+            Effect "TeslaHitboxes", effect, true, true
 
     MakeHolo: =>
         holo = ents.Create "base_anim"
@@ -146,8 +144,7 @@ class ThornsPowerup extends BasePowerup
             damageWatcher ply, dmg
 
         timer.Create @TimerName, duration, 1, -> @Remove!
-        timer.Create @ZapperName, 0.1, duration * 10, ->
-            Effect("TeslaHitboxes", @aoeEffect, true, true )
+        timer.Create @ZapperName, 0.1, duration * 10, -> @PlayAoeEffect!
 
         @passiveSound\Play!
         @passiveSound\ChangeVolume 0.1

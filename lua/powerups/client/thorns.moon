@@ -101,9 +101,7 @@ class Thorn
 manager = ThornManager!
 
 net.Receive "CFC_Powerups-ThornsDamage", ->
-    print "Receiving thorns damage.."
     damageData = net.ReadTable!
-    PrintTable damageData
 
     for ply, attackers in pairs damageData do
         continue unless IsValid ply

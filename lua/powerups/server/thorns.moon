@@ -76,10 +76,6 @@ class ThornsPowerup extends BasePowerup
 
     BroadcastDamage: =>
         net.Start "CFC_Powerups-ThornsDamage"
-
-        print "Preparing to broadcast damage queue:"
-        PrintTable @BroadcastQueue
-
         net.WriteTable @BroadcastQueue
         net.Broadcast!
 
@@ -94,9 +90,6 @@ class ThornsPowerup extends BasePowerup
             @BroadcastQueue[@owner][attacker] += amount
         else
             @BroadcastQueue[@owner][attacker] = amount
-
-        print "Queued damage of amount #{amount} for broadcast. New queue:"
-        PrintTable @BroadcastQueue
 
         now = CurTime!
         diff = now - @LastDamageBroadcast

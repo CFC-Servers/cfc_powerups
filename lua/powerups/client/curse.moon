@@ -1,11 +1,8 @@
 import Clamp from math
 
 EMITTER_INTERVAL = 0.1
-EMITTER_MATERIAL = "particle/particle_smokegrenade"
-EMITTER_START_SIZE = 10
-EMITTER_END_SIZE = 10
 EMITTER_LIFE = 5
-EMITTER_AMOUNT = 5
+EMITTER_AMOUNT = 7
 EMITTER_GRAVITY = Vector 0, 0, 0
 EMITTER_SPREAD_XY = 1.25
 EMITTER_SPREAD_Z = 0.75
@@ -13,7 +10,36 @@ EMITTER_SPREAD_FROM_TOP = false
 EMITTER_SPEED_MIN = 5
 EMITTER_SPEED_MAX = 10
 EMITTER_AIR_RESISTANCE = 3
-EMITTER_COLOR_INTENSITY = 65
+
+EMITTER_OPTIONS = {
+    {
+        mat: "particle/particle_smokegrenade"
+        color: Color 32, 0, 65
+        colorIntensityMin: 0
+        colorIntensityMax: 1
+        startSize: 10
+        endSize: 10
+        weight: 50
+    },
+    {
+        mat: "sprites/orangeflare1"
+        color: Color 50, 0, 200
+        colorIntensityMin: 0.75
+        colorIntensityMax: 1
+        startSize: 0
+        endSize: 10
+        weight: 5
+    },
+    {
+        mat: "sprites/glow04_noz_gmod"
+        color: Color 125, 0, 200
+        colorIntensityMin: 0.5
+        colorIntensityMax: 1
+        startSize: 0
+        endSize: 10
+        weight: 5
+    },
+}
 
 BEAM_MAT = Material "sprites/physbeama"
 BEAM_WIDTH = 30
@@ -25,6 +51,13 @@ ANGLE_ZERO = Angle 0, 0, 0
 emitters = {}
 emitterOwners = {}
 beams = {}
+emitterWeightTotals = {}
+emitterTotalWeight = 0
+
+for option in *EMITTER_OPTIONS
+    emitterTotalWeight = emitterTotalWeight + option.weight
+    table.insert emitterWeightTotals, emitterTotalWeight
+
 
 removeEmitter = (ownerSteamID64) ->
     emitter = emitters[ownerSteamID64]
@@ -89,13 +122,23 @@ timer.Create "CFC_Powerups-Curse-EmitterThink", EMITTER_INTERVAL, 0, ->
         for _ = 1, EMITTER_AMOUNT
             pos = centerPos + Vector(math.Rand(-spreadX, spreadX), math.Rand(-spreadY, spreadY), math.Rand(-spreadZ, spreadZ))
             dir = AngleRand!\Forward!
-            colorIntensity = math.Rand 0, EMITTER_COLOR_INTENSITY
-            with part = emitter\Add EMITTER_MATERIAL, pos
-                \SetStartSize EMITTER_START_SIZE
-                \SetEndSize EMITTER_END_SIZE
+
+            weight = math.random 1, emitterTotalWeight
+            option = nil
+            for i, total in ipairs emitterWeightTotals
+                if weight <= total
+                    option = EMITTER_OPTIONS[i]
+                    break
+
+            color = option.color
+            intensity = math.Rand option.colorIntensityMin, option.colorIntensityMax
+
+            with part = emitter\Add option.mat, pos
+                \SetStartSize option.startSize
+                \SetEndSize option.endSize
                 \SetDieTime EMITTER_LIFE
                 \SetGravity EMITTER_GRAVITY
-                \SetColor colorIntensity / 2, 0, colorIntensity
+                \SetColor color.r * intensity, color.g * intensity, color.b * intensity
                 \SetVelocity dir * math.Rand EMITTER_SPEED_MIN, EMITTER_SPEED_MAX
 
 

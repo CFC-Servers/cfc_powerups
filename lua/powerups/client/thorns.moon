@@ -14,12 +14,12 @@ class ThornManager
             @drawThorns!
 
     getSparkSound: =>
-        sparkNumber = random 1, 11
-        "ambient/energy/newspark#{string.format "%02d", sparkNumber}.wav"
+        sparkNumber = random 3, 6
+        "ambient/energy/spark#{sparkNumber}.wav"
 
     playSparkSound: (attacker) =>
         sparkSound = @getSparkSound!
-        attacker\EmitSound sparkSound, 75, 100, 0.6
+        attacker\EmitSound sparkSound, 75, 100, 1
 
     generateThornSegments: (thorn) =>
         :ply, :attacker, :amount, :createdAt = thorn
@@ -101,9 +101,7 @@ class Thorn
 manager = ThornManager!
 
 net.Receive "CFC_Powerups-ThornsDamage", ->
-    print "Receiving thorns damage.."
     damageData = net.ReadTable!
-    PrintTable damageData
 
     for ply, attackers in pairs damageData do
         continue unless IsValid ply

@@ -20,7 +20,6 @@ class ThornsPowerup extends BasePowerup
         super ply
 
         @holo = @MakeHolo!
-        @aoeEffect = @MakeAoeEffect!
 
         -- We batch up damage broadcasts to lessen the network load
         -- Interval is in seconds
@@ -43,17 +42,19 @@ class ThornsPowerup extends BasePowerup
         @HookName = @TimerName
         @ZapperName = "#{@TimerName}-Zapper"
 
+        with @damageInflictor = ents.Create "cfc_powerup_thorns_inflictor"
+            \SetOwner @owner
+            \Spawn!
+
         @ApplyEffect!
 
-    MakeAoeEffect: =>
-        effect = EffectData!
-        with effect
+    PlayAoeEffect: =>
+        with effect = EffectData!
             \SetEntity @holo
             \SetScale 1
             \SetMagnitude 12
-            \SetRadius 20
 
-        effect
+            Effect "TeslaHitboxes", effect, true, true
 
     MakeHolo: =>
         holo = ents.Create "base_anim"
@@ -75,10 +76,6 @@ class ThornsPowerup extends BasePowerup
 
     BroadcastDamage: =>
         net.Start "CFC_Powerups-ThornsDamage"
-
-        print "Preparing to broadcast damage queue:"
-        PrintTable @BroadcastQueue
-
         net.WriteTable @BroadcastQueue
         net.Broadcast!
 
@@ -94,9 +91,6 @@ class ThornsPowerup extends BasePowerup
         else
             @BroadcastQueue[@owner][attacker] = amount
 
-        print "Queued damage of amount #{amount} for broadcast. New queue:"
-        PrintTable @BroadcastQueue
-
         now = CurTime!
         diff = now - @LastDamageBroadcast
 
@@ -111,43 +105,51 @@ class ThornsPowerup extends BasePowerup
             return unless ent == @owner
             return if took == false
 
-            originalAttacker = dmg\GetAttacker!
-            return unless IsValid originalAttacker
-            --return unless originalAttacker\IsPlayer!
-            return if ent == originalAttacker
+            attacker = dmg\GetAttacker!
+            return unless IsValid attacker
+            return if ent == attacker
+
+            inflictor = dmg\GetInflictor!
+            return if IsValid(inflictor) and inflictor\GetClass! == "cfc_powerup_thorns_inflictor"
 
             damageAmount = dmg\GetDamage!
-
             return unless damageAmount > 0
-            --return unless originalAttacker\Alive! -- TODO: Does this actually prevent reflect damage being reflected?
 
             damageScale = getConf "thorns_return_percentage"
             damageScale = damageScale / 100
+            reflectedAmount = math.ceil damageAmount * damageScale
+            thornsInflictor = @damageInflictor
 
-            -- Now we modify the damage and return it to the originalAttacker
-            dmg\SetAttacker @owner
-            dmg\ScaleDamage damageScale
+            -- CTakeDamageInfo is a singleton, need to deal damage in a timer otherwise it'll break other PED hook listeners
+            timer.Simple 0, ->
+                return unless IsValid attacker
+                return unless IsValid ent
+                return unless IsValid thornsInflictor
 
-            newDamageAmount = damageAmount * damageScale
-            @QueueDamageForBroadcast originalAttacker, newDamageAmount
+                with refDmg = DamageInfo!
+                    \SetAttacker ent
+                    \SetInflictor thornsInflictor
+                    \SetDamage reflectedAmount
+                    \SetDamageType DMG_GENERIC
 
-            originalAttacker\TakeDamageInfo dmg
+                    attacker\TakeDamageInfo refDmg
 
-            --originalAttacker\ChatPrint "[CFC Powerups] You took #{Round newDamageAmount} reflected damage!"
+            @QueueDamageForBroadcast attacker, reflectedAmount
+
+            return nil
 
     ApplyEffect: =>
         super self
 
-        duration = getConf "thorns_duration"
+        @duration = getConf "thorns_duration"
 
         damageWatcher = @DamageWatcher!
         hook.Add "PostEntityTakeDamage", @HookName, damageWatcher
         hook.Add "DoPlayerDeath", @HookName, (ply, _, dmg ) ->
             damageWatcher ply, dmg
 
-        timer.Create @TimerName, duration, 1, -> @Remove!
-        timer.Create @ZapperName, 0.1, duration * 10, ->
-            Effect("TeslaHitboxes", @aoeEffect, true, true )
+        timer.Create @TimerName, @duration, 1, -> @Remove!
+        timer.Create @ZapperName, 0.1, @duration * 10, -> @PlayAoeEffect!
 
         @passiveSound\Play!
         @passiveSound\ChangeVolume 0.1
@@ -159,6 +161,7 @@ class ThornsPowerup extends BasePowerup
     Refresh: =>
         super self
         timer.Start @TimerName
+        timer.Create @ZapperName, 0.1, @duration * 10, -> @PlayAoeEffect!
 
         @owner\ChatPrint "You've refreshed the duration of your Thorns Powerup"
 
@@ -169,9 +172,19 @@ class ThornsPowerup extends BasePowerup
         hook.Remove "DoPlayerDeath", @HookName
         timer.Remove @TimerName
         timer.Remove @ZapperName
+
         @passiveSound\Stop!
+        damageInflictor = @damageInflictor
+
         if IsValid @holo
             @holo\Remove!
+
+        -- Remove damageInflictor after a decent delay to ensure all damage reflections finish first.
+        -- There's no harm in having it exist for a little longer, and overlaps aren't a problem, so this is safe.
+        timer.Simple 0.5, ->
+            return unless IsValid damageInflictor
+
+            damageInflictor\Remove!
 
         return unless IsValid @owner
 

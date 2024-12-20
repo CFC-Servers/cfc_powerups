@@ -107,16 +107,13 @@ class ThornsPowerup extends BasePowerup
 
             attacker = dmg\GetAttacker!
             return unless IsValid attacker
-            --return unless attacker\IsPlayer!
             return if ent == attacker
 
             inflictor = dmg\GetInflictor!
             return if IsValid(inflictor) and inflictor\GetClass! == "cfc_powerup_thorns_inflictor"
 
             damageAmount = dmg\GetDamage!
-
             return unless damageAmount > 0
-            --return unless attacker\Alive! -- TODO: Does this actually prevent reflect damage being reflected?
 
             damageScale = getConf "thorns_return_percentage"
             damageScale = damageScale / 100
@@ -138,8 +135,6 @@ class ThornsPowerup extends BasePowerup
                     attacker\TakeDamageInfo refDmg
 
             @QueueDamageForBroadcast attacker, reflectedAmount
-
-            --attacker\ChatPrint "[CFC Powerups] You took #{Round newDamageAmount} reflected damage!"
 
             return nil
 

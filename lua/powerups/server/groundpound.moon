@@ -299,9 +299,8 @@ class GroundpoundPowerup extends BasePowerup
 
             return if cantFastFall
 
-            owner = @owner
             dt = FrameTime!
-            vel = owner\GetVelocity!
+            vel = @owner\GetVelocity!
 
             -- Downwards acceleration
             change = -@accel * dt
@@ -312,7 +311,7 @@ class GroundpoundPowerup extends BasePowerup
             fallSoundPitch = Lerp speedFrac, 100, 200
             fallSoundLevel = Lerp speedFrac, 75, 150
 
-            owner\SetVelocity velToAdd
+            @owner\SetVelocity velToAdd
             @fallSound\ChangePitch fallSoundPitch, dt
             @fallSound\SetSoundLevel fallSoundLevel
 

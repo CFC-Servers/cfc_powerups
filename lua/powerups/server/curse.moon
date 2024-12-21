@@ -153,8 +153,8 @@ class CursePowerup extends BasePowerup
         CFCUlxCurse.ApplyCurseEffect ply, effectData, duration
 
         net.Start "CFC_Powerups-Curse-CurseHit"
-        net.WriteEntity @owner
-        net.WriteEntity ply
+        net.WritePlayer @owner
+        net.WritePlayer ply
         net.Broadcast!
 
     ClearCurses: (ply) =>

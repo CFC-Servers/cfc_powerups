@@ -98,8 +98,8 @@ net.Receive "CFC_Powerups-Curse-Stop", ->
     removeEmitter ownerSteamID64
 
 net.Receive "CFC_Powerups-Curse-CurseHit", ->
-    owner = net.ReadEntity!
-    victim = net.ReadEntity!
+    owner = net.ReadPlayer!
+    victim = net.ReadPlayer!
     return unless IsValid owner
     return unless IsValid victim
 

@@ -12,10 +12,13 @@ BLACKLISTED_EFFECTS = {
     NoclipSpam: true
     DisableNoclip: true
     TextScramble: true
+    SeeingDouble: true
 
     -- Too short of a duration to matter
     ColorModifyContinuous: true
     TextureShuffleContinuous: true
+    RollAimIncremental: true
+    Schizophrenia: true
 
     -- Not fun or too unfair
     JumpExplode: true
@@ -27,6 +30,16 @@ BLACKLISTED_EFFECTS = {
     NoInteract: true
     Lidar: true
     Ball: true
+    Blindness: true
+    DoNoHarm: true
+    DoSomeHarm: true
+    RotatedAim: true
+    InvertedAim: true
+    Crouch: true
+    StaggeredAim: true
+    ViewPummel: true
+    TopDown: true
+    Trainfuck: true
 
     -- Causes a big lagspike for the first time per session, and doesn't affect pvp a huge amount
     SoundShuffle: true
@@ -40,10 +53,22 @@ BLACKLISTED_EFFECTS = {
 
     -- Too much nausea
     SanFransisco: true
+
+    -- Too hard to notice or to realize what the source is
+    NoHud: true
+    NoJump: true
+    InputDrop: true
+    Rubberband: true
+    SpineBreak: true
+    Butterfingers: true
+    HealthDrain: true
+    AimSensitivity: true
+    OffsetAim: true
 }
 
 util.AddNetworkString "CFC_Powerups-Curse-Start"
 util.AddNetworkString "CFC_Powerups-Curse-Stop"
+util.AddNetworkString "CFC_Powerups-Curse-CurseHit"
 
 export CursePowerup
 class CursePowerup extends BasePowerup
@@ -64,7 +89,8 @@ class CursePowerup extends BasePowerup
         @chance = getConf "curse_chance"
         @ratelimit = getConf "curse_ratelimit"
 
-        @nextCurseTimes = {}
+        @nextCurseTimes = {} -- ply -> cooldownEndTime
+        @cursesPerVictim = {} -- ply -> {effectName -> endTime}
 
         @ApplyEffect!
 
@@ -92,6 +118,12 @@ class CursePowerup extends BasePowerup
 
             return nil
 
+    PostDeathWatcher: =>
+        (ply) ->
+            @ClearCurses ply
+
+            return nil
+
     Curse: (ply) =>
         effectData = CFCUlxCurse.GetRandomEffect ply, BLACKLISTED_EFFECTS
         return unless effectData -- No compatible effects at this time
@@ -109,7 +141,36 @@ class CursePowerup extends BasePowerup
         duration = math.Rand @durationMin, @durationMax
         @nextCurseTimes[ply] = CurTime! + @ratelimit
 
+        curses = @cursesPerVictim[ply]
+        if not curses
+            curses = {}
+            @cursesPerVictim[ply] = curses
+
+        curses[effectData.name] = CurTime! + duration
+
+        ply\ChatPrint "A Curse Powerup has afflicted you with #{effectData.nameUpper} for damaging #{@owner\Nick!}"
+
         CFCUlxCurse.ApplyCurseEffect ply, effectData, duration
+
+        net.Start "CFC_Powerups-Curse-CurseHit"
+        net.WritePlayer @owner
+        net.WritePlayer ply
+        net.Broadcast!
+
+    ClearCurses: (ply) =>
+        return unless IsValid ply
+
+        curses = @cursesPerVictim[ply]
+        return unless curses
+
+        now = CurTime!
+
+        for effectName, endTime in pairs curses
+            continue if endTime < now -- Already expired, don't want to clear in case they got the effect from another source since then
+
+            CFCUlxCurse.StopCurseEffect ply, effectName
+
+        @cursesPerVictim[ply] = nil
 
     ApplyEffect: =>
         super self
@@ -117,6 +178,7 @@ class CursePowerup extends BasePowerup
         @ownerSteamID64 = @owner\SteamID64!
         @hookName = "CFC_Powerups-Curse-#{@ownerSteamID64}"
         hook.Add "EntityTakeDamage", @hookName, @DamageWatcher!
+        hook.Add "PostPlayerDeath", @hookName, @PostDeathWatcher!
         timer.Create @hookName, @duration, 1, -> @Remove!
 
         net.Start "CFC_Powerups-Curse-Start"
@@ -139,6 +201,9 @@ class CursePowerup extends BasePowerup
         net.Start "CFC_Powerups-Curse-Stop"
         net.WriteString @ownerSteamID64
         net.Broadcast!
+
+        -- Clear curses of all victims
+        @ClearCurses victim for victim in pairs @cursesPerVictim
 
         return unless IsValid @owner
 

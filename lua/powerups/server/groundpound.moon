@@ -261,8 +261,9 @@ class GroundpoundPowerup extends BasePowerup
 
         @nextTrailTime = now + TRAIL_INTERVAL
 
+        vel = @owner\GetVelocity!
         startPos = @owner\GetPos! + @owner\OBBCenter!
-        endPos = startPos + @owner\GetVelocity! * TRAIL_INTERVAL * TRAIL_LENGTH
+        endPos = startPos + vel * TRAIL_INTERVAL * TRAIL_LENGTH
 
         with eff = EffectData!
             \SetScale vel\Length! * TRAIL_SPEED

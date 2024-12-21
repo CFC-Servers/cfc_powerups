@@ -236,7 +236,7 @@ class GroundpoundPowerup extends BasePowerup
         return false
 
     HandleFastFallChange: (cantFastFall) =>
-        return if cantFastFall == @fastFalling -- No change
+        return unless cantFastFall == @fastFalling -- No change
 
         if @fastFalling -- Stop fast-falling
             @fastFalling = false

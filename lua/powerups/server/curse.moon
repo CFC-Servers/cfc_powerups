@@ -203,8 +203,7 @@ class CursePowerup extends BasePowerup
         net.Broadcast!
 
         -- Clear curses of all victims
-        for victim, curses in pairs @cursesPerVictim
-            @ClearCurses victim
+        @ClearCurses victim for victim in pairs @cursesPerVictim
 
         return unless IsValid @owner
 

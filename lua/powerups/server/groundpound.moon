@@ -106,7 +106,7 @@ class GroundpoundPowerup extends BasePowerup
             -- Otherwise, it's a coin flip between barely any movement and way too much, because of Source shenanigans
             ang = dir\Angle!
             pitch = -math.Rand 40, 60
-            dir = ( Angle pitch, ang.yaw, 0 )\Forward!
+            dir = Angle(pitch, ang.yaw, 0)\Forward!
 
             if victim\IsPlayer!
                 clampedKnockback = math.min knockback, @knockbackMax
@@ -220,8 +220,7 @@ class GroundpoundPowerup extends BasePowerup
                         \SetScale effScale
                         util.Effect "powerups_groundpound_shockwave", effDat
 
-            if @UsesRemaining < 1
-                @Remove!
+            @Remove! unless @UsesRemaining > 0
 
             return 0
 

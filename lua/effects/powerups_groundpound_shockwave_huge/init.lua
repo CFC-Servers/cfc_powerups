@@ -36,7 +36,7 @@ function EFFECT:Dust()
         end
     end
 
-    for _ = 1, 20 * scale do
+    for _ = 1, 10 * scale do
         local Dust = emitter:Add( "particle/particle_composite", pos )
         if Dust then
             Dust:SetVelocity( dir * math.random( 100, 400 ) * scale + VectorRand():GetNormalized() * 300 * scale )
@@ -54,7 +54,7 @@ function EFFECT:Dust()
         end
     end
 
-    for _ = 1, 15 * scale do
+    for _ = 1, 7 * scale do
         local Dust = emitter:Add( "particle/smokesprites_000" .. math.random( 1, 9 ), pos )
         if Dust then
             Dust:SetVelocity( dir * math.random( 100, 400 ) * scale + VectorRand():GetNormalized() * 400 * scale )
@@ -72,7 +72,7 @@ function EFFECT:Dust()
         end
     end
 
-    for _ = 1, 25 * scale do
+    for _ = 1, 12 * scale do
         local Debris = emitter:Add( "effects/fleck_cement" .. math.random( 1, 2 ), pos )
         if Debris then
             Debris:SetVelocity( dir * math.random( 0, 700 ) * scale + VectorRand():GetNormalized() * math.random( 0, 700 ) * scale )

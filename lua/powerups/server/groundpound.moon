@@ -255,7 +255,7 @@ class GroundpoundPowerup extends BasePowerup
                 now = CurTime!
 
                 if @nextCrouchSound <= now -- sound when starting the groundpound
-                    @owner\EmitSound "ambient/machines/thumper_top.wav", 78, 110, 1
+                    owner\EmitSound "ambient/machines/thumper_top.wav", 78, 110, 1
                     @nextCrouchSound = now + 0.75 -- cooldown
 
             dt = FrameTime!
@@ -270,7 +270,7 @@ class GroundpoundPowerup extends BasePowerup
             fallSoundPitch = Lerp speedFrac, 100, 200
             fallSoundLevel = Lerp speedFrac, 75, 150
 
-            @owner\SetVelocity velToAdd
+            owner\SetVelocity velToAdd
             @fallSound\ChangePitch fallSoundPitch, dt
             @fallSound\SetSoundLevel fallSoundLevel
 
@@ -279,7 +279,7 @@ class GroundpoundPowerup extends BasePowerup
             if not @upToSpeedSound -- sound when starting to deal damage
                 @upToSpeedSound = true
                 if @nextUpToSpeedSound < CurTime! -- block spamming this sound
-                    @owner\EmitSound "weapons/mortar/mortar_shell_incomming1.wav", 120, 100, 0.5
+                    owner\EmitSound "weapons/mortar/mortar_shell_incomming1.wav", 120, 100, 0.5
                 
                 @nextUpToSpeedSound = CurTime! + 15
             if vel.z <= -TERMINAL_VELOCITY and not @upToTerminalSpeedSound -- sound when hitting terminal velocity
@@ -287,7 +287,7 @@ class GroundpoundPowerup extends BasePowerup
                 if @nextUpToTerminalSpeedSound < CurTime!
                     filter = RecipientFilter!
                     filter\AddAllPlayers!
-                    @owner\EmitSound "weapons/mortar/mortar_shell_incomming1.wav", 150, 60, 0.5, CHAN_AUTO, 0, 0, filter
+                    owner\EmitSound "weapons/mortar/mortar_shell_incomming1.wav", 150, 60, 0.5, CHAN_AUTO, 0, 0, filter
                 
                 @nextUpToSpeedSound = CurTime! + 15
 

@@ -224,40 +224,82 @@ class GroundpoundPowerup extends BasePowerup
 
             return 0
 
+    CantFastFall: =>
+        owner = @owner
+
+        return true unless owner\Alive!
+        return true if owner\InVehicle!
+        return true if owner\IsOnGround!
+        return true if BAD_MOVETYPES[owner\GetMoveType!]
+        return true unless owner\KeyDown IN_DUCK
+
+        return false
+
+    HandleFastFallChange: (cantFastFall) =>
+        return if cantFastFall == @fastFalling -- No change
+
+        if @fastFalling -- Stop fast-falling
+            @fastFalling = false
+            @upToSpeedSound = false
+            @upToTerminalSpeedSound = false
+            @fallSound\ChangeVolume 0, FALL_SOUND_FADE_OUT
+        else -- Start fast-falling
+            @fastFalling = true
+            @fallSound\ChangeVolume 1, FALL_SOUND_FADE_IN
+
+            now = CurTime!
+
+            if @nextCrouchSound <= now -- sound when starting the groundpound
+                @owner\EmitSound "ambient/machines/thumper_top.wav", 78, 110, 1
+                @nextCrouchSound = now + 0.75 -- cooldown
+
+    DoWindTrail: =>
+        return unless TRAIL_ENABLED
+
+        now = CurTime!
+        return if now < @nextTrailTime
+
+        @nextTrailTime = now + TRAIL_INTERVAL
+
+        startPos = @owner\GetPos! + @owner\OBBCenter!
+        endPos = startPos + @owner\GetVelocity! * TRAIL_INTERVAL * TRAIL_LENGTH
+
+        with eff = EffectData!
+            \SetScale vel\Length! * TRAIL_SPEED
+            \SetFlags 0 
+
+            for _ = 1, TRAIL_AMOUNT
+                offset = VectorRand -TRAIL_OFFSET_SPREAD, TRAIL_OFFSET_SPREAD
+
+                \SetStart startPos + offset
+                \SetOrigin endPos + offset
+
+                util.Effect "GaussTracer", eff, true, true
+
+    DoSpeedSounds: (speed) =>
+        if not @upToSpeedSound -- sound when starting to deal damage
+            @upToSpeedSound = true
+            if @nextUpToSpeedSound < CurTime! -- block spamming this sound
+                @owner\EmitSound "weapons/mortar/mortar_shell_incomming1.wav", 120, 100, 0.5
+
+            @nextUpToSpeedSound = CurTime! + 15
+        if speed <= TERMINAL_VELOCITY and not @upToTerminalSpeedSound -- sound when hitting terminal velocity
+            @upToTerminalSpeedSound = true
+            if @nextUpToTerminalSpeedSound < CurTime!
+                filter = RecipientFilter!
+                filter\AddAllPlayers!
+                @owner\EmitSound "weapons/mortar/mortar_shell_incomming1.wav", 150, 60, 0.5, CHAN_AUTO, 0, 0, filter
+
+            @nextUpToSpeedSound = CurTime! + 15
+
     CreateThinkWatcher: =>
         () ->
+            cantFastFall = @CantFastFall!
+            @HandleFastFallChange cantFastFall
+
+            return if cantFastFall
+
             owner = @owner
-
-            checkCantFastFall = () ->
-                return true unless owner\Alive!
-                return true if owner\InVehicle!
-                return true if owner\IsOnGround!
-                return true if BAD_MOVETYPES[owner\GetMoveType!]
-                return true unless owner\KeyDown IN_DUCK
-
-                return false
-            
-            cantFastFall = checkCantFastFall!
-
-            if cantFastFall
-                if @fastFalling
-                    @fastFalling = false
-                    @upToSpeedSound = false
-                    @upToTerminalSpeedSound = false
-                    @fallSound\ChangeVolume 0, FALL_SOUND_FADE_OUT
-
-                return
-
-            if not @fastFalling
-                @fastFalling = true
-                @fallSound\ChangeVolume 1, FALL_SOUND_FADE_IN
-
-                now = CurTime!
-
-                if @nextCrouchSound <= now -- sound when starting the groundpound
-                    owner\EmitSound "ambient/machines/thumper_top.wav", 78, 110, 1
-                    @nextCrouchSound = now + 0.75 -- cooldown
-
             dt = FrameTime!
             vel = owner\GetVelocity!
 
@@ -276,43 +318,8 @@ class GroundpoundPowerup extends BasePowerup
 
             return if vel.z > -@minSpeed
 
-            if not @upToSpeedSound -- sound when starting to deal damage
-                @upToSpeedSound = true
-                if @nextUpToSpeedSound < CurTime! -- block spamming this sound
-                    owner\EmitSound "weapons/mortar/mortar_shell_incomming1.wav", 120, 100, 0.5
-                
-                @nextUpToSpeedSound = CurTime! + 15
-            if vel.z <= -TERMINAL_VELOCITY and not @upToTerminalSpeedSound -- sound when hitting terminal velocity
-                @upToTerminalSpeedSound = true
-                if @nextUpToTerminalSpeedSound < CurTime!
-                    filter = RecipientFilter!
-                    filter\AddAllPlayers!
-                    owner\EmitSound "weapons/mortar/mortar_shell_incomming1.wav", 150, 60, 0.5, CHAN_AUTO, 0, 0, filter
-                
-                @nextUpToSpeedSound = CurTime! + 15
-
-            -- Rushing wind trail
-            return unless TRAIL_ENABLED
-
-            now = CurTime!
-            return if now < @nextTrailTime
-
-            @nextTrailTime = now + TRAIL_INTERVAL
-
-            startPos = owner\GetPos! + owner\OBBCenter!
-            endPos = startPos + owner\GetVelocity! * TRAIL_INTERVAL * TRAIL_LENGTH
-
-            with eff = EffectData!
-                \SetScale vel\Length! * TRAIL_SPEED
-                \SetFlags 0 
-
-                for _ = 1, TRAIL_AMOUNT
-                    offset = VectorRand -TRAIL_OFFSET_SPREAD, TRAIL_OFFSET_SPREAD
-
-                    \SetStart startPos + offset
-                    \SetOrigin endPos + offset
-
-                    util.Effect "GaussTracer", eff, true, true
+            @DoSpeedSounds -vel.z
+            @DoWindTrail!
 
             return nil -- Moon moment
 

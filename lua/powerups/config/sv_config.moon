@@ -82,12 +82,27 @@
 
 "cfc_powerups_speed_interval":
     default: 1
-    helpText: "How often to check if the speed powerup needs to be re-applied"
+    helpText: "How often to check if the Speed powerup needs to be re-applied"
     min: 0.01
 
 "cfc_powerups_speed_multiplier":
-    default: 2.25
+    default: 1.5
     helpText: "What value to multiply speed by for the Speed powerup"
+-- =======================================================================
+
+-- Super Speed =================================================================
+"cfc_powerups_super_speed_duration":
+    default: 600
+    helpText: "How long does the Super Speed powerup last, in seconds"
+
+"cfc_powerups_super_speed_interval":
+    default: 1
+    helpText: "How often to check if the Super Speed powerup needs to be re-applied"
+    min: 0.01
+
+"cfc_powerups_super_speed_multiplier":
+    default: 2.25
+    helpText: "What value to multiply speed by for the Super Speed powerup"
 -- =======================================================================
 
 -- Feather ===============================================================
@@ -276,5 +291,87 @@
 "cfc_powerups_groundpound_knockback_max":
     default: 1500
     helpText: "Knockback maximum for Groundpound shockwaves"
+-- =======================================================================
+
+-- Shotgun ================================================================
+"cfc_powerups_shotgun_duration":
+    default: 300
+    helpText: "How long does the Shotgun powerup last, in seconds"
+
+"cfc_powerups_shotgun_single_bullets_min":
+    default: 6
+    helpText: "Minimum number of bullets for single-bullet weapons"
+
+"cfc_powerups_shotgun_single_bullets_max":
+    default: 8
+    helpText: "Maximum number of bullets for single-bullet weapons"
+
+"cfc_powerups_shotgun_single_damage_multiplier":
+    default: 0.5
+    helpText: "Damage multiplier for single-bullet weapons"
+
+"cfc_powerups_shotgun_single_spread_multiplier":
+    default: 1.25
+    helpText: "Spread multiplier for single-bullet weapons"
+
+"cfc_powerups_shotgun_single_spread_add":
+    default: 0.04
+    helpText: "Spread additive for single-bullet weapons"
+
+"cfc_powerups_shotgun_multi_bullets_multiplier":
+    default: 1.5
+    helpText: "Multiplier against the number of bullets for multi-bullet weapons"
+
+"cfc_powerups_shotgun_multi_damage_multiplier":
+    default: 1.5
+    helpText: "Damage multiplier for multi-bullet weapons"
+
+-- Phoenix =============================================================
+"cfc_powerups_phoenix_uses":
+    default: 1
+    helpText: "How many uses of the Phoenix powerup is given"
+
+"cfc_powerups_phoenix_max_uses":
+    default: 5
+    helpText: "The maximum uses of the Phoenix powerup a player can hold"
+
+"cfc_powerups_phoenix_revive_health":
+    default: 100
+    helpText: "What to set a Phoenix player's health to when they revive"
+
+"cfc_powerups_phoenix_revive_armor":
+    default: 0
+    helpText: "What to set a Phoenix player's armor to when they revive"
+
+"cfc_powerups_phoenix_immunity_duration":
+    default: 5
+    helpText: "How long a Phoenix player is immune for after being revived"
+
+"cfc_powerups_phoenix_immunity_damage_multiplier":
+    default: 1
+    helpText: "While a Phoenix player is immune, multiply damage they deal by this much"
+    min: 0
+-- =======================================================================
+
+-- Curse =============================================================
+"cfc_powerups_curse_duration":
+    default: 300
+    helpText: "How long does the Curse powerup last, in seconds"
+
+"cfc_powerups_curse_duration_min":
+    default: 10
+    helpText: "Minimum curse effect duration from the Curse powerup"
+
+"cfc_powerups_curse_duration_max":
+    default: 15
+    helpText: "Maximum curse effect duration from the Curse powerup"
+
+"cfc_powerups_curse_chance":
+    default: 0.25
+    helpText: "The chance to apply a curse, when a player shoots a Curse powerup user and has no curses"
+
+"cfc_powerups_curse_ratelimit":
+    default: 0.75
+    helpText: "Cooldown for applying curses to attackers when they already have one"
 -- =======================================================================
 }

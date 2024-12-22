@@ -1,8 +1,8 @@
 ENT.Base        = "base_cfc_powerup"
 
 ENT.Type        = "anim"
-ENT.PrintName   = "Speed Powerup"
-ENT.Purpose     = "Increases the speed of a player"
+ENT.PrintName   = "Phoenix Powerup"
+ENT.Purpose     = "You get extra lives"
 ENT.Category    = "Powerups"
 
 ENT.Spawnable   = true

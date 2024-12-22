@@ -5,7 +5,8 @@ end
 require( "logger" )
 
 CFCPowerups = {
-    Logger = Logger( "CFC Powerups" )
+    Logger = Logger( "CFC Powerups" ),
+    SharedHandlers = {}, -- For powerup handler classes that carry duplicate code between server and client relams
 }
 
 if SERVER then

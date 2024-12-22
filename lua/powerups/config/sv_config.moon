@@ -263,6 +263,36 @@
     helpText: "What sound should play when the bolt acquires a target?"
 -- =======================================================================
 
+-- Groundpound ===============================================================
+"cfc_powerups_groundpound_uses":
+    default: 10
+    helpText: "How many uses of the Groundpound powerup is given"
+
+"cfc_powerups_groundpound_acceleration":
+    default: 600
+    helpText: "Added hmu/s^2 Groundpound acceleration to the player"
+
+"cfc_powerups_groundpound_min_speed":
+    default: 600
+    helpText: "The minimum falling speed needed for Groundpound shockwaves"
+
+"cfc_powerups_groundpound_base_damage":
+    default: 100
+    helpText: "Base groundpound damage/radius"
+
+"cfc_powerups_groundpound_added_damage":
+    default: 0.25
+    helpText: "Damage/radius added per speed player is above the min speed"
+
+"cfc_powerups_groundpound_knockback_multiplier":
+    default: 10
+    helpText: "Knockback multiplier for Groundpound shockwaves, scales based on final damage"
+
+"cfc_powerups_groundpound_knockback_max":
+    default: 1500
+    helpText: "Knockback maximum for Groundpound shockwaves"
+-- =======================================================================
+
 -- Shotgun ================================================================
 "cfc_powerups_shotgun_duration":
     default: 300

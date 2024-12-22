@@ -284,7 +284,7 @@ class GroundpoundPowerup extends BasePowerup
                 @owner\EmitSound "weapons/mortar/mortar_shell_incomming1.wav", 120, 100, 0.5
 
             @nextUpToSpeedSound = CurTime! + 15
-        if speed <= TERMINAL_VELOCITY and not @upToTerminalSpeedSound -- sound when hitting terminal velocity
+        if speed >= TERMINAL_VELOCITY and not @upToTerminalSpeedSound -- sound when hitting terminal velocity
             @upToTerminalSpeedSound = true
             if @nextUpToTerminalSpeedSound < CurTime!
                 filter = RecipientFilter!

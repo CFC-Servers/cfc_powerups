@@ -25,6 +25,8 @@ PowerupManager =
             return true if refreshable
             return false, "This powerup cannot be refreshed"
 
+        return true unless CFCPvp
+
         baseRequiresPvp = powerupBase.RequiresPvp
 
         return true unless baseRequiresPvp

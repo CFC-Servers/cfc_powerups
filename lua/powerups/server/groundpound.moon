@@ -81,7 +81,9 @@ class GroundpoundPowerup extends BasePowerup
     CreateOwnerDamageWatcher: =>
         (victim, damageInfo) ->
             return unless victim == @owner
-            return true if damageInfo\IsFallDamage! -- Block fall damage
+
+            gravitonned = @owner._cfcPvPWeapons_GravitonGunStatus
+            return true if damageInfo\IsFallDamage! and not gravitonned -- Block fall damage
 
             return unless damageInfo\GetAttacker! == victim -- Only block groundpounds from the owner
 

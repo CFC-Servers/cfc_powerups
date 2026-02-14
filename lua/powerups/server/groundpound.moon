@@ -27,6 +27,12 @@ TRAIL_SPEED = 2
 TRAIL_OFFSET_SPREAD = 30
 TRAIL_AMOUNT = 5
 
+DAMAGE_TAKENMUL_NORMAL = 0
+DAMAGE_TAKENMUL_GRAVITONNED = 10
+
+SPEED_MUL_NORMAL = 1
+SPEED_MUL_GRAVITONNED = 10
+
 UP_VECTOR = Vector 0, 0, 1 
 
 export GroundpoundPowerup
@@ -129,10 +135,19 @@ class GroundpoundPowerup extends BasePowerup
         (ply, speed) ->
             return unless ply == @owner
             return unless speed >= @minSpeed
-            return unless @owner\KeyDown IN_DUCK -- Only trigger when crouched
+
+            gravitonned = @owner._cfcPvPWeapons_GravitonGunStatus
+            ducking = @owner\KeyDown IN_DUCK
+
+            return unless ( ducking or gravitonned ) -- Only trigger when crouched or gravitonned
 
             @nextUpToSpeedSound = 0
             @nextUpToTerminalSpeedSound = 0
+
+            takenMul = gravitonned and DAMAGE_TAKENMUL_GRAVITONNED or DAMAGE_TAKENMUL_NORMAL
+            speedMul = gravitonned and SPEED_MUL_GRAVITONNED or SPEED_MUL_NORMAL
+
+            damageTaken = speed * takenMul
 
             speedClamped = math.min speed, TERMINAL_VELOCITY
             speedZeroToOne = speedClamped / TERMINAL_VELOCITY
@@ -222,7 +237,7 @@ class GroundpoundPowerup extends BasePowerup
 
             @Remove! unless @UsesRemaining > 0
 
-            return 0
+            return damageTaken
 
     CantFastFall: =>
         owner = @owner
@@ -231,7 +246,11 @@ class GroundpoundPowerup extends BasePowerup
         return true if owner\InVehicle!
         return true if owner\IsOnGround!
         return true if BAD_MOVETYPES[owner\GetMoveType!]
-        return true unless owner\KeyDown IN_DUCK
+
+        gravitonned = @owner._cfcPvPWeapons_GravitonGunStatus
+        ducking = @owner\KeyDown IN_DUCK
+        
+        return true unless ( ducking or gravitonned )
 
         return false
 

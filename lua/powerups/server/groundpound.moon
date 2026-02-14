@@ -149,7 +149,9 @@ class GroundpoundPowerup extends BasePowerup
 
             damageTaken = speed * takenMul
 
-            speedClamped = math.min speed, TERMINAL_VELOCITY
+            effectiveSpeed = speed * speedMul -- calc this after damage, so damage doesnt get blown up 
+
+            speedClamped = math.min effectiveSpeed, TERMINAL_VELOCITY
             speedZeroToOne = speedClamped / TERMINAL_VELOCITY
             speedOneToZero = 1 - speedZeroToOne
 

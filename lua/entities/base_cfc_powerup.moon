@@ -40,6 +40,7 @@ ENT.Initialize = =>
 
 ENT.GivePowerup = (ply) =>
     return unless IsValid ply
+    return unless ply\Alive!
 
     alertThreshold = 1
     lastFailedPickup = @FailedPickups[ply]

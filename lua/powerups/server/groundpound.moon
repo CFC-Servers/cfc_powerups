@@ -27,6 +27,12 @@ TRAIL_SPEED = 2
 TRAIL_OFFSET_SPREAD = 30
 TRAIL_AMOUNT = 5
 
+DAMAGE_TAKEN_MUL_NORMAL = 0
+DAMAGE_TAKEN_MUL_GRAVITONNED = 1
+
+SPEED_MUL_NORMAL = 1
+SPEED_MUL_GRAVITONNED = 4
+
 UP_VECTOR = Vector 0, 0, 1 
 
 export GroundpoundPowerup
@@ -75,7 +81,9 @@ class GroundpoundPowerup extends BasePowerup
     CreateOwnerDamageWatcher: =>
         (victim, damageInfo) ->
             return unless victim == @owner
-            return true if damageInfo\IsFallDamage! -- Block fall damage
+
+            gravitonned = @owner._cfcPvPWeapons_GravitonGunStatus
+            return true if damageInfo\IsFallDamage! and not gravitonned -- Block fall damage
 
             return unless damageInfo\GetAttacker! == victim -- Only block groundpounds from the owner
 
@@ -129,12 +137,23 @@ class GroundpoundPowerup extends BasePowerup
         (ply, speed) ->
             return unless ply == @owner
             return unless speed >= @minSpeed
-            return unless @owner\KeyDown IN_DUCK -- Only trigger when crouched
+
+            gravitonned = @owner._cfcPvPWeapons_GravitonGunStatus
+            ducking = @owner\KeyDown IN_DUCK
+
+            return unless ( ducking or gravitonned ) -- Only trigger when crouched or gravitonned
 
             @nextUpToSpeedSound = 0
             @nextUpToTerminalSpeedSound = 0
 
-            speedClamped = math.min speed, TERMINAL_VELOCITY
+            takenMul = gravitonned and DAMAGE_TAKEN_MUL_GRAVITONNED or DAMAGE_TAKEN_MUL_NORMAL
+            speedMul = gravitonned and SPEED_MUL_GRAVITONNED or SPEED_MUL_NORMAL
+
+            damageTaken = speed * takenMul
+
+            effectiveSpeed = speed * speedMul -- calc this after damage, so damage doesn't get blown up 
+
+            speedClamped = math.min effectiveSpeed, TERMINAL_VELOCITY
             speedZeroToOne = speedClamped / TERMINAL_VELOCITY
             speedOneToZero = 1 - speedZeroToOne
 
@@ -222,7 +241,7 @@ class GroundpoundPowerup extends BasePowerup
 
             @Remove! unless @UsesRemaining > 0
 
-            return 0
+            return damageTaken
 
     CantFastFall: =>
         owner = @owner
@@ -231,7 +250,11 @@ class GroundpoundPowerup extends BasePowerup
         return true if owner\InVehicle!
         return true if owner\IsOnGround!
         return true if BAD_MOVETYPES[owner\GetMoveType!]
-        return true unless owner\KeyDown IN_DUCK
+
+        gravitonned = @owner._cfcPvPWeapons_GravitonGunStatus
+        ducking = @owner\KeyDown IN_DUCK
+        
+        return true unless ( ducking or gravitonned )
 
         return false
 

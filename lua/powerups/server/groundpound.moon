@@ -146,7 +146,7 @@ class GroundpoundPowerup extends BasePowerup
             @nextUpToSpeedSound = 0
             @nextUpToTerminalSpeedSound = 0
 
-            takenMul = gravitonned and DAMAGE_TAKENMUL_GRAVITONNED or DAMAGE_TAKENMUL_NORMAL
+            takenMul = gravitonned and DAMAGE_TAKEN_MUL_GRAVITONNED or DAMAGE_TAKEN_MUL_NORMAL
             speedMul = gravitonned and SPEED_MUL_GRAVITONNED or SPEED_MUL_NORMAL
 
             damageTaken = speed * takenMul
